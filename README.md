@@ -5,7 +5,7 @@
   a. Speed up PT as much as possible ("Fast") so more people can play it
   b. Improve PT quality (reducing edge and boiling noise) for high-end PCs and those sensitive to PT noise
   c. Ray tracing + path tracing for AMD and lower-powered PCs
-3. Ability to switch between modes so users can see the difference for themselves
+3. **Change modes in real-time** so users can see differences for themselves
 4. **Fix PT / RT bugs** that can be fixed via engine manipulation
 5. **Improve game stability**
 
