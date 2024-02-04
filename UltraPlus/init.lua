@@ -1,5 +1,5 @@
 -- 	Ultra+ 		(CET version)
---	version:	v0.1
+--	version:	v2.0-alpha1
 --	author:		SammiLucia
 --	copyright:	copy or use only with explicit consent
 
