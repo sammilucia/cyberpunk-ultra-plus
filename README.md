@@ -20,6 +20,7 @@ Please feel free to pitch in! I don't know LUA or ImGui and have limited time, s
 - Enable no-ray/path tracing mode
 - Add streaming options (? vanilla, medium, high)
 - Remove options that are confusing or don't add any value
+- Separate settings into separate file(s)
 
 ## Where to find me
 
