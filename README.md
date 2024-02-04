@@ -9,6 +9,13 @@
 4. **Fix PT / RT bugs** that can be fixed via engine manipulation
 5. **Improve game stability**
 
+![sshot-4491](https://github.com/sammilucia/cyberpunk-ultra-plus/assets/3295286/3954baaa-e420-4647-912d-fbc9f01d3b26)
+
+## Progress Video
+
+[![Watch the video](https://img.youtube.com/vi/onmGdsKmJWE/default.jpg)](https://youtu.be/onmGdsKmJWE)
+Sorry for my terrible screen capture!
+
 ## Contributing
 
 Please feel free to pitch in! I don't know LUA or ImGui and have limited time, so help is wonderful. This is a proof of concept.
