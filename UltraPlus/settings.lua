@@ -2,60 +2,77 @@ Settings = {
 
 	Mode = {
 		{
-			item = "UltraPlus",
-			name = "RTPT",
-			category = "",
+			item = "Enable",
+			name = "Path Tracing PT21 (ReSTIRGI)",
+			category = "Editor/ReSTIRGI",
 			note = "",
+			defaultValue = false,
+		},
+
+		{
+			item = "AllowRTXDIRejitter",
+			name = "RTXDI rejittering",
+			category = "Rendering",
+			note = "(Default: Off)",
 			defaultValue = true,
 		},
 
-		{
-			item = "UltraPlus",
-			name = "PT21",
-			category = "",
-			note = "",
-			defaultValue = false,
-		},
-
-		{
-			item = "UltraPlus",
-			name = "PT20",
-			category = "",
-			note = "",
-			defaultValue = false,
-		},
-		
-		{
-			item = "UltraPlus",
-			name = "Vanilla",
-			category = "",
-			note = "",
-			defaultValue = false,
-		},
 	},
 
 	Experimental = {
 		{
-			item = "EnableApproximateTargetPDF",
-			name = "RTXDI approximate PDF",
-			category = "Editor/RTXDI",
-			note = "PDF is probability density function. Evaluates the final BRDF, which is almost ideal (Default: Off)",
-			defaultValue = true,
-		},
-
-		{
 			item = "DLSSDSeparateParticleColor",
-			name = "Particle colour in path tracing",
+			name = "Do not include particle colour in path tracing",
 			category = "Rendering",
-			note = "Integrates particle FX (steam, smoke, fire, sparks) better into path tracing (Default: Off)",
+			note = "Unchecking this option includes particle FX colour in path tracing (steam, smoke, fire, sparks), and generally looks better, however it can make some rain mods look weird (Default: Yes, keep particle colour separate).",
+			defaultValue = false,
+		},
+		
+		{
+			item = "EnableImportanceSampling",
+			name = "Path tracing importance sampling",
+			category = "RayTracing",
+			note = "(Default: On)",
+			defaultValue = true,
+		},
+		
+		{
+			item = "EnableLocalLightImportanceSampling",
+			name = "Fixes brightness of some local lights",
+			category = "Editor/RTXDI",
+			note = "(Default: Off)",
 			defaultValue = true,
 		},
 
 		{
-			item = "UseRTXDIAtPrimary",
-			name = "UseRTXDIAtPrimary",
-			category = "Editor/SHARC",
-			note = "(Default: Off)",
+			item = "EnableRIS",
+			name = "Enable RIS (disables for reLIGHT)",
+			category = "RayTracing/Reference",
+			note = "(Default: RIS - resampled importance sampling - is enabled by default, however reLIGHT requires it's disabled for correct lighting until CDPR have a fix.)",
+			defaultValue = true,
+		},
+
+		{
+			item = "EnableNRD",
+			name = "Enable NRD (path tracing) denoiser",
+			category = "RayTracing",
+			note = "Only intended if you're NOT using ray reconstruction, for example AMD users (Default: Off)",
+			defaultValue = false,
+		},
+
+		{
+			item = "EnableFixed",
+			name = "Enable Reference 'Fixed' (Unknown)",
+			category = "RayTracing/Reference",
+			note = "(Default: On)",
+			defaultValue = true,
+		},
+		
+		{
+			item = "EnableGlobalShadowCulling",
+			name = "Global Shadow Culling",
+			category = "RayTracing/Collector",
+			note = "(Default: On)",
 			defaultValue = false,
 		},
 	},
@@ -108,20 +125,20 @@ Settings = {
 			note = "",
 			defaultValue = true,
 		},
-		
-		{
-			item = "RainMap",
-			name = "Rain map",
-			category = "Developer/FeatureToggles",
-			note = "(Default: On)",
-			defaultValue = true,
-		},
 
 		{
-			item = "EnableTransparentReflection",
-			name = "(Ray traced?) reflections on transparent",
+			item = "HideFPPAvatar",
+			name = "Show player avatar in reflections (except for head)",
 			category = "RayTracing",
-			note = "E.g. reflections on glass (Default: On)",
+			note = "(Default: Off)",
+			defaultValue = false,
+		},
+		
+		{
+			item = "CharacterRimEnhancement",
+			name = "Character/object rim enhancement",
+			category = "Developer/FeatureToggles",
+			note = "Default (On)",
 			defaultValue = false,
 		},
 
@@ -191,13 +208,6 @@ Settings = {
 			defaultValue = 5.0,
 		},
 ]]--
-		{
-			item = "DistantShadowsUseTodVis",
-			name = "DistantShadowsUseTodVis",
-			category = "Rendering",
-			note = "Distant shadow hack (Default: Off)",
-			defaultValue = false,
-		},
 	},
 
 	SkinHair = {
@@ -208,42 +218,10 @@ Settings = {
 			note = "(Default: On)",
 			defaultValue = true,
 		},
-
-		{
-			item = "CharacterRimEnhancement",
-			name = "Character rim enhancement",
-			category = "Developer/FeatureToggles",
-			note = "Default (On)",
-			defaultValue = true,
-		},
-
-		{
-			item = "CharacterSubsurfaceScattering",
-			name = "Skin Subsurface Scattering",
-			category = "Developer/FeatureToggles",
-			note = "(Default: On)",
-			defaultValue = true,
-		},
-
-		{
-			item = "CharacterSubsurfaceTranslucency",
-			name = "Skin Translucency",
-			category = "Developer/FeatureToggles",
-			note = "(Default: Off)",
-			defaultValue = false,
-		},
-		
-		{
-			item = "UseReferenceImplementation",
-			name = "Include hair in path tracing",
-			category = "Editor/Characters/Hair",
-			note = "(Default: Off)",
-			defaultValue = false,
-		},
 		
 		{
 			item = "AAAA_HACK_hairModifiedLocalLightIntensity",
-			name = "Hair local light intensity hack for ray tracing (path tracing?)",
+			name = "Reduce light intensity for hair in ray/path tracing",
 			category = "Editor/Characters/Hair/HACKS",
 			note = "(Default: On)",
 			defaultValue = true,
