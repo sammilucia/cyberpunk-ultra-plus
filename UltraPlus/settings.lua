@@ -1,24 +1,5 @@
 Settings = {
 
-	Mode = {
-		{
-			item = "Enable",
-			name = "Path Tracing PT21 (ReSTIRGI)",
-			category = "Editor/ReSTIRGI",
-			note = "",
-			defaultValue = false,
-		},
-
-		{
-			item = "AllowRTXDIRejitter",
-			name = "RTXDI rejittering",
-			category = "Rendering",
-			note = "(Default: Off)",
-			defaultValue = true,
-		},
-
-	},
-
 	Experimental = {
 		{
 			item = "DLSSDSeparateParticleColor",
@@ -38,15 +19,15 @@ Settings = {
 		
 		{
 			item = "EnableLocalLightImportanceSampling",
-			name = "Fixes brightness of some local lights",
+			name = "Local light importance sampling",
 			category = "Editor/RTXDI",
-			note = "(Default: Off)",
+			note = "Adjusts some local lights to be brighter (Default: Off)",
 			defaultValue = true,
 		},
 
 		{
 			item = "EnableRIS",
-			name = "Enable RIS (disables for reLIGHT)",
+			name = "Enable resampled importance sampling (disable for reLIGHT)",
 			category = "RayTracing/Reference",
 			note = "(Default: RIS - resampled importance sampling - is enabled by default, however reLIGHT requires it's disabled for correct lighting until CDPR have a fix.)",
 			defaultValue = true,
@@ -80,10 +61,10 @@ Settings = {
 	Features = {
 		{
 			item = "ConstrastAdaptiveSharpening",
-			name = "AMD Constrast Adaptive Sharpening",
+			name = "AMD Contrast Adaptive Sharpening",
 			category = "Developer/FeatureToggles",
 			note = "(Default: On)",
-			defaultValue = false,
+			defaultValue = true,
 		},
 
 		{
@@ -136,9 +117,9 @@ Settings = {
 		
 		{
 			item = "CharacterRimEnhancement",
-			name = "Character/object rim enhancement",
+			name = "Object (and character) rim enhancement",
 			category = "Developer/FeatureToggles",
-			note = "Default (On)",
+			note = "Only works in raster and RT modes (Default: On)",
 			defaultValue = false,
 		},
 
