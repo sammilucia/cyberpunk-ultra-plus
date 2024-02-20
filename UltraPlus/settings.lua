@@ -13,7 +13,7 @@ Settings = {
 			item = "EnableImportanceSampling",
 			name = "Path tracing importance sampling",
 			category = "RayTracing",
-			note = "(Default: On)",
+			note = "Enables the first stage of importance sampling (before 'RIS') as a performance improvement, with possible quality reduction in some scenarios. Generally leave enabled unless ultimate visual quality is your goal (Default: On)",
 			defaultValue = true,
 		},
 		
@@ -21,31 +21,39 @@ Settings = {
 			item = "EnableLocalLightImportanceSampling",
 			name = "Local light importance sampling",
 			category = "Editor/RTXDI",
-			note = "Adjusts some local lights to be brighter (Default: Off)",
-			defaultValue = true,
+			note = "Adjusts occasional light sources to be dimmer or brighter (0.5 to 1 fps performance cost). You could argue it looks more realistic, or less. Personal preference (Default: Off)",
+			defaultValue = false,
 		},
 
 		{
 			item = "EnableRIS",
-			name = "Enable resampled importance sampling (disable for reLIGHT)",
+			name = "Resampled importance sampling (RIS). Disable for reLIGHT",
 			category = "RayTracing/Reference",
 			note = "(Default: RIS - resampled importance sampling - is enabled by default, however reLIGHT requires it's disabled for correct lighting until CDPR have a fix.)",
 			defaultValue = true,
 		},
 
 		{
+			item = "UseReblurForIndirectRadiance",
+			name = "Use ReBLUR instead of ReLAX (PT20 and RT+PT only)",
+			category = "RayTracing/NRD",
+			note = "Forces ReBLUR for indirect lighting instead of ReLAX. ReBLUR may be removed in 2.11, I can no longer see a difference (Default: Off)",
+			defaultValue = false,
+		},
+
+		{
 			item = "EnableNRD",
-			name = "Enable NRD (path tracing) denoiser",
+			name = "NRD path tracing denoiser from 1.63",
 			category = "RayTracing",
-			note = "Only intended if you're NOT using ray reconstruction, for example AMD users (Default: Off)",
+			note = "NRD is only intended if you're NOT using ray reconstruction, for example AMD users. The engine tries to turn this on under certain circumstances, Ultra+ Control will show you if it has become enabled (Default: Off)",
 			defaultValue = false,
 		},
 
 		{
 			item = "EnableFixed",
-			name = "Enable Reference 'Fixed' (Unknown)",
+			name = "Reference 'Fixed' (Unknown)",
 			category = "RayTracing/Reference",
-			note = "(Default: On)",
+			note = "I'm not sure what this is, possibly it was important in 1.64 path tracing. I've left it here in case anyone finds it makes a difference (Default: On)",
 			defaultValue = true,
 		},
 		
@@ -53,7 +61,7 @@ Settings = {
 			item = "EnableGlobalShadowCulling",
 			name = "Global Shadow Culling",
 			category = "RayTracing/Collector",
-			note = "(Default: On)",
+			note = "Generally in rendering engines, you want to cull as much as possible, as early as possible. However shadows can pop-in in CP, and this does not seem to have a negative performance impact, so it's here as an experiment (Default: On)",
 			defaultValue = false,
 		},
 	},
@@ -63,7 +71,7 @@ Settings = {
 			item = "ConstrastAdaptiveSharpening",
 			name = "AMD Contrast Adaptive Sharpening",
 			category = "Developer/FeatureToggles",
-			note = "(Default: On)",
+			note = "I don't believe this is used in 2.11 anymore, it's here for testing (Default: On)",
 			defaultValue = true,
 		},
 

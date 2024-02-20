@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION     = 'ultraplus.lua 0.2',
+  __VERSION     = 'ultraplus.lua 0.3.1',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE     = [[
@@ -104,7 +104,6 @@ function EnableDlssd()
 
 	print( '/graphics/presets/DLSS_D = ', checkDlssd )
 	PushChanges()
-	--SetOption( "RayTracing", "EnableNRD", false )
 	SaveSettings()
 end
 
@@ -208,8 +207,8 @@ function SetMode( mode )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		PushChanges()
-		--EnableDlssd()
 
+		SetOption( "RayTracing", "EnableNRD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
@@ -222,11 +221,11 @@ function SetMode( mode )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		PushChanges()
-		--EnableDlssd()
 
+		SetOption( "RayTracing", "EnableNRD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
-		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
+		--SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
 		SetOption( "Rendering", "AllowRTXDIRejitter", true )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", false )
@@ -238,7 +237,7 @@ function SetMode( mode )
 		SetOption( "Editor/SHARC", "SceneScale", "33.3333333333" )
 		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.35" )
+		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
 		SaveSettings()
 
 	elseif mode == "Vanilla" then
@@ -349,6 +348,16 @@ function SetSamples( samples )
 		SetOption( "Editor/RTXDI", "NumInitialSamples", "16" )
 		SetOption( "Editor/RTXDI", "NumEnvMapSamples", "0" )
 		SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
+		SetOption( "Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8" )
+
+	elseif samples == "Insane" then
+		print( "---------- Ultra+: Switching to Insane RTXDI samples" )
+		SetOption( "RayTracing/ReferenceScreenshot", "SampleNumber", "24" )
+		SetOption( "Editor/ReSTIRGI", "SpatialNumSamples", "2" )
+		SetOption( "Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "2" )
+		SetOption( "Editor/RTXDI", "NumInitialSamples", "20" )
+		SetOption( "Editor/RTXDI", "NumEnvMapSamples", "0" )
+		SetOption( "Editor/RTXDI", "SpatialNumSamples", "3" )
 		SetOption( "Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8" )
 	end
 end
@@ -513,7 +522,7 @@ end)
 registerForEvent( "onDraw", function()
 	if windowOpen then
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 550, 818 )
+		ImGui.SetNextWindowSize( 550, 886 )
 		ImGui.Begin( "Ultra+ Control", ImGuiWindowFlags.NoResize )
 
 		width = ImGui.GetWindowContentRegionWidth()
@@ -559,7 +568,7 @@ registerForEvent( "onDraw", function()
 				
 				DrawSection( "The number of path tracing samples affects both boiling, and edge noise: Higher samples = less noise." )
 
-				if ImGui.RadioButton( "Vanilla RTXDI samples (spatial sampling: On)", ptSamples == "Vanilla" ) then
+				if ImGui.RadioButton( "Vanilla RTXDI samples (spatial sampling: Low)", ptSamples == "Vanilla" ) then
 					ptSamples = "Vanilla"
 					SetSamples( ptSamples )
 				end
@@ -569,8 +578,13 @@ registerForEvent( "onDraw", function()
 					SetSamples( ptSamples )
 				end
 
-				if ImGui.RadioButton( "High RTXDI samples (spatial sampling: On)", ptSamples == "High" ) then
+				if ImGui.RadioButton( "High RTXDI samples (spatial sampling: Medium)", ptSamples == "High" ) then
 					ptSamples = "High"
+					SetSamples( ptSamples )
+				end
+				
+				if ImGui.RadioButton( "Insane RTXDI samples (spatial sampling: High)", ptSamples == "Insane" ) then
+					ptSamples = "Insane"
 					SetSamples( ptSamples )
 				end
 
