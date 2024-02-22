@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION     = 'ultraplus.lua 0.4',
+  __VERSION     = 'ultraplus.lua 0.5',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE     = [[
@@ -520,7 +520,7 @@ end)
 registerForEvent( "onDraw", function()
 	if windowOpen then
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 550, 922 )
+		ImGui.SetNextWindowSize( 550, 786 )
 		ImGui.Begin( "Ultra+ Control", ImGuiWindowFlags.NoResize )
 
 		width = ImGui.GetWindowContentRegionWidth()

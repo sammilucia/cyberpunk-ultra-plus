@@ -16,14 +16,6 @@ Settings = {
 			note = "Enables the first stage of importance sampling (before 'RIS') as a performance improvement, with possible quality reduction in some scenarios. Generally leave enabled unless ultimate visual quality is your goal (Default: On)",
 			defaultValue = true,
 		},
-		
-		{
-			item = "EnableLocalLightImportanceSampling",
-			name = "Local light importance sampling",
-			category = "Editor/RTXDI",
-			note = "Adjusts occasional light sources to be dimmer or brighter (0.5 to 1 fps performance cost). You could argue it looks more realistic, or less. Personal preference (Default: Off)",
-			defaultValue = false,
-		},
 
 		{
 			item = "EnableRIS",
@@ -46,30 +38,6 @@ Settings = {
 			name = "NRD path tracing denoiser from 1.63",
 			category = "RayTracing",
 			note = "NRD is only intended if you're NOT using ray reconstruction, for example AMD users. The engine tries to turn this on under certain circumstances, Ultra+ Control will show you if it has become enabled (Default: Off)",
-			defaultValue = false,
-		},
-
-		{
-			item = "EnableFixed",
-			name = "Reference 'Fixed' (Unknown)",
-			category = "RayTracing/Reference",
-			note = "I'm not sure what this is, possibly it was important in 1.64 path tracing. I've left it here in case anyone finds it makes a difference (Default: On)",
-			defaultValue = true,
-		},
-		
-		{
-			item = "EnableEmissiveProxyLightRejection",
-			name = "Emissive proxy light rejection",
-			category = "Editor/RTXDI",
-			note = "Increases performance by 0.5–2 fps but can introduce small hitches (Default: Off)",
-			defaultValue = false,
-		},
-		
-		{
-			item = "EnableGlobalShadowCulling",
-			name = "Global Shadow Culling",
-			category = "RayTracing/Collector",
-			note = "Generally in rendering engines, you want to cull as much as possible, as early as possible. However shadows can pop-in in CP, and this does not seem to have a negative performance impact, so it's here as an experiment (Default: On)",
 			defaultValue = false,
 		},
 	},
