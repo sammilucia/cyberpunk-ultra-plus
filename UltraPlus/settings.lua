@@ -6,7 +6,7 @@ Settings = {
 			name = "Do not include particle colour in path tracing",
 			category = "Rendering",
 			note = "Unchecking this option includes particle FX colour in path tracing (steam, smoke, fire, sparks), and generally looks better, however it can make some rain mods look weird (Default: Yes, keep particle colour separate).",
-			defaultValue = false,
+			defaultValue = true,
 		},
 		
 		{
@@ -55,6 +55,14 @@ Settings = {
 			category = "RayTracing/Reference",
 			note = "I'm not sure what this is, possibly it was important in 1.64 path tracing. I've left it here in case anyone finds it makes a difference (Default: On)",
 			defaultValue = true,
+		},
+		
+		{
+			item = "EnableEmissiveProxyLightRejection",
+			name = "Emissive proxy light rejection",
+			category = "Editor/RTXDI",
+			note = "Increases performance by 0.5–2 fps but can introduce small hitches (Default: Off)",
+			defaultValue = false,
 		},
 		
 		{

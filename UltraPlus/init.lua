@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION     = 'ultraplus.lua 0.3.1',
+  __VERSION     = 'ultraplus.lua 0.4',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE     = [[
@@ -226,7 +226,7 @@ function SetMode( mode )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		--SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
-		SetOption( "Rendering", "AllowRTXDIRejitter", true )
+		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", true )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", false )
 		SetOption( "Editor/RTXDI", "MaxHistoryLength", "0" )
@@ -250,7 +250,7 @@ function SetMode( mode )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
-		SetOption( "Rendering", "AllowRTXDIRejitter", false )
+		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", false )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", true )
 		SetOption( "Editor/ReSTIRGI", "EnableBoilingFilter", true )
@@ -276,7 +276,7 @@ function SetMode( mode )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
 		SetOption( "RayTracing", "EnableImportanceSampling", false )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
-		SetOption( "Rendering", "AllowRTXDIRejitter", false )
+		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", false )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", true )
 		SetOption( "Editor/ReSTIRGI", "EnableFallbackSampling", true )			-- test 2.0
@@ -303,7 +303,7 @@ function SetMode( mode )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
-		SetOption( "Rendering", "AllowRTXDIRejitter", true )
+		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", true )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", false )
 		SetOption( "Editor/RTXDI", "MaxHistoryLength", "0" )
@@ -393,12 +393,10 @@ end
 function guessMode()
 	local guess = "Unknown"
 
-	local reJitter    = GetOption( "Rendering", "AllowRTXDIRejitter" )
+	local reJitter    = GetOption( "Rendering", "AllowRayTracedReferenceRejitter" )
 	local reStir      = GetOption( "Editor/ReSTIRGI", "Enable" )
 	local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
 	local rayTracing  = GetOption( "/graphics/raytracing", "RayTracing" )
-	
-	print( "reJitter:", reJitter, "reStir:", reStir, "pathTracing:", pathTracing, "rayTracing:", rayTracing )
 
 	if rayTracing == false then
 		guess = "Raster"
@@ -522,7 +520,7 @@ end)
 registerForEvent( "onDraw", function()
 	if windowOpen then
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 550, 886 )
+		ImGui.SetNextWindowSize( 550, 922 )
 		ImGui.Begin( "Ultra+ Control", ImGuiWindowFlags.NoResize )
 
 		width = ImGui.GetWindowContentRegionWidth()
