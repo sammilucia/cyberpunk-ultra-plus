@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION     = 'ultraplus.lua 0.5',
+  __VERSION     = 'ultraplus.lua 0.8-test',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE     = [[
@@ -26,11 +26,14 @@ local ultraplus = {
   ]]
 }
 
-local Settings = require( "settings.lua" )
+_var 	 = require( "variables" )
 
-currentMode = "Unknown"
-ptSamples = "Fast"
-streamer = "Medium"
+Defaults = require( "defaults" )
+config 	 = {
+	SetSamples 	= require( "setsamples" ).SetSamples,
+	SetMode 	= require( "setmode" ).SetMode,
+	CommonFixes = require( "commonfixes" ).CommonFixes,
+}
 
 function Wait( seconds )
 	-- wait for fractions of seconds e.g. '0.4'
@@ -44,9 +47,32 @@ function SplitOption( string )
     return category, item
 end
 
-function SetOption( category, item, value )
-	-- handle graphics settings
+function GetOption( category, item )
+	local value = nil
+	
 	if category:match( "^/" ) then
+		-- handle graphics settings
+		value = Game.GetSettingsSystem():GetVar( category, item ):GetValue()
+	else
+		--handle ini settings
+		value = GameOptions.Get( category, item )
+		
+		if value == "true" then
+			value = true
+		elseif value == "false" then
+			value = false
+		elseif string.match( value, "^%-?%d+$" ) then
+			value = tonumber( value )
+		end
+	end
+
+    return value
+end
+
+function SetOption( category, item, value )
+	
+	if category:match( "^/" ) then
+		-- handle graphics settings
 		Game.GetSettingsSystem():GetVar( category, item ):SetValue( value )
 	else
 		-- handle ini settings
@@ -62,35 +88,12 @@ function SetOption( category, item, value )
 	end
 end
 
-function GetOption( category, item )
-	local value = nil
-
-	-- handle graphics settings
-	if category:match( "^/" ) then
-		value = Game.GetSettingsSystem():GetVar( category, item ):GetValue()
-	else
-		--handle ini settings
-		value = GameOptions.GetBool( category, item )
---[[
-		if value == "true" then
-			value = true
-		elseif value == "false" then
-			value = false
-		elseif string.match( value, "^%-?%d+%.%d+$" ) then
-			value = tonumber(
-		elseif string.match( value, "^%-?%d+$"" ) then
-]]--
-	end
-
-    return value
-end
-
 function PushChanges()
 	Wait( 0.1 )
 	Game.GetSettingsSystem():ConfirmChanges()
 end
 
-function EnableDlssd()
+function ForceDlssd()
     local checkDlssd = GetOption( '/graphics/presets', 'DLSS_D' )
 
     while checkDlssd == false do
@@ -103,289 +106,89 @@ function EnableDlssd()
     end
 
 	print( '/graphics/presets/DLSS_D = ', checkDlssd )
+
 	PushChanges()
+	
+	SetOption( "RayTracing", "EnableNRD", false )
 	SaveSettings()
 end
 
-function CommonFixes()
-	print( "---------- Ultra+: Resetting all settings" )
-	local category
+function LoadSettings()
+	local file = io.open( "UserSettings.json", "r" )
+	if not file then return end
 
-	category = "Streaming"
-		SetOption( category, "MaxNodesPerFrame", "300" )
-		SetOption( category, "MaxNodesPerFrameWhileLoading", "100000" )
-		SetOption( category, "MaxStreamingDistance", "8000.0" )
-		SetOption( category, "EditorThrottledMaxNodesPerFrame", "300" )
-		SetOption( category, "TimeLimitAttachingPerFrame", "0.5" )
-		SetOption( category, "TimeLimitSectorLoadPerFrame", "2.0" )
-		SetOption( category, "TimeLimitSectorUnloadPerFrame", "2.0" )
-		SetOption( category, "TimeLimitStreamedPerFrame", "3.0" )
-		SetOption( category, "TimeLimitStreamedPerFrameWhileLoading", "8.0" )
-		SetOption( category, "ObserverVelocityOffsetEnabled", true )
-		SetOption( category, "ObserverMaxOnFootForwardVelocity", "40.0" )
-		SetOption( category, "ObserverMaxNonAirVehicleForwardVelocity", "600.0" )
-		SetOption( category, "ObserverMaxAirVehicleForwardVelocity", "200.0" )
+	local rawJson = file:read( "*a" )
+	file:close()
 
-	category = "Streaming/Editor"
-		SetOption( category, "TimeLimitAttachingPerFrame", "0.5" )
-		SetOption( category, "TimeLimitDetachingPerFrame", "1.0" )
-		SetOption( category, "TimeLimitStreamedPerFrame", "3.0" )
-		
-	category = "Editor/Streaming"
-		SetOption( category, "ForceAutoHideDistanceMax", "0.0" )
-		
-	category = "Streaming/QueryZoom"
-		SetOption( category, "Enabled", true )
-		SetOption( category, "MaxSpeed", "2.0" )
-		SetOption( category, "MinActivationZoomFactor", "2.0" )
-		SetOption( category, "MaxZoomFactor", "4.0" )
+	if rawJson:match( "^%s*$" ) then
+        print("---------- Ultra+: UserSettings.json is empty or invalid.")
+        return
+    end
 
-	category = "DLSS"
-		SetOption( category, "SampleNumber", "24" )
-		SetOption( category, "EnableMirrorScaling", false )
-		SetOption( category, "MirrorScaling", "1.0" )
+	local success, output = pcall( json.decode, rawJson )
 
-	category = "FSR2"
-		SetOption( category, "SampleNumber", "24" )
-		SetOption( category, "EnableMirrorScaling", false )
-		SetOption( category, "MirrorScaling", "1.0" )
-		
-	category = "Rendering/LUT"
-		SetOption( category, "Size", "64" )
-		SetOption( category, "MinRange", "0.0000000001" )
-		SetOption( category, "MaxRange", "100.0" )
-		
-	category = "Editor/VolumetricFog"
-		SetOption( category, "Exponent", "5.0" )
-
-	category = "RayTracing/NRD"
-		SetOption( category, "UseReblurForDirectRadiance", false )
-		SetOption( category, "UseReblurForIndirectRadiance", false )
-
-	category = "RayTracing/Reference"
-		SetOption( category, "BounceNumber", "1" )
-		SetOption( category, "RayNumber", "1" )
-		SetOption( category, "EnableProbabilisticSampling", true )
-		SetOption( category, "BounceNumberScreenshot", "2" )
-		SetOption( category, "RayNumberScreenshot", "3" )
-
-	category = "Editor/ReSTIRGI"
-		SetOption( category, "PermutationSamplingMode", "2" )
-		SetOption( category, "EnableBoilingFilter", false )
-		SetOption( category, "UseTemporalRGS", true )
-
-	category = "Editor/SHARC"
-		SetOption( category, "Enable", true )
-
-	category = "Editor/PathTracing"
-		SetOption( category, "UseScreenSpaceData", true )
-
-	category = "Editor/Characters/Eyes"
-		SetOption( category, "UseAOOnEyes", true )
-
-	category = "Editor/Characters/Skin"
-		SetOption( category, "AllowSkinAmbientMix", false )
-		SetOption( category, "SkinAmbientMix_Factor", "1.0" )
-		SetOption( category, "SubsurfaceSpecularTintWeight", "0.5" )
-		SetOption( category, "SkinAmbientIntensity_Factor", "0.3" )
-		SetOption( category, "SubsurfaceSpecularTint_R", "0.26" )
-		SetOption( category, "SubsurfaceSpecularTint_G", "0.17" )
-		SetOption( category, "SubsurfaceSpecularTint_B", "0.19" )
-end
-
-function SetMode( mode )
-	if mode == "Raster" then
-		print( "---------- Ultra+: Switching to Raster" )
-		SetOption( '/graphics/raytracing', 'RayTracing', false )
-		PushChanges()
-
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
-		SaveSettings()
-
-	elseif mode == "RTOnly" then
-		print( "---------- Ultra+: Switching to RTPT" )
-		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
-		SetOption( '/graphics/raytracing', 'RayTracing', true )
-		PushChanges()
-
-		SetOption( "RayTracing", "EnableNRD", true )
-		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
-		SetOption( "RayTracing", "EnableImportanceSampling", true )
-		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
-		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.35" )
-		SaveSettings()
-
-	elseif mode == "RTPT" then
-		print( "---------- Ultra+: Switching to RTPT" )
-		SetOption( '/graphics/raytracing', 'RayTracing', true )
-		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
-		PushChanges()
-
-		SetOption( "RayTracing", "EnableNRD", true )
-		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
-		SetOption( "RayTracing", "EnableImportanceSampling", true )
-		--SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
-		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", true )
-		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
-		SetOption( "Editor/ReSTIRGI", "Enable", false )
-		SetOption( "Editor/RTXDI", "MaxHistoryLength", "0" )
-		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.45" )
-		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "1" )
-		SetOption( "Editor/RTXDI", "SpatialSamplingRadius", "20.0" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.02" )
-		SetOption( "Editor/SHARC", "SceneScale", "33.3333333333" )
-		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
-		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
-		SaveSettings()
-
-	elseif mode == "Vanilla" then
-		print( "---------- Ultra+: Switching to Vanilla Path Tracing" )
-		SetOption( '/graphics/raytracing', 'RayTracing', true )
-		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
-		PushChanges()
-		--EnableDlssd()
-
-		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
-		SetOption( "RayTracing", "EnableImportanceSampling", true )
-		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
-		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", false )
-		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
-		SetOption( "Editor/ReSTIRGI", "Enable", true )
-		SetOption( "Editor/ReSTIRGI", "EnableBoilingFilter", true )
-		SetOption( "Editor/ReSTIRGI", "UseTemporalRGS", false )
-		SetOption( "Editor/RTXDI", "MaxHistoryLength", "20" )
-		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.5" )
-		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "2" )
-		SetOption( "Editor/RTXDI", "SpatialSamplingRadius", "32.0" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "1.0" )
-		SetOption( "Editor/SHARC", "SceneScale", "50.0" )
-		SetOption( "Editor/SHARC", "DownscaleFactor", "5" )
-		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
-		SaveSettings()
-
-	elseif mode == "PT21" then
-		print( "---------- Ultra+: Switching to PT21" )
-		SetOption( '/graphics/raytracing', 'RayTracing', true )
-		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
-		PushChanges()
-		--EnableDlssd()
-
-		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
-		SetOption( "RayTracing", "EnableImportanceSampling", false )
-		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
-		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", false )
-		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
-		SetOption( "Editor/ReSTIRGI", "Enable", true )
-		SetOption( "Editor/ReSTIRGI", "EnableFallbackSampling", true )			-- test 2.0
-		SetOption( "Editor/ReSTIRGI", "EnableBoilingFilter", true )
-		SetOption( "Editor/ReSTIRGI", "UseTemporalRGS", true )
-		SetOption( "Editor/RTXDI", "MaxHistoryLength", "4" )
-		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.45" )
-		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "1" )
-		SetOption( "Editor/RTXDI", "SpatialSamplingRadius", "20.0" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.02" )
-		SetOption( "Editor/SHARC", "SceneScale", "33.3333333333" )
-		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
-		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
-		SaveSettings()
-
-	elseif mode == "PT20" then
-		print( "---------- Ultra+: Switching to PT20" )
-		SetOption( '/graphics/raytracing', 'RayTracing', true )
-		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
-		PushChanges()
-		--EnableDlssd()
-
-		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
-		SetOption( "RayTracing", "EnableImportanceSampling", true )
-		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
-		SetOption( "Rendering", "AllowRayTracedReferenceRejitter", true )
-		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
-		SetOption( "Editor/ReSTIRGI", "Enable", false )
-		SetOption( "Editor/RTXDI", "MaxHistoryLength", "0" )
-		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.45" )
-		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "1" )
-		SetOption( "Editor/RTXDI", "SpatialSamplingRadius", "20.0" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.02" )
-		SetOption( "Editor/SHARC", "SceneScale", "33.3333333333" )
-		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
-		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
-		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
-		SaveSettings()
+	if not success then
+		print( "---------- Ultra+: Error loading UserSettings.json:", output )
+		return
 	end
-end
+	
+	local settingsTable = output
 
-function SetSamples( samples )
-	if samples == "Vanilla" then
-		print( "---------- Ultra+: Switching to Vanilla RTXDI samples" )
-		SetOption( "RayTracing/ReferenceScreenshot", "SampleNumber", "5" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumSamples", "2" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "2" )
-		SetOption( "Editor/RTXDI", "NumInitialSamples", "8" )
-		SetOption( "Editor/RTXDI", "NumEnvMapSamples", "8" )
-		SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
-		SetOption( "Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8" )
+	print( "---------- Ultra+: Loading Settings..." )
+	
+	local settingsCategories = {
+		Defaults.Experimental,
+		Defaults.Features,
+		Defaults.Distance,
+		Defaults.SkinHair,
+	}
 
-	elseif samples == "Fast" then
-		print( "---------- Ultra+: Switching to Fast RTXDI samples" )
-		SetOption( "RayTracing/ReferenceScreenshot", "SampleNumber", "16" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumSamples", "2" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "2" )
-		SetOption( "Editor/RTXDI", "NumInitialSamples", "16" )
-		SetOption( "Editor/RTXDI", "NumEnvMapSamples", "0" )
-		SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
-		SetOption( "Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8" )
+	for _, thisCategory in pairs( settingsCategories )
+	do
+		for _, thisSetting in pairs( thisCategory )
+		do
+			local settingValue = settingsTable.UltraPlus[ thisSetting.item ]
 
-	elseif samples == "High" then
-		print( "---------- Ultra+: Switching to High RTXDI samples" )
-		SetOption( "RayTracing/ReferenceScreenshot", "SampleNumber", "16" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumSamples", "2" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "2" )
-		SetOption( "Editor/RTXDI", "NumInitialSamples", "16" )
-		SetOption( "Editor/RTXDI", "NumEnvMapSamples", "0" )
-		SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
-		SetOption( "Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8" )
-
-	elseif samples == "Insane" then
-		print( "---------- Ultra+: Switching to Insane RTXDI samples" )
-		SetOption( "RayTracing/ReferenceScreenshot", "SampleNumber", "24" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumSamples", "2" )
-		SetOption( "Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "2" )
-		SetOption( "Editor/RTXDI", "NumInitialSamples", "20" )
-		SetOption( "Editor/RTXDI", "NumEnvMapSamples", "0" )
-		SetOption( "Editor/RTXDI", "SpatialNumSamples", "3" )
-		SetOption( "Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8" )
+			if settingValue ~= nil then
+				thisSetting.defaultValue = settingValue
+				SetOption( thisSetting.category, thisSetting.item, thisSetting.defaultValue )
+			end
+		end
 	end
 end
 
 function SaveSettings()
-	local thisSetting = {}
-	local allCategories =
-	{
-		Settings.Experimental,
-		Settings.Features,
-		Settings.Distance,
-		Settings.SkinHair,
+	local UltraPlus = {}
+	local settingsCategories = {
+		Defaults.Experimental,
+		Defaults.Features,
+		Defaults.Distance,
+		Defaults.SkinHair,
 	}
 
-	for _, categoryList in pairs( allCategories ) do
-		for _, setting in pairs( categoryList ) do
-			thisSetting[ setting.item ] = setting.defaultValue
+	for _, thisCategory in pairs( settingsCategories )
+	do
+		for _, thisSetting in pairs( thisCategory ) do
+			UltraPlus[ thisSetting.item ] = thisSetting.defaultValue
 		end
 	end
 
-	local settingsTable = { thisSetting = thisSetting }
-	local jsonString = json.encode( settingsTable )
+	local settingsTable = { UltraPlus = UltraPlus }
 
-	local file = io.open( "settings.json", "w" )
+	local success, output = pcall( json.encode, settingsTable )
+
+	if not success then
+		print( "---------- Ultra+: Error saving UserSettings.json:", output )
+		return
+	end
+
+	local rawJson = output
+
+	local file = io.open( "UserSettings.json", "w" )
 	if file then
 		print( "---------- Ultra+: Saving Settings..." )
 		
-		file:write( jsonString )
+		file:write( rawJson )
 		file:close()
 	end
 end
@@ -399,58 +202,41 @@ function guessMode()
 	local rayTracing  = GetOption( "/graphics/raytracing", "RayTracing" )
 
 	if rayTracing == false then
-		guess = "Raster"
+		guess = _var.mode.raster
 	elseif pathTracing == false and rayTracing == true and reJitter == false then
-		guess = "RTOnly"
+		guess = _var.mode.rtOnly
 	elseif pathTracing == false and rayTracing == true and reJitter == true then
-		guess = "RTPT"
+		guess = _var.mode.rtpt
 	elseif pathTracing == true and reStir == false then
-		guess = "PT20"
+		guess = _var.mode.pt20
 	elseif pathTracing == true and reStir == true and reJitter == true then
-		guess = "PT21"
+		guess = _var.mode.pt21
 	elseif pathTracing == true and reStir == true and reJitter == false then
-		guess = "Vanilla"
-	else
-		print( "---------- Ultra+: Could not guess current rendering mode." )
+		guess = _var.mode.vanilla
 	end
 	
 	print( "---------- Ultra+: Guessed rendering mode is", guess )
 	return guess
 end
 
-function LoadSettings()
-	local file = io.open( "settings.json", "r" )
-
-	if file then
-		local jsonString = file:read( "*a" )
-		file:close()
-
-		local settingsTable = json.decode( jsonString )
-
-		if settingsTable then
-			print( "---------- Ultra+: Loading Settings..." )
-			
-			local allCategories = {
-				Settings.Experimental,
-				Settings.Features,
-				Settings.Distance,
-				Settings.SkinHair,
-			}
-
-			for _, categoryList in pairs( allCategories )
-			do
-				for _, setting in pairs( categoryList ) 
-				do
-					local settingValue = settingsTable.thisSetting[ setting.item ]
-					if settingValue ~= nil
-					then
-						setting.defaultvalue = settingValue
-						SetOption( setting.category, setting.item, setting.defaultvalue )
-					end
-				end
-			end
-		end
+function guessSamples()
+	local guess = "Unknown"
+	
+	local numInitial = GetOption( "Editor/RTXDI", "NumInitialSamples" )
+	local numSpatial = GetOption( "Editor/RTXDI", "SpatialNumSamples" )
+	
+	if numInitial == 16 and numSpatial == 0 then
+		guess = _var.samples.performance
+	elseif numInitial == 20 and numSpatial == 1 then
+		guess = _var.samples.balanced
+	elseif numInitial == 24 and numSpatial == 2 then
+		guess = _var.samples.quality
+	elseif numInitial == 8 and numSpatial == 1 then
+		guess = _var.samples.vanilla
 	end
+	
+	print( "---------- Ultra+: Guessed sample mode is", guess )
+	return guess
 end
 
 function DrawLine()
@@ -476,37 +262,50 @@ function DrawTooltip( text )
 	end
 end
 
-function DrawRadio( label, subLabel, variable, value )
-    local clicked = ImGui.RadioButton( "##" .. label, variable == value )
-    ImGui.SameLine()
-
-    -- main label
-    ImGui.Text(label)
-    ImGui.SameLine()
-
-    -- sublabel
-    ImGui.PushStyleColor( ImGuiCol.Text, 0xff888888 )
-    ImGui.Text( subLabel )
-    ImGui.PopStyleColor()
-
-    -- update when clicked
-    if clicked then
-        variable = value
-    end
-
-    return variable
-end
-
 function ResetEngine()
 	print( "---------- Ultra+: Reloading redENGINE" )
 	GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
+function DoCronTasks()
+
+	if _var.settings.mode == _var.mode.pt21 and _var.settings.nrdFix == true
+	then
+		SetOption( "RayTracing", "EnableNRD", false )
+	end
+--[[
+	if GetOptions( weatherStates ) == "Rain" or GetOptions( weatherStates ) == "Rain2" then
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
+	else
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
+	end
+]]
+
+end
+
+registerForEvent( 'onUpdate', function( delta )
+
+	_var.timer.counter = _var.timer.counter + delta
+	_var.timer.cron = _var.timer.cron + delta
+
+	if _var.timer.cron < _var.timer.interval then return end
+	
+	DoCronTasks()
+	_var.timer.cron = 0
+
+end)
+
 registerForEvent( "onInit", function()
-	CommonFixes()
+
+	config.CommonFixes()
 	LoadSettings()
-	currentMode = guessMode()
-	SetMode( currentMode )
+
+	_var.settings.mode = guessMode()
+	config.SetMode( _var.settings.mode )
+
+	_var.settings.samples = guessSamples()
+	config.SetSamples( _var.settings.samples )
+
 end)
 
 registerForEvent( "onOverlayOpen", function()
@@ -518,173 +317,189 @@ registerForEvent( "onOverlayClose", function()
 end)
 
 registerForEvent( "onDraw", function()
+
 	if windowOpen then
+	
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 550, 786 )
-		ImGui.Begin( "Ultra+ Control", ImGuiWindowFlags.NoResize )
+		ImGui.SetNextWindowSize( 550, 820, ImGuiCond.Appearing )
 
-		width = ImGui.GetWindowContentRegionWidth()
+		if ImGui.Begin( "Ultra+ Control", true ) then
 
-		if ImGui.BeginTabBar( "Tabs" ) then
+			--width = ImGui.GetWindowContentRegionWidth()
 
-			-- Ultra+ Tab
-			if ImGui.BeginTabItem( "Engine Config" ) then
-				local newMode = currentMode
+			if ImGui.BeginTabBar( "Tabs" ) then
 
-				ImGui.Text("Settings")
-				ImGui.Spacing()		
+				-- Ultra+ Tab
+				if ImGui.BeginTabItem( "Engine Config" ) then
 
-				if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", newMode == "Raster" ) then
-					currentMode = "Raster"
-					SetMode( currentMode )
-				end
+					local newMode = _var.settings.mode
 
-				if ImGui.RadioButton( "Ray Tracing: Normal Ray Tracing", newMode == "RTOnly" ) then
-					currentMode = "RTOnly"
-					SetMode( currentMode )
-				end
+					ImGui.Text("Settings")
+					ImGui.Spacing()		
 
-				if ImGui.RadioButton( "RT+PT: Ray Tracing plus Path Tracing", newMode == "RTPT" ) then
-					currentMode = "RTPT"
-					SetMode( currentMode )
-				end
+					if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", newMode == _var.mode.raster ) then
+						_var.settings.mode = _var.mode.raster
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
 
-				if ImGui.RadioButton( "Vanilla Path Tracing (no tweaks, bugfixes only)", newMode == "Vanilla" ) then
-					currentMode = "Vanilla"
-					SetMode( currentMode )
-				end
+					if ImGui.RadioButton( "Ray Tracing: Normal Ray Tracing", newMode == _var.mode.rtOnly ) then
+						_var.settings.mode = _var.mode.rtOnly
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
 
-				if ImGui.RadioButton( "PT20: Fast Path Tracing (RTXDI+ReLAX, tweaked)", newMode == "PT20" ) then
-					currentMode = "PT20"
-					SetMode( currentMode )
-				end
+					if ImGui.RadioButton( "RT+PT: Ray Tracing plus Path Tracing", newMode == _var.mode.rtpt ) then
+						_var.settings.mode = _var.mode.rtpt
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
 
-				if ImGui.RadioButton( "PT21: Ultra+ Path Tracing (RTXDI+ReSTIR, tweaked)", newMode == "PT21" ) then
-					currentMode = "PT21"
-					SetMode( currentMode )
-				end
-				
-				DrawSection( "The number of path tracing samples affects both boiling, and edge noise: Higher samples = less noise." )
+					if ImGui.RadioButton( "Vanilla Path Tracing (no tweaks, bugfixes only)", newMode == _var.mode.vanilla ) then
+						_var.settings.mode = _var.mode.vanilla
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
 
-				if ImGui.RadioButton( "Vanilla RTXDI samples (spatial sampling: Low)", ptSamples == "Vanilla" ) then
-					ptSamples = "Vanilla"
-					SetSamples( ptSamples )
-				end
+					if ImGui.RadioButton( "PT20: Fast Path Tracing (RTXDI+ReLAX, tweaked)", newMode == _var.mode.pt20 ) then
+						_var.settings.mode = _var.mode.pt20
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
 
-				if ImGui.RadioButton( "Fast RTXDI samples (spatial sampling: Off)", ptSamples == "Fast" ) then
-					ptSamples = "Fast"
-					SetSamples( ptSamples )
-				end
+					if ImGui.RadioButton( "PT21: Ultra+ Path Tracing (RTXDI+ReSTIR, tweaked)", newMode == _var.mode.pt21 ) then
+						_var.settings.mode = _var.mode.pt21
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
+					
+					DrawSection( "The number of path tracing samples affects both boiling, and edge noise: Higher samples = less noise." )
 
-				if ImGui.RadioButton( "High RTXDI samples (spatial sampling: Medium)", ptSamples == "High" ) then
-					ptSamples = "High"
-					SetSamples( ptSamples )
-				end
-				
-				if ImGui.RadioButton( "Insane RTXDI samples (spatial sampling: High)", ptSamples == "Insane" ) then
-					ptSamples = "Insane"
-					SetSamples( ptSamples )
-				end
+					if ImGui.RadioButton( "Vanilla RTXDI samples (spatial samples: 1)", _var.settings.samples == _var.samples.vanilla ) then
+						_var.settings.samples = _var.samples.vanilla
+						config.SetSamples( _var.settings.samples )
+					end
 
-				DrawSection( "Experimental" )
-				ImGui.Spacing()
-				
-				for _, setting in pairs( Settings.Experimental ) 
-				do
-					setting.defaultValue = GetOption( setting.category, setting.item )
-					setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
-					DrawTooltip( setting.note )
+					if ImGui.RadioButton( "Performance RTXDI samples (spatial samples: Off)", _var.settings.samples == _var.samples.performance ) then
+						_var.settings.samples = _var.samples.performance
+						config.SetSamples( _var.settings.samples )
+					end
 
-					if toggled then
-						GameOptions.SetBool( setting.category, setting.item, setting.defaultValue )
-						setting.defaultValue = setting.defaultValue
+					if ImGui.RadioButton( "Balanced RTXDI samples (spatial samples: 1)", _var.settings.samples == _var.samples.balanced ) then
+						_var.settings.samples = _var.samples.balanced
+						config.SetSamples( _var.settings.samples )
+					end
+					
+					if ImGui.RadioButton( "Quality RTXDI samples (spatial samples: 2)", _var.settings.samples == _var.samples.quality ) then
+						_var.settings.samples = _var.samples.quality
+						config.SetSamples( _var.settings.samples )
+					end
+
+					DrawSection( "Experimental" )
+					ImGui.Spacing()
+
+					_var.settings.nrdFix = ImGui.Checkbox( "PT21 FPS Fix: Continually disable NRD", _var.settings.nrdFix )
+					
+					for _, setting in pairs( Defaults.Experimental ) do
+
+						setting.defaultValue = GetOption( setting.category, setting.item )
+						setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+						DrawTooltip( setting.note )
+
+						if toggled then
+						
+							SetOption( setting.category, setting.item, setting.defaultValue )
+							setting.defaultValue = setting.defaultValue
+							SaveSettings()
+						
+						end
+					end
+					
+					DrawLine()
+					
+					if ImGui.Button( "(Re)load All" ) then
+						config.CommonFixes()
+						LoadSettings()
+						config.SetMode( _var.settings.mode )
+						config.SetSamples( _var.settings.samples )
+					end
+					
+					ImGui.SameLine()
+					if ImGui.Button( "Save All" ) then
 						SaveSettings()
 					end
-				end
-				
-				DrawLine()
-				
-				if ImGui.Button( "(Re)load All" ) then
-					CommonFixes()
-					LoadSettings()
-					SetMode( currentMode )
-				end
-				
-				ImGui.SameLine()
-				if ImGui.Button( "Save All" ) then
-					SaveSettings()
+
+					ImGui.SameLine()
+					if ImGui.Button( "Force Ray Reconstruction" ) then
+						ForceDlssd()
+					end
+		
+					ImGui.SameLine()
+					if ImGui.Button( "Restart Engine" ) then
+						ResetEngine()
+					end
+					
+					ImGui.EndTabItem()
 				end
 
-				ImGui.SameLine()
-				if ImGui.Button( "Force Ray Reconstruction" ) then
-					EnableDlssd()
+				-- Features Tab
+				if ImGui.BeginTabItem( "Rendering Config" ) then
+					ImGui.Text( "General" )
+					ImGui.Spacing()
+
+					for _, setting in pairs( Defaults.Features ) 
+					do
+						setting.defaultValue = GetOption( setting.category, setting.item )
+						setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+						DrawTooltip( setting.note )
+		
+						if toggled then
+							SetOption( setting.category, setting.item, setting.defaultValue )
+							setting.defaultValue = setting.defaultValue
+							SaveSettings()
+						end
+					end
+
+					ImGui.Spacing()
+					ImGui.Text( "Distance" )
+					ImGui.Spacing()
+
+					for _, setting in pairs( Defaults.Distance )
+					do
+						setting.defaultValue = GetOption( setting.category, setting.item )
+						setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+						DrawTooltip( setting.note )
+
+						if toggled then
+							SetOption( setting.category, setting.item, setting.defaultValue )
+							setting.defaultValue = setting.defaultValue
+							SaveSettings()
+						end
+					end
+
+					ImGui.Spacing()
+					ImGui.Text( "Skin/Hair" )
+					ImGui.Spacing()
+
+					for _, setting in pairs( Defaults.SkinHair )
+					do
+						setting.defaultValue = GetOption( setting.category, setting.item )
+						setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+						DrawTooltip( setting.note )
+
+						if toggled then
+							SetOption( setting.category, setting.item, setting.defaultValue )
+							setting.defaultValue = setting.defaultValue
+							SaveSettings()
+						end
+					end
+					ImGui.EndTabItem()
 				end
-	
-				ImGui.SameLine()
-				if ImGui.Button( "Restart Engine" ) then
-					ResetEngine()
-				end
-				
-				ImGui.EndTabItem()
+
+				ImGui.EndTabBar()
 			end
-
-			-- Features Tab
-			if ImGui.BeginTabItem( "Rendering Config" ) then
-				ImGui.Text( "General" )
-				ImGui.Spacing()
-
-				for _, setting in pairs( Settings.Features ) 
-				do
-					setting.defaultValue = GetOption( setting.category, setting.item )
-					setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
-					DrawTooltip( setting.note )
-	
-					if toggled then
-						SetOption( setting.category, setting.item, setting.defaultValue )
-						setting.defaultValue = setting.defaultValue
-						SaveSettings()
-					end
-				end
-
-				ImGui.Spacing()
-				ImGui.Text( "Distance" )
-				ImGui.Spacing()
-
-				for _, setting in pairs( Settings.Distance )
-				do
-					setting.defaultValue = GetOption( setting.category, setting.item )
-					setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
-					DrawTooltip( setting.note )
-
-					if toggled then
-						GameOptions.SetBool( setting.category, setting.item, setting.defaultValue )
-						setting.defaultValue = setting.defaultValue
-						SaveSettings()
-					end
-				end
-
-				ImGui.Spacing()
-				ImGui.Text( "Skin/Hair" )
-				ImGui.Spacing()
-
-				for _, setting in pairs( Settings.SkinHair )
-				do
-					setting.defaultValue = GetOption( setting.category, setting.item )
-					setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
-					DrawTooltip( setting.note )
-
-					if toggled then
-						GameOptions.SetBool( setting.category, setting.item, setting.defaultValue )
-						setting.defaultValue = setting.defaultValue
-						SaveSettings()
-					end
-				end
-				ImGui.EndTabItem()
-			end
-
-			ImGui.EndTabBar()
-		end
 
 		ImGui.End()
+		end
 	end
 end)
