@@ -1,4 +1,4 @@
-Defaults = {
+local defaults = {
 
 	Experimental = {
 		{
@@ -13,7 +13,7 @@ Defaults = {
 			item = "DLSS_D",
 			name = "PT Denoiser: Ray Reconstruction",
 			category = "/graphics/presets",
-			note = "NRD is only intended if you're NOT using ray reconstruction, for example AMD users. The engine tries to turn this on under certain circumstances, Ultra+ Control will show you if it has become enabled (Default: Off)",
+			note = "Ultra+ allows the engine to override this avoid crashes, so this option will appear not to save (Default: N/A)",
 			defaultValue = false,
 		},
 
@@ -164,23 +164,6 @@ Defaults = {
 			note = "(Default: On)",
 			defaultValue = true,
 		},
---[[
-		{
-			item = "DistantShadowForce",
-			name = "GI Distant Shadow Force",
-			category = "Rendering/GlobalIllumination",
-			note = "",
-			defaultValue = 0.6,
-		},
-
-		{
-			item = "DistantShadowBlur",
-			name = "Distant Shadow Blur",
-			category = "Rendering/GlobalIllumination",
-			note = "",
-			defaultValue = 5.0,
-		},
-]]--
 	},
 
 	SkinHair = {
@@ -197,7 +180,7 @@ Defaults = {
 			name = "Reduce light intensity for hair in ray/path tracing",
 			category = "Editor/Characters/Hair/HACKS",
 			note = "(Default: On)",
-			defaultValue = true,
+			defaultValue = false,
 		},
 	},
 --[[
@@ -227,4 +210,4 @@ Defaults = {
 ]]--
 }
 
-return Defaults
+return defaults

@@ -30,7 +30,7 @@ local var =
     {
 		mode        = "Unknown",
 		samples     = "Unknown",
-        rain        = "Unknown",
+        rain        = 0,
 	},
 	timer =
     {

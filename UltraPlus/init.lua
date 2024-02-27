@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION     = 'ultraplus.lua 1.0-rc1',
+  __VERSION     = 'ultraplus.lua 1.0-rc2',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE     = [[
@@ -154,57 +154,52 @@ end
 
 function LoadSettings()
 
-	local file = io.open( "UserSettings.json", "r" )
-	if not file then return end
+	local settingsTable = {}
+    local settingsCategories = {
+        defaults.Experimental,
+        defaults.Features,
+        defaults.Distance,
+        defaults.SkinHair,
+    }
 
-	local rawJson = file:read( "*a" )
-	file:close()
+    -- load Ultra+ default settings
+    for _, category in pairs(settingsCategories) do
+        for _, setting in ipairs(category) do
+            settingsTable[setting.item] = {value = setting.defaultValue, category = setting.category}
+        end
+    end
 
-	if rawJson:match( "^%s*$" ) then
+    -- try to load user settings
+    local file = io.open("UserSettings.json", "r")
+    if file then
 
-		print("---------- Ultra+: UserSettings.json is empty or invalid.")
-        return
+        local rawJson = file:read("*a")
+        file:close()
 
-	end
+        if not rawJson:match("^%s*$") then
 
-	local success, output = pcall( json.decode, rawJson )
+			local success, userSettings = pcall(json.decode, rawJson)
 
-	if not success then
+			if success and userSettings.UltraPlus then
 
-		print( "---------- Ultra+: Error loading UserSettings.json:", output )
-		return
+                -- overwrite defaults with user settings if valid
+                for item, value in pairs(userSettings.UltraPlus) do
+                    if settingsTable[item] ~= nil then
+                        settingsTable[item].value = value
+                    end
+				end
+            else
+                print("---------- Ultra+: Error loading UserSettings.json:", userSettings)
+            end
+        else
+            print("---------- Ultra+: UserSettings.json is empty or invalid.")
+        end
+    end
 
-	end
+    print( "---------- Ultra+: Loading Settings..." )
 
-	local settingsTable = output
-
-	print( "---------- Ultra+: Loading Settings..." )
-
-	local settingsCategories = {
-		defaults.Experimental,
-		defaults.Features,
-		defaults.Distance,
-		defaults.SkinHair,
-	}
-
-	for _, thisCategory in pairs( settingsCategories ) do
-
-		for _, thisSetting in pairs( thisCategory ) do
-
-			local value = settingsTable.UltraPlus[ thisSetting.item ]
-
-			if value ~= nil and type(value) == "boolean" then
-
-				thisSetting.defaultValue = value
-				SetOption( thisSetting.category, thisSetting.item, thisSetting.defaultValue )
-
-			else
-				-- if UserSettings.json is invalid, revert to default
-				SetOption( thisSetting.category, thisSetting.item, thisSetting.defaultValue )
-				print("Invalid value for setting:", thisSetting.item, "- reverted to default.")
-
-			end
-		end
+    for item, setting in pairs(settingsTable) do
+        SetOption(setting.category, item, setting.value)
 	end
 end
 
@@ -330,15 +325,26 @@ local function RainFix()
 
 	if not var.settings.particle_fix then return end
 
-		local rainTest = Game.GetWeatherSystem():GetRainIntensity()
+-- TODO: check if indoors
 
-		if rainTest > 0 then
-			SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
+	local rainTest = Game.GetWeatherSystem():GetRainIntensity()
+	if rainTest > 0 then rainTest = 1 end
 
-		else
-			SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
+	-- if no change then return
+	if rainTest == var.settings.rain then return end
 
-		end
+	if rainTest == 1 then
+		-- it's raining, disable particles in PT
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
+
+	else
+		-- it's not raining, enable particles in PT
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
+
+	end
+
+	var.settings.rain = rainTest
+
 end
 
 function DoCronTasks()
@@ -453,7 +459,7 @@ registerForEvent( "onDraw", function()
 
 					end
 
-					Draw.Section( "The number of path tracing samples affects both boiling, and edge noise: Higher samples = less noise." )
+					Draw.Section( "The number of PT samples affects how fast the image resolves, and edge noise: Higher samples = less noise." )
 
 					if ImGui.RadioButton( "Vanilla RTXDI samples (spatial samples: 1)", var.settings.samples == var.samples.vanilla ) then
 
