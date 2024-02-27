@@ -2,6 +2,14 @@ Defaults = {
 
 	Experimental = {
 		{
+			item = "nrd_fix",
+			name = "PT21 FPS Fix: Continually disable NRD",
+			category = "internal",
+			note = "",
+			defaultValue = false,
+		},
+
+		{
 			item = "DLSS_D",
 			name = "PT Denoiser: Ray Reconstruction",
 			category = "/graphics/presets",
@@ -15,14 +23,6 @@ Defaults = {
 			category = "RayTracing",
 			note = "NRD is only intended when NOT using ray reconstruction (for example AMD). The engine tries to turn this on under certain circumstances, Ultra+ Control will try and show you if it has become enabled, though there may be a bug in CP 2.1x that causes NRD to become partionally enabled (see the above PT21 FPS Fix).",
 			defaultValue = false,
-		},
-
-		{
-			item = "DLSSDSeparateParticleColor",
-			name = "Don't include particle colour in path tracing",
-			category = "Rendering",
-			note = "Unchecking this option includes particle FX colour in path tracing (steam, smoke, fire, sparks), and generally looks better, however it can make some rain mods look weird (Default: Yes, keep particle colour separate).",
-			defaultValue = true,
 		},
 
 		{
@@ -40,6 +40,22 @@ Defaults = {
 			note = "Forces ReBLUR for indirect lighting instead of ReLAX. ReBLUR may be removed in 2.11, I can no longer see a difference (Default: Off)",
 			defaultValue = false,
 		},
+
+		{
+			item = "DLSSDSeparateParticleColor",
+			name = "Don't include particles in PT",
+			category = "Rendering",
+			note = "Unchecking this option includes particle FX colour in path tracing (steam, smoke, fire, sparks), and generally looks better, however it can make some rain mods look weird (Default: Yes, keep particle colour separate).",
+			defaultValue = true,
+		},
+
+		{
+			item = "particle_fix",
+			name = "Particle Fix: Auto-toggle on rain",
+			category = "internal",
+			note = "Automatically toggles the above setting (Don't include particles in PT) when rain is detected",
+			defaultValue = true,
+		},
 	},
 
 	Features = {
@@ -56,14 +72,6 @@ Defaults = {
 			name = "Bloom",
 			category = "Developer/FeatureToggles",
 			note = "(Default: On)",
-			defaultValue = true,
-		},
-
-		{
-			item = "ImageBasedFlares",
-		 	name = "Lens Flare",
-		 	category = "Developer/FeatureToggles",
-		 	note = "(Default: On)",
 			defaultValue = true,
 		},
 
@@ -98,7 +106,7 @@ Defaults = {
 			note = "(Default: Off)",
 			defaultValue = false,
 		},
-		
+
 		{
 			item = "CharacterRimEnhancement",
 			name = "Object (and character) rim enhancement",
@@ -183,7 +191,7 @@ Defaults = {
 			note = "(Default: On)",
 			defaultValue = true,
 		},
-		
+
 		{
 			item = "AAAA_HACK_hairModifiedLocalLightIntensity",
 			name = "Reduce light intensity for hair in ray/path tracing",

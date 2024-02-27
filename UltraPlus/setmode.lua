@@ -1,9 +1,10 @@
-_var = require( "variables" )
-
+local var    = require( "variables" )
 local config = {}
 
 function config.SetMode( mode )
-	if mode == _var.mode.raster then
+
+	if mode == var.mode.raster then
+
 		print( "---------- Ultra+: Switching to Raster" )
 		SetOption( '/graphics/raytracing', 'RayTracing', false )
 		PushChanges()
@@ -11,7 +12,8 @@ function config.SetMode( mode )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
 		SaveSettings()
 
-	elseif mode == _var.mode.rtOnly then
+	elseif mode == var.mode.rt_only then
+
 		print( "---------- Ultra+: Switching to RTPT" )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
@@ -26,7 +28,8 @@ function config.SetMode( mode )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.35" )
 		SaveSettings()
 
-	elseif mode == _var.mode.rtpt then
+	elseif mode == var.mode.rt_pt then
+
 		print( "---------- Ultra+: Switching to RTPT" )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
@@ -53,7 +56,8 @@ function config.SetMode( mode )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
 		SaveSettings()
 
-	elseif mode == _var.mode.vanilla then
+	elseif mode == var.mode.vanilla then
+
 		print( "---------- Ultra+: Switching to Vanilla Path Tracing" )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
@@ -61,8 +65,7 @@ function config.SetMode( mode )
 		--ForceDlssd()
 
 		-- if DLAA then use NRD, not RR (let engine switch on NRD)
-		print( GetOption( "/graphics/presets", "DLSS" ) )
-		if GetOption( "/graphics/presets", "DLSS" ) == _var.dlss.dlaa then
+		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.dlaa then
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
@@ -86,15 +89,15 @@ function config.SetMode( mode )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 		SaveSettings()
 
-	elseif mode == _var.mode.pt21 then
+	elseif mode == var.mode.pt21 then
+
 		print( "---------- Ultra+: Switching to PT21" )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 		PushChanges()
 
 		-- if DLAA then use NRD, not RR (let engine switch on NRD)
-		print( GetOption( "/graphics/presets", "DLSS" ) )
-		if GetOption( "/graphics/presets", "DLSS" ) == _var.dlss.dlaa then
+		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.dlaa then
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
@@ -119,15 +122,15 @@ function config.SetMode( mode )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 		SaveSettings()
 
-	elseif mode == _var.mode.pt20 then
+	elseif mode == var.mode.pt20 then
+
 		print( "---------- Ultra+: Switching to PT20" )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 		PushChanges()
 
 		-- if DLAA then use NRD, not RR (let engine switch on NRD)
-		print( GetOption( "/graphics/presets", "DLSS" ) )
-		if GetOption( "/graphics/presets", "DLSS" ) == _var.dlss.dlaa then
+		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.dlaa then
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
@@ -148,6 +151,7 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 		SaveSettings()
+
 	end
 end
 

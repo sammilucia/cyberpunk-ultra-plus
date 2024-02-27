@@ -23,10 +23,10 @@ function config.CommonFixes()
 		SetOption( category, "TimeLimitAttachingPerFrame", "0.5" )
 		SetOption( category, "TimeLimitDetachingPerFrame", "1.0" )
 		SetOption( category, "TimeLimitStreamedPerFrame", "3.0" )
-		
+
 	category = "Editor/Streaming"
 		SetOption( category, "ForceAutoHideDistanceMax", "0.0" )
-		
+
 	category = "Streaming/QueryZoom"
 		SetOption( category, "Enabled", true )
 		SetOption( category, "MaxSpeed", "2.0" )
@@ -42,12 +42,12 @@ function config.CommonFixes()
 		-- SetOption( category, "SampleNumber", "24" )
 		SetOption( category, "EnableMirrorScaling", false )
 		SetOption( category, "MirrorScaling", "1.0" )
-		
+
 	category = "Rendering/LUT"
-		SetOption( category, "Size", "96" )
+		SetOption( category, "Size", "128" )
 		SetOption( category, "MinRange", "0.000000000001" )
 		SetOption( category, "MaxRange", "100.0" )
-		
+
 	category = "Editor/VolumetricFog"
 		SetOption( category, "Exponent", "5.0" )
 
