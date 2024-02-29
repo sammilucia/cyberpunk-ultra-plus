@@ -1,22 +1,25 @@
-local var    = require( "variables" )
+-- setmode.lua
+
+local var = require( "variables" )
 local config = {}
 
-function config.SetMode( mode )
+function config.setMode( mode )
 
-	if mode == var.mode.raster then
+	print( "---------- Ultra+: Switching to", mode )
 
-		print( "---------- Ultra+: Switching to Raster" )
+	if mode == var.mode.RASTER
+	then
 		SetOption( '/graphics/raytracing', 'RayTracing', false )
 		PushChanges()
 
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
+
 		SaveSettings()
-
-	elseif mode == var.mode.rt_only then
-
-		print( "---------- Ultra+: Switching to RTPT" )
+	elseif mode == var.mode.RT_ONLY
+	then
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
+
 		PushChanges()
 
 		SetOption( "RayTracing", "EnableNRD", false )
@@ -26,11 +29,11 @@ function config.SetMode( mode )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.35" )
+
 		SaveSettings()
 
-	elseif mode == var.mode.rt_pt then
-
-		print( "---------- Ultra+: Switching to RTPT" )
+	elseif mode == var.mode.RT_PT
+	then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		PushChanges()
@@ -54,18 +57,17 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
+
 		SaveSettings()
-
-	elseif mode == var.mode.vanilla then
-
-		print( "---------- Ultra+: Switching to Vanilla Path Tracing" )
+	elseif mode == var.mode.VANILLA
+	then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
+		
 		PushChanges()
-		--ForceDlssd()
 
-		-- if DLAA then use NRD, not RR (let engine switch on NRD)
-		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.dlaa then
+		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.DLAA
+		then
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
@@ -87,17 +89,18 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "DownscaleFactor", "5" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
+
 		SaveSettings()
 
-	elseif mode == var.mode.pt21 then
-
-		print( "---------- Ultra+: Switching to PT21" )
+	elseif mode == var.mode.PT21
+	then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
+
 		PushChanges()
 
-		-- if DLAA then use NRD, not RR (let engine switch on NRD)
-		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.dlaa then
+		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.DLAA
+		then
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
@@ -120,17 +123,18 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
+
 		SaveSettings()
 
-	elseif mode == var.mode.pt20 then
-
-		print( "---------- Ultra+: Switching to PT20" )
+	elseif mode == var.mode.PT20
+	then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
+
 		PushChanges()
 
-		-- if DLAA then use NRD, not RR (let engine switch on NRD)
-		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.dlaa then
+		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.DLAA
+		then
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
@@ -150,8 +154,8 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
-		SaveSettings()
 
+		SaveSettings()
 	end
 end
 

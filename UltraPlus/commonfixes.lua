@@ -1,6 +1,8 @@
+-- commonfixes.lua
+
 local config = {}
 
-function config.CommonFixes()
+function config.commonFixes()
 	print( "---------- Ultra+: Resetting all settings" )
 	local category
 
@@ -61,6 +63,11 @@ function config.CommonFixes()
 		-- SetOption( category, "EnableProbabilisticSampling", true )
 		-- SetOption( category, "BounceNumberScreenshot", "2" )
 		-- SetOption( category, "RayNumberScreenshot", "3" )
+
+	category = "Editor/ReGIR"
+		SetOption( category, "BuildCandidatesCount", "16" )
+		SetOption( category, "ShadingCandidatesCount", "8" )
+		SetOption( category, "LightSlotsCount", "256" )
 
 	category = "Editor/ReSTIRGI"
 		SetOption( category, "EnableBoilingFilter", true )
