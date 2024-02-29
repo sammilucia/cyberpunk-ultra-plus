@@ -1,4 +1,4 @@
-# Cyberpunk Ultra+ v2.0 Alpha
+# Cyberpunk Ultra+ Control
 
 ## Goals
 1. **Improve path tracing for as many people as possible**
