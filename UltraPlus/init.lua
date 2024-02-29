@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION	 	= 'ultraplus.lua 1.1',
+  __VERSION	 	= 'ultraplus.lua 1.2.1',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL		 	= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE	 	= [[
