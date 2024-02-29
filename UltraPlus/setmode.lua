@@ -104,7 +104,7 @@ function config.setMode( mode )
 			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
-		SetOption( "RayTracing", "EnableImportanceSampling", false )
+		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "SunAngularSize", "0.20" )
 		SetOption( "RayTracing", "EnableShadowCascades", true )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
