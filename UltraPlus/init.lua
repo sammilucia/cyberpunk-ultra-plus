@@ -1,5 +1,5 @@
 local ultraplus = {
-  __VERSION	 	= 'ultraplus.lua 1.2.1',
+  __VERSION	 	= '3.2',
   __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
   __URL		 	= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
   __LICENSE	 	= [[
@@ -25,30 +25,30 @@ local ultraplus = {
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]
 }
-
-local defaults	= require( "defaults" )
-local var		= require( "variables" )
-local ui		= require( "ui" )
-local config	= {
-	setSamples	= require( "setsamples" ).setSamples,
-	setMode		= require( "setmode" ).setMode,
-	commonFixes	= require( "commonfixes" ).commonFixes,
+local toggled
+local defaults = require( "defaults" )
+local var = require( "variables" )
+local ui = require( "ui" )
+local config = {
+	setSamples = require( "setsamples" ).setSamples,
+	setMode = require( "setmode" ).setMode,
+	commonFixes = require( "commonfixes" ).commonFixes,
 }
+local activeTimers = {}
 local timer = {
 	lazy = 0,
 	fast = 0,
 	LAZY = 20.0,
 	FAST = 2.0,
 }
-local activeTimers = {}
-local toggled
 
 function Wait( seconds, callback )
--- non-blocking wait
+	-- non-blocking wait
 	table.insert( activeTimers, { countdown = seconds, callback = callback } )
 end
 
 function SplitOption( string )
+	-- splits an ini/CVar command into its constituents
 	local category, item = string.match( string, "(.-)/([^/]+)$" )
 
 	return category, item
@@ -75,7 +75,6 @@ function GetOption( category, item )
 
 		elseif string.match( value, "^%-?%d+$" ) then
 			value = tonumber( value )
-
 		end
 	end
 
@@ -215,8 +214,6 @@ function SaveSettings()
 	local file = io.open( "UserSettings.json", "w" )
 
 	if file then
-		print( "---------- Ultra+: Saving Settings..." )
-
 		file:write( rawJson )
 		file:close()
 	end
@@ -262,16 +259,16 @@ local function guessSamples()
 	local numInitial = GetOption( "Editor/RTXDI", "NumInitialSamples" )
 	local numSpatial = GetOption( "Editor/RTXDI", "SpatialNumSamples" )
 
-	if numInitial == 16 and numSpatial == 0 then
+	if numInitial == 14 then
 		guess = var.samples.PERFORMANCE
 
-	elseif numInitial == 20 and numSpatial == 1 then
+	elseif numInitial == 16 then
 		guess = var.samples.BALANCED
 
-	elseif numInitial == 24 and numSpatial == 2 then
+	elseif numInitial == 20 then
 		guess = var.samples.QUALITY
 
-	elseif numInitial == 8 and numSpatial == 1 then
+	elseif numInitial == 8 then
 		guess = var.samples.VANILLA
 
 	end
@@ -286,35 +283,75 @@ function ResetEngine()
 end
 
 local function doNrdFix()
-	if var.settings.mode ~= var.mode.PT21 or var.settings.nrdFix == false then return end
+	-- if var.settings.mode ~= var.mode.PT21 or var.settings.nrdFix == false then return end
+	if not var.settings.nrdFix then return end
 
 	SetOption( "RayTracing", "EnableNRD", false )
 end
 
-local function doRainFix()
+local function updateState()
+	-- if testRain > 0 then testRain = 1
+    local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and 1 or 0
+    local testIndoors = IsEntityInInteriorArea(GetPlayer())
 
-	if not var.settings.particleFix then return end
+    if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors
+	then
+        var.settings.rain = testRain
+        var.settings.indoors = testIndoors
 
-	-- TODO: check if indoors
+        return true
+    end
 
-	local testRain = Game.GetWeatherSystem():GetRainIntensity()
-	if testRain > 0 then
-		testRain = 1
-	end
-
-	if testRain == var.settings.rain then return end
-
-	SetOption( "Rendering", "DLSSDSeparateParticleColor", testRain == 1 )
-
-	var.settings.rain = testRain
+    return false
 end
 
-local function doLazyUpdate()
-	doNrdFix()
+local function doTurboHack()
+	-- disable RTXDI spatial sampling if player is outdoors
+    if not var.settings.realTurbo or var.settings.indoors then
+        config.setSamples( var.settings.samples )
+
+		return
+	end
+
+    if not var.settings.indoors then
+        print( "---------- Ultra+: Disabling SpatialNumSamples" )
+        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
+    else
+        config.setSamples( var.settings.samples )
+    end
+end
+
+local function doRainFix()
+	-- emable particle PT integration unless player is outdoors AND it's raining
+    if not var.settings.rainFix then
+        print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
+
+		return
+	end
+
+    if var.settings.rain == 1 and not var.settings.indoors then
+		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
+        SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
+    else
+		print( "---------- Ultra+: Disabling DLSSDSeparateParticleColor" )
+        SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
+    end
 end
 
 local function doFastUpdate()
-	doRainFix()
+	-- runs every timer.__FAST seconds
+    local stateChanged = updateState()
+
+    if stateChanged then
+        doRainFix()
+        doTurboHack()
+    end
+end
+
+local function doLazyUpdate()
+	-- runs every timer.__LAZY seconds
+	if var.settings.nrdFix then doNrdFix() end
 end
 
 registerForEvent( 'onUpdate', function( delta )
@@ -322,12 +359,12 @@ registerForEvent( 'onUpdate', function( delta )
 	timer.fast = timer.fast + delta
 	timer.lazy = timer.lazy + delta
 
-	if timer.fast > timer.FAST then
+	if timer.fast > timer.__FAST then
 		doFastUpdate()
 		timer.fast = 0
 	end
 
-	if timer.lazy > timer.LAZY then
+	if timer.lazy > timer.__LAZY then
 		doLazyUpdate()
 		timer.lazy = 0
 	end
@@ -369,9 +406,11 @@ registerForEvent( "onDraw", function()
 	if WindowOpen then
 
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 538, 854, ImGuiCond.Appearing )
+		ImGui.SetNextWindowSize( 510, 738, ImGuiCond.Appearing )
 
-		if ImGui.Begin( "Ultra+ Control", true ) then
+		if ImGui.Begin( "Ultra+ Control v" .. ultraplus.__VERSION, true ) then
+
+			ImGui.SetWindowFontScale(0.9)
 
 			if ImGui.BeginTabBar( "Tabs" ) then
 
@@ -428,25 +467,25 @@ registerForEvent( "onDraw", function()
 					ui.space()
 					if ImGui.CollapsingHeader( "Path Tracing Samples", ImGuiTreeNodeFlags.DefaultOpen )
 					then
-						if ImGui.RadioButton( "Vanilla samples (spatial samples: 1)", var.settings.samples == var.samples.VANILLA )
+						if ImGui.RadioButton( "Vanilla", var.settings.samples == var.samples.VANILLA )
 						then
 							var.settings.samples = var.samples.VANILLA
 							config.setSamples( var.settings.samples )
 						end
 
-						if ImGui.RadioButton( "Performance samples (spatial samples: Off)", var.settings.samples == var.samples.PERFORMANCE )
+						if ImGui.RadioButton( "Performance", var.settings.samples == var.samples.PERFORMANCE )
 						then
 							var.settings.samples = var.samples.PERFORMANCE
 							config.setSamples( var.settings.samples )
 						end
 
-						if ImGui.RadioButton( "Balanced samples (spatial samples: 1)", var.settings.samples == var.samples.BALANCED )
+						if ImGui.RadioButton( "Balanced", var.settings.samples == var.samples.BALANCED )
 						then
 							var.settings.samples = var.samples.BALANCED
 							config.setSamples( var.settings.samples )
 						end
 
-						if ImGui.RadioButton( "Quality samples (spatial samples: 2)", var.settings.samples == var.samples.QUALITY )
+						if ImGui.RadioButton( "Quality", var.settings.samples == var.samples.QUALITY )
 						then
 							var.settings.samples = var.samples.QUALITY
 							config.setSamples( var.settings.samples )
@@ -462,39 +501,14 @@ registerForEvent( "onDraw", function()
 							setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
 								ui.tooltip( setting.tooltip )
 
-							if toggled then
+							if toggled
+							then
 								SetOption( setting.category, setting.item, setting.defaultValue )
 								setting.defaultValue = setting.defaultValue
 
 								SaveSettings()
 							end
 						end
-					end
-
-					ui.line()
-
-					if ImGui.Button( "(Re)load All" ) then
-						config.commonFixes()
-
-						LoadSettings()
-
-						config.setMode( var.settings.mode )
-						config.setSamples( var.settings.samples )
-					end
-
-					ImGui.SameLine()
-					if ImGui.Button( "Save All" ) then
-						SaveSettings()
-					end
-
-					ImGui.SameLine()
-					if ImGui.Button( "Force Ray Reconstruction" ) then
-						forceDlssd()
-					end
-
-					ImGui.SameLine()
-					if ImGui.Button( "Reset Engine" ) then
-						ResetEngine()
 					end
 
 					ImGui.EndTabItem()

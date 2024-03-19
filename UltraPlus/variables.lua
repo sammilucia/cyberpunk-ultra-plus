@@ -34,7 +34,8 @@ local var =
 		samples = "Unknown",
 		nrdFix = nil,
 		particleFix = nil,
-		rain = nil,
+		indoors = true,
+		rain = true,
 	},
 }
 

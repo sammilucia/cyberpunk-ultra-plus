@@ -4,17 +4,24 @@ local defaults = {
 
 	Experimental = {
 		{
-			item = "UseForDI",
-			name = "PT Turbo Mode: (Can use with FPS Fix)",
-			category = "Editor/ReGIR",
-			tooltip = "Enables ReGIR for Direct Illumination as a performance optimisation (Default: Off)",
+			item = "realTurbo",
+			name = "PT Real Turbo",
+			category = "internal",
+			tooltip = "RTXDI Spatial sampling is mostly required indoors. This auto-disables it when player is outdoors.",
 			defaultValue = false,
 		},
 		{
-			item = "nrdFix",
-			name = "PT21 FPS Fix: Continually disable NRD",
+			item = "rainFix",
+			name = "PT Rain Fix",
 			category = "internal",
-			tooltip = "",
+			tooltip = "Enables full particle integration with path tracing while it's not raining or you're indoors.",
+			defaultValue = true,
+		},
+		{
+			item = "nrdFix",
+			name = "RR FPS Fix: Continually disable NRD",
+			category = "internal",
+			tooltip = "When using ray reconstruction, it's possible for FPS to drop during cut-scenes or while driving. Enabling this fix attempts to work around this problem.",
 			defaultValue = false,
 		},
 		{
@@ -36,27 +43,6 @@ local defaults = {
 			name = "Resampled importance sampling (RIS - disable for reLIGHT)",
 			category = "RayTracing/Reference",
 			tooltip = "(Default: RIS - resampled importance sampling - is enabled by default, however reLIGHT requires it's disabled for correct lighting until CDPR have a fix.)",
-			defaultValue = true,
-		},
-		{
-			item = "Enable",
-			name = "ReGIR (initial sample generator for ReSTIR)",
-			category = "Editor/ReGIR",
-			tooltip = "Enables Reservoir-based Grid Importance Resampling. I'm not sure if this is properly wired to ReSTIR (Default: Off)",
-			defaultValue = false,
-		},
-		{
-			item = "DLSSDSeparateParticleColor",
-			name = "Don't include particles in PT",
-			category = "Rendering",
-			tooltip = "Unchecking this option includes particle FX colour in path tracing (steam, smoke, fire, sparks), and generally looks better, however it can make some rain mods look weird (Default: Particles are not in PT).",
-			defaultValue = true,
-		},
-		{
-			item = "particleFix",
-			name = "Particle Fix: Auto-toggle on rain",
-			category = "internal",
-			tooltip = "Automatically toggles the above setting (Don't include particles in PT) when rain is detected",
 			defaultValue = true,
 		},
 	},
@@ -149,13 +135,6 @@ local defaults = {
 		},
 	},
 	SkinHair = {
-		{
-			item = "CharacterLightBlockers",
-			name = "Character light blocking",
-			category = "Developer/FeatureToggles",
-			tooltip = "(Default: On)",
-			defaultValue = true,
-		},
 		{
 			item = "AAAA_HACK_hairModifiedLocalLightIntensity",
 			name = "Reduce light intensity for hair in ray/path tracing",
