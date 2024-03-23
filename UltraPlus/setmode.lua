@@ -12,7 +12,11 @@ function config.setMode( mode )
 		SetOption( '/graphics/raytracing', 'RayTracing', false )
 		PushChanges()
 
+		SetOption( "Developer/FeatureToggles", "DLSSD", false )
+		SetOption( "Developer/FeatureToggles", "RTXDI", false )
+		SetOption( "RayTracing", "EnableNRD", false )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
+		SetOption( "Editor/SHARC", "Enable", "false" )
 
 		SaveSettings()
 	elseif mode == var.mode.RT_ONLY
@@ -22,13 +26,18 @@ function config.setMode( mode )
 
 		PushChanges()
 
+		SetOption( "Developer/FeatureToggles", "RTXDI", false )
+		SetOption( "Developer/FeatureToggles", "DLSSD", false )
 		SetOption( "RayTracing", "EnableNRD", false )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "EnableShadowCascades", false )					-- test
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
+		SetOption( "RayTracing/Collector", "VisibilityFrustumOffset", "200.0" )
+		SetOption( "RayTracing/Collector", "LocalShadowCullingRadius", "100.0" )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.35" )
+		SetOption( "Editor/SHARC", "Enable", "false" )
 
 		SaveSettings()
 
@@ -36,21 +45,27 @@ function config.setMode( mode )
 	then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
+		
 		PushChanges()
 
 		-- SetOption( "/graphics/presets", "DLSS_D", false )
+		SetOption( "Developer/FeatureToggles", "RTXDI", true )
+		SetOption( "Developer/FeatureToggles", "DLSSD", true )
 		SetOption( "RayTracing", "EnableNRD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "SunAngularSize", "0.20" )
 		SetOption( "RayTracing", "EnableShadowCascades", false )					-- test
+		SetOption( "RayTracing/Collector", "VisibilityFrustumOffset", "70.0" )
+		SetOption( "RayTracing/Collector", "LocalShadowCullingRadius", "70.0" )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", false )
 		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.45" )
 		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "1" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.25" )
+		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1" )
 		SetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection", true )
+		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
 
@@ -59,17 +74,22 @@ function config.setMode( mode )
 	then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
-		
-		PushChanges()
 
+		PushChanges()
+--[[
 		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.DLAA
 		then
-			-- SetOption( "/graphics/presets", "DLSS_D", false )
+			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
+]]
+		SetOption( "Developer/FeatureToggles", "RTXDI", true )
+		SetOption( "Developer/FeatureToggles", "DLSSD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "SunAngularSize", "0.50" )
 		SetOption( "RayTracing", "EnableShadowCascades", false )
+		SetOption( "RayTracing/Collector", "VisibilityFrustumOffset", "200.0" )
+		SetOption( "RayTracing/Collector", "LocalShadowCullingRadius", "100.0" )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", true )
@@ -77,8 +97,9 @@ function config.setMode( mode )
 		SetOption( "Editor/ReSTIRGI", "UseTemporalRGS", false )
 		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.5" )
 		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "2" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "1.0" )
+		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1" )
 		SetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection", false )
+		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 
@@ -90,15 +111,20 @@ function config.setMode( mode )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 
 		PushChanges()
-
+--[[
 		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.DLAA
 		then
-			-- SetOption( "/graphics/presets", "DLSS_D", false )
+			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
+]]
+		SetOption( "Developer/FeatureToggles", "RTXDI", true )
+		SetOption( "Developer/FeatureToggles", "DLSSD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "SunAngularSize", "0.20" )
 		SetOption( "RayTracing", "EnableShadowCascades", true )
+		SetOption( "RayTracing/Collector", "VisibilityFrustumOffset", "70.0" )
+		SetOption( "RayTracing/Collector", "LocalShadowCullingRadius", "70.0" )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "1" )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", true )
@@ -107,8 +133,9 @@ function config.setMode( mode )
 		SetOption( "Editor/ReSTIRGI", "UseTemporalRGS", true )
 		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.45" )
 		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "1" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.25" )
+		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1" )
 		SetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection", true )
+		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 
@@ -120,22 +147,28 @@ function config.setMode( mode )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 
 		PushChanges()
-
+--[[
 		if GetOption( "/graphics/presets", "DLSS" ) == var.dlss.DLAA
 		then
-			-- SetOption( "/graphics/presets", "DLSS_D", false )
+			SetOption( "/graphics/presets", "DLSS_D", false )
 		end
+]]
+		SetOption( "Developer/FeatureToggles", "RTXDI", true )
+		SetOption( "Developer/FeatureToggles", "DLSSD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "0" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "SunAngularSize", "0.20" )
 		SetOption( "RayTracing", "EnableShadowCascades", true )
+		SetOption( "RayTracing/Collector", "VisibilityFrustumOffset", "70.0" )
+		SetOption( "RayTracing/Collector", "LocalShadowCullingRadius", "70.0" )
 		SetOption( "RayTracing/Diffuse", "EnableHalfResolutionTracing", "0" )
 		SetOption( "Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0" )
 		SetOption( "Editor/ReSTIRGI", "Enable", false )
 		SetOption( "Editor/RTXDI", "BoilingFilterStrength", "0.45" )
 		SetOption( "Editor/RTXDI", "BiasCorrectionMode", "1" )
-		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.25" )
+		SetOption( "Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1" )
 		SetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection", true )
+		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 

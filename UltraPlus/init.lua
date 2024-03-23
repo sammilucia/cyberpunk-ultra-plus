@@ -1,8 +1,8 @@
 local ultraplus = {
-  __VERSION	 	= '3.2',
-  __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
-  __URL		 	= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
-  __LICENSE	 	= [[
+	__VERSION	 	= '3.4',
+	__DESCRIPTION	= 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
+	__URL			= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
+	__LICENSE		= [[
 	Copyright (c) 2024 SammiLucia
 
 	Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,21 +26,29 @@ local ultraplus = {
   ]]
 }
 local toggled
-local defaults = require( "defaults" )
+local options = require( "options" )
 local var = require( "variables" )
 local ui = require( "ui" )
 local config = {
 	setSamples = require( "setsamples" ).setSamples,
 	setMode = require( "setmode" ).setMode,
 	commonFixes = require( "commonfixes" ).commonFixes,
+	__DEBUG = false,
 }
 local activeTimers = {}
 local timer = {
 	lazy = 0,
 	fast = 0,
 	LAZY = 20.0,
-	FAST = 2.0,
+	FAST = 1.0,
 }
+
+function debug( ... )
+	if not config.__DEBUG then return end
+
+    local args = { ... }
+    print( "DEBUG:", table.concat( args, " " ) )
+end
 
 function Wait( seconds, callback )
 	-- non-blocking wait
@@ -83,6 +91,11 @@ end
 
 function SetOption( category, item, value )
 
+    if value == nil then
+        debug( "Skipping nil value:", category .. "/" .. item)
+        return
+    end
+
 	if category == "internal" then
 		var.settings[item] = value
 
@@ -93,21 +106,26 @@ function SetOption( category, item, value )
 		if type( value ) == "boolean" then
 			GameOptions.SetBool( category, item, value )
 
-		elseif value:match( "^%-?%d+%.%d+$" ) then
+		elseif tostring(value):match( "^%-?%d+%.%d+$" ) then
 			GameOptions.SetFloat( category, item, tonumber( value ) )
 
-		elseif value:match( "^%-?%d+$" ) then
+		elseif tostring(value):match( "^%-?%d+$" ) then
 			GameOptions.SetInt( category, item, tonumber( value ) )
 
 		else
-			print("---------- Ultra+: Unsupported GameOption:", category .. "/" .. item, "=", value)
+			debug( "Unsupported GameOption:", category .. "/" .. item, "=", value )
 		end
 	end
 end
 
 function PushChanges()
-	Wait( 0.1, function()
+	-- confirm menu changes and save UserSettings.json to try to prevent it getting out of sync
+	Wait( 1.0, function()
 		Game.GetSettingsSystem():ConfirmChanges()
+	end )
+
+	Wait( 1.0, function()
+		GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():RequestSaveUserSettings()
 	end )
 end
 
@@ -116,11 +134,11 @@ local function forceDlssd()
 
 	while testDlssd == false
 	do
-		print( '/graphics/presets/DLSS_D = ', testDlssd )
+		debug( "/graphics/presets/DLSS_D =", testDlssd )
 
 		SetOption( "/graphics/presets", "DLSS_D", true )
 
-		Wait( 0.1, function()
+		Wait( 1.0, function()
 			testDlssd = GetOption( '/graphics/presets', 'DLSS_D' )
 		end )
 	end
@@ -133,27 +151,27 @@ local function forceDlssd()
 end
 
 function LoadSettings()
--- load defaults, then attempt to replace with user settings
+-- load options (if they exist), then attempt to replace with user settings
 
 	local settingsTable = {}
 	local settingsCategories = {
-		defaults.Experimental,
-		defaults.Features,
-		defaults.Distance,
-		defaults.SkinHair,
+		options.Experimental,
+		options.Features,
+		options.Distance,
+		options.SkinHair,
 	}
 
-	for _, category in pairs(settingsCategories)
+	for _, category in pairs( settingsCategories )
 	do
-		for _, setting in ipairs(category)
+		for _, setting in ipairs( category )
 		do
-			settingsTable[setting.item] = {value = setting.defaultValue, category = setting.category}
+			settingsTable[setting.item] = { category = setting.category , value = setting.defaultValue }
 		end
 	end
 
-	local file = io.open( "UserSettings.json", "r" )
-
-	if file then
+	local file = io.open( "config.json", "r" )
+	if file
+	then
 		local rawJson = file:read( "*a" )
 		file:close()
 
@@ -169,18 +187,23 @@ function LoadSettings()
 					end
 				end
 			else
-				print("---------- Ultra+: Error loading UserSettings.json:", result)
+				print( "---------- Ultra+: Error loading config.json:", result )
 			end
 		else
-			print("---------- Ultra+: UserSettings.json is empty or invalid.")
+			print( "---------- Ultra+: config.json is empty or invalid." )
 		end
 	end
 
-	print("---------- Ultra+: Loading Settings...")
+	print( "---------- Ultra+: Loading Settings..." )
 
 	for item, setting in pairs( settingsTable )
 	do
-		SetOption( setting.category, item, setting.value )
+		if setting.value ~= nil
+		then
+			SetOption( setting.category, item, setting.value )
+		else
+			debug( "Skipping nil value:", setting.category .. "/" .. item )
+		end
 	end
 end
 
@@ -188,17 +211,17 @@ function SaveSettings()
 
 	local UltraPlus = {}
 	local settingsCategories = {
-		defaults.Experimental,
-		defaults.Features,
-		defaults.Distance,
-		defaults.SkinHair,
+		options.Experimental,
+		options.Features,
+		options.Distance,
+		options.SkinHair,
 	}
 
 	for _, thisCategory in pairs( settingsCategories )
 	do
 		for _, thisSetting in pairs( thisCategory )
 		do
-			UltraPlus[ thisSetting.item ] = thisSetting.defaultValue
+			UltraPlus[ thisSetting.item ] = thisSetting.value
 		end
 	end
 
@@ -206,12 +229,12 @@ function SaveSettings()
 
 	local success, result = pcall( json.encode, settingsTable )
 	if not success then
-		print( "---------- Ultra+: Error saving UserSettings.json:", result )
+		print( "---------- Ultra+: Error saving config.json:", result )
 		return
 	end
 
 	local rawJson = result
-	local file = io.open( "UserSettings.json", "w" )
+	local file = io.open( "config.json", "w" )
 
 	if file then
 		file:write( rawJson )
@@ -223,29 +246,35 @@ local function guessMode()
 
 	local guess = "Unknown"
 
-	local reJitter = GetOption( "Rendering", "AllowRayTracedReferenceRejitter" )
+	local proxyLightRejection = GetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection" )
+	local nrdEnabled = GetOption( "Raytracing", "EnableNRD" )
 	local reStir = GetOption( "Editor/ReSTIRGI", "Enable" )
 	local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
 	local rayTracing = GetOption( "/graphics/raytracing", "RayTracing" )
 
-	if rayTracing == false then
+	if not rayTracing
+	then
 		guess = var.mode.RASTER
 
-	elseif pathTracing == false and rayTracing == true and reJitter == false then
+	elseif rayTracing and not pathTracing and not nrdEnabled
+	then
 		guess = var.mode.RT_ONLY
 
-	elseif pathTracing == false and rayTracing == true and reJitter == true then
+	elseif rayTracing and not pathTracing and nrdEnabled
+	then
 		guess = var.mode.RT_PT
 
-	elseif pathTracing == true and reStir == false then
+	elseif pathTracing and proxyLightRejection and not reStir
+	then
 		guess = var.mode.PT20
 
-	elseif pathTracing == true and reStir == true and reJitter == true then
+	elseif pathTracing and proxyLightRejection and reStir
+	then
 		guess = var.mode.PT21
 
-	elseif pathTracing == true and reStir == true and reJitter == false then
+	elseif pathTracing and not proxyLightRejection and reStir
+	then
 		guess = var.mode.VANILLA
-
 	end
 
 	print( "---------- Ultra+: Guessed rendering mode is", guess )
@@ -256,19 +285,23 @@ local function guessSamples()
 
 	local guess = "Unknown"
 
-	local numInitial = GetOption( "Editor/RTXDI", "NumInitialSamples" )
-	local numSpatial = GetOption( "Editor/RTXDI", "SpatialNumSamples" )
+	local initialSamples = GetOption( "Editor/RTXDI", "NumInitialSamples" )
+	local spatialSamples = GetOption( "Editor/RTXDI", "SpatialNumSamples" )
 
-	if numInitial == 14 then
+
+	if initialSamples == 14 and spatialSamples == 1 then
 		guess = var.samples.PERFORMANCE
 
-	elseif numInitial == 16 then
+	elseif initialSamples == 14 and spatialSamples == 2 then
 		guess = var.samples.BALANCED
 
-	elseif numInitial == 20 then
+	elseif initialSamples == 20 and spatialSamples == 3 then
 		guess = var.samples.QUALITY
 
-	elseif numInitial == 8 then
+	elseif initialSamples == 24 and spatialSamples == 8 then
+		guess = var.samples.CINEMATIC
+
+	elseif initialSamples == 8 and spatialSamples == 1 then
 		guess = var.samples.VANILLA
 
 	end
@@ -307,15 +340,60 @@ end
 
 local function doTurboHack()
 	-- disable RTXDI spatial sampling if player is outdoors
-    if not var.settings.realTurbo or var.settings.indoors then
+    if not var.settings.turboHack
+	or var.settings.indoors
+	then
         config.setSamples( var.settings.samples )
-
 		return
 	end
 
-    if not var.settings.indoors then
-        print( "---------- Ultra+: Disabling SpatialNumSamples" )
-        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
+    if var.settings.turboHack
+	and not var.settings.indoors
+	then
+        print( "---------- Ultra+: Reducing SpatialNumSamples" )
+        
+		if var.settings.samples == var.samples.VANILLA then
+
+			SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+
+		elseif var.settings.samples == var.samples.PERFORMANCE
+		then
+			if var.settings.mode == var.mode.PT20 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+			elseif var.settings.mode == var.mode.RT_PT then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+			elseif var.settings.mode == var.mode.PT21 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+			end
+
+		elseif var.settings.samples == var.samples.BALANCED then
+			if var.settings.mode == var.mode.PT20 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
+			elseif var.settings.mode == var.mode.RT_PT then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+			elseif var.settings.mode == var.mode.PT21 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
+			end
+
+		elseif var.settings.samples == var.samples.QUALITY then
+			if var.settings.mode == var.mode.PT20 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "2" )
+			elseif var.settings.mode == var.mode.RT_PT then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
+			elseif var.settings.mode == var.mode.PT21 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "2" )
+			end
+
+		elseif var.settings.samples == var.samples.CINEMATIC then
+			if var.settings.mode == var.mode.PT20 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "4" )
+			elseif var.settings.mode == var.mode.RT_PT then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "2" )
+			elseif var.settings.mode == var.mode.PT21 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "4" )
+			end
+		end
+
     else
         config.setSamples( var.settings.samples )
     end
@@ -323,14 +401,16 @@ end
 
 local function doRainFix()
 	-- emable particle PT integration unless player is outdoors AND it's raining
-    if not var.settings.rainFix then
+    if not var.settings.rainFix
+	then
         print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
 		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
-
 		return
 	end
 
-    if var.settings.rain == 1 and not var.settings.indoors then
+    if var.settings.rain == 1
+	or var.settings.indoors
+	then
 		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
         SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
     else
@@ -340,18 +420,22 @@ local function doRainFix()
 end
 
 local function doFastUpdate()
-	-- runs every timer.__FAST seconds
+	-- runs every timer.FAST seconds
     local stateChanged = updateState()
 
     if stateChanged then
         doRainFix()
         doTurboHack()
     end
+
+	if var.settings.nrdFix then
+		doNrdFix()
+	end
 end
 
 local function doLazyUpdate()
-	-- runs every timer.__LAZY seconds
-	if var.settings.nrdFix then doNrdFix() end
+	-- runs every timer.LAZY seconds
+
 end
 
 registerForEvent( 'onUpdate', function( delta )
@@ -359,12 +443,12 @@ registerForEvent( 'onUpdate', function( delta )
 	timer.fast = timer.fast + delta
 	timer.lazy = timer.lazy + delta
 
-	if timer.fast > timer.__FAST then
+	if timer.fast > timer.FAST then
 		doFastUpdate()
 		timer.fast = 0
 	end
 
-	if timer.lazy > timer.__LAZY then
+	if timer.lazy > timer.LAZY then
 		doLazyUpdate()
 		timer.lazy = 0
 	end
@@ -406,7 +490,7 @@ registerForEvent( "onDraw", function()
 	if WindowOpen then
 
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 510, 738, ImGuiCond.Appearing )
+		ImGui.SetNextWindowSize( 510, 770, ImGuiCond.Appearing )
 
 		if ImGui.Begin( "Ultra+ Control v" .. ultraplus.__VERSION, true ) then
 
@@ -490,21 +574,27 @@ registerForEvent( "onDraw", function()
 							var.settings.samples = var.samples.QUALITY
 							config.setSamples( var.settings.samples )
 						end
+
+						if ImGui.RadioButton( "Cinematic", var.settings.samples == var.samples.CINEMATIC )
+						then
+							var.settings.samples = var.samples.CINEMATIC
+							config.setSamples( var.settings.samples )
+						end
 					end
 
 					ui.space()
 					if ImGui.CollapsingHeader( "Experimental", ImGuiTreeNodeFlags.DefaultOpen )
 					then
-						for _, setting in pairs( defaults.Experimental )
+						for _, setting in pairs( options.Experimental )
 						do
-							setting.defaultValue = GetOption( setting.category, setting.item )
-							setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+							setting.value = GetOption( setting.category, setting.item )
+							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
 								ui.tooltip( setting.tooltip )
 
 							if toggled
 							then
-								SetOption( setting.category, setting.item, setting.defaultValue )
-								setting.defaultValue = setting.defaultValue
+								SetOption( setting.category, setting.item, setting.value )
+								setting.value = setting.value
 
 								SaveSettings()
 							end
@@ -519,15 +609,15 @@ registerForEvent( "onDraw", function()
 					ui.space()
 					if ImGui.CollapsingHeader( "Features", ImGuiTreeNodeFlags.DefaultOpen )
 					then
-						for _, setting in pairs( defaults.Features )
+						for _, setting in pairs( options.Features )
 						do
-							setting.defaultValue = GetOption( setting.category, setting.item )
-							setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+							setting.value = GetOption( setting.category, setting.item )
+							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
 							ui.tooltip( setting.tooltip )
 
 							if toggled then
-								SetOption( setting.category, setting.item, setting.defaultValue )
-								setting.defaultValue = setting.defaultValue
+								SetOption( setting.category, setting.item, setting.value )
+								setting.value = setting.value
 
 								SaveSettings()
 							end
@@ -537,34 +627,15 @@ registerForEvent( "onDraw", function()
 					ui.space()
 					if ImGui.CollapsingHeader( "Distance", ImGuiTreeNodeFlags.DefaultOpen )
 					then
-						for _, setting in pairs( defaults.Distance )
+						for _, setting in pairs( options.Distance )
 						do
-							setting.defaultValue = GetOption( setting.category, setting.item )
-							setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
+							setting.value = GetOption( setting.category, setting.item )
+							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
 							ui.tooltip( setting.tooltip )
 
 							if toggled then
-								SetOption( setting.category, setting.item, setting.defaultValue )
-								setting.defaultValue = setting.defaultValue
-
-								SaveSettings()
-							end
-						end
-					end
-
-					ui.space()
-					if ImGui.CollapsingHeader( "Skin and Hair", ImGuiTreeNodeFlags.DefaultOpen )
-					then
-						for _, setting in pairs( defaults.SkinHair )
-						do
-							setting.defaultValue = GetOption( setting.category, setting.item )
-							setting.defaultValue, toggled = ImGui.Checkbox( setting.name, setting.defaultValue )
-							ui.tooltip( setting.tooltip )
-
-							if toggled then
-
-								SetOption( setting.category, setting.item, setting.defaultValue )
-								setting.defaultValue = setting.defaultValue
+								SetOption( setting.category, setting.item, setting.value )
+								setting.value = setting.value
 
 								SaveSettings()
 							end

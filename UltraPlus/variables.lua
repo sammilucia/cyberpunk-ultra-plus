@@ -17,6 +17,7 @@ local var =
 		PERFORMANCE = "Performance",
 		BALANCED = "Balanced",
 		QUALITY = "Quality",
+		CINEMATIC = "Cinematic",
 	},
 	dlss =
 	{
@@ -32,10 +33,11 @@ local var =
 	{
 		mode = "Unknown",
 		samples = "Unknown",
-		nrdFix = nil,
+		nrdFix = false,
+		turboHack = nil,
 		particleFix = nil,
-		indoors = true,
-		rain = true,
+		indoors = nil,
+		rain = nil,
 	},
 }
 

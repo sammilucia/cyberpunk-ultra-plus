@@ -14,7 +14,7 @@ function config.commonFixes()
 		SetOption( category, "EditorThrottledMaxNodesPerFrame", "300" )
 		SetOption( category, "TimeLimitAttachingPerFrame", "0.5" )
 		SetOption( category, "TimeLimitSectorLoadPerFrame", "2.5" )
-		SetOption( category, "TimeLimitSectorUnloadPerFrame", "1.5" )
+		SetOption( category, "TimeLimitSectorUnloadPerFrame", "2.5" )
 		SetOption( category, "TimeLimitStreamedPerFrame", "3.0" )
 		SetOption( category, "TimeLimitStreamedPerFrameWhileLoading", "8.0" )
 		SetOption( category, "ObserverVelocityOffsetEnabled", true )
@@ -38,12 +38,12 @@ function config.commonFixes()
 
 	category = "DLSS"
 		-- SetOption( category, "SampleNumber", "24" )
-		SetOption( category, "EnableMirrorScaling", true )
+		SetOption( category, "EnableMirrorScaling", false )
 		SetOption( category, "MirrorScaling", "1.0" )
 
 	category = "FSR2"
 		-- SetOption( category, "SampleNumber", "24" )
-		SetOption( category, "EnableMirrorScaling", true )
+		SetOption( category, "EnableMirrorScaling", false )
 		SetOption( category, "MirrorScaling", "1.0" )
 
 	category = "Rendering/LUT"
@@ -75,7 +75,8 @@ function config.commonFixes()
 		-- SetOption( category, "UseTemporalRGS", true )
 
 	category = "Editor/RTXDI"
-		SetOption( category, "SpatialSamplingRadius", "32.0" )				-- was 20.0
+		SetOption( category, "SpatialSamplingRadius", "48.0" )				-- was 20.0
+		SetOption( category, "EnableEmissiveProxyLightRejection", true )
 
 	category = "Editor/SHARC"
 		SetOption( category, "Enable", true )

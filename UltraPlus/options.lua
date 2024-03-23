@@ -1,49 +1,45 @@
 -- defaults.lua
 
-local defaults = {
+local options = {
 
 	Experimental = {
 		{
-			item = "realTurbo",
-			name = "PT Real Turbo",
+			item = "turboHack",
+			name = "Enable PT Turbo while outdoors",
 			category = "internal",
-			tooltip = "RTXDI Spatial sampling is mostly required indoors. This auto-disables it when player is outdoors.",
-			defaultValue = false,
+			tooltip = "RTXDI spatial sampling is mostly needed indoors. This tweak reduces it while\noutdoors to try and maintain FPS in complex outdoor areas. It CAN reduce\nvisual quality outdoors in certain situations (white cars\nand highly reflective surfaces in particular).",
+			defaultValue = true,
 		},
 		{
 			item = "rainFix",
-			name = "PT Rain Fix",
+			name = "Enable PT Rain Fix",
 			category = "internal",
-			tooltip = "Enables full particle integration with path tracing while it's not raining or you're indoors.",
+			tooltip = "Enables full particle integration with path tracing while it's not raining\nor you're indoors.",
 			defaultValue = true,
 		},
 		{
 			item = "nrdFix",
-			name = "RR FPS Fix: Continually disable NRD",
+			name = "Enable Ray Reconstruction FPS Fix",
 			category = "internal",
-			tooltip = "When using ray reconstruction, it's possible for FPS to drop during cut-scenes or while driving. Enabling this fix attempts to work around this problem.",
-			defaultValue = false,
+			tooltip = "When using ray reconstruction, it's possible for FPS to drop during cut-\nscenes or while driving. Enabling this fix attempts to work around this\nproblem.",
 		},
 		{
 			item = "DLSS_D",
-			name = "PT Denoiser: Ray Reconstruction",
+			name = "Enable PT Denoiser: Ray Reconstruction",
 			category = "/graphics/presets",
-			tooltip = "Ultra+ allows the engine to override this avoid crashes, so this option will appear not to save (Default: N/A)",
-			defaultValue = nil,
+			tooltip = "Ultra+ allows the engine to override this avoid crashes, so this option will\nappear not to save (Default: N/A)",
 		},
 		{
 			item = "EnableNRD",
-			name = "PT Denoiser: NRD",
+			name = "Enable PT Denoiser: NRD",
 			category = "RayTracing",
-			tooltip = "NRD is only intended when NOT using ray reconstruction (for example AMD). The engine tries to turn this on under certain circumstances, Ultra+ Control will try and show you if it has become enabled, though there may be a bug in CP 2.1x that causes NRD to become partionally enabled (see the above PT21 FPS Fix).",
-			defaultValue = false,
+			tooltip = "NRD is only intended when NOT using ray reconstruction (for example AMD).\nThe engine tries to turn this on under certain circumstances, Ultra+ Control\nwill try and show you if it has become enabled, though there may be a bug in\nCP 2.1x that causes NRD to become partionally enabled (see the above PT21\nFPS Fix).",
 		},
 		{
 			item = "EnableRIS",
-			name = "Resampled importance sampling (RIS - disable for reLIGHT)",
+			name = "Enable Resampled importance sampling (RIS)",
 			category = "RayTracing/Reference",
-			tooltip = "(Default: RIS - resampled importance sampling - is enabled by default, however reLIGHT requires it's disabled for correct lighting until CDPR have a fix.)",
-			defaultValue = true,
+			tooltip = "RIS is resampled importance sampling. It is enabled by default, but disable\nit for reLIGHT.",
 		},
 	},
 	Features = {
@@ -52,46 +48,40 @@ local defaults = {
 			name = "Bloom",
 			category = "Developer/FeatureToggles",
 			tooltip = "(Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "Distortion",
 			name = "Distortion Effects",
 			category = "Developer/FeatureToggles",
 			tooltip = "(Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "ScreenSpaceHeatHaze",
 			name = "Heat Haze",
 			category = "Developer/FeatureToggles",
 			tooltip = "Can distort badly with path tracing (Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "VolumetricFog",
 			name = "Volumetric Fog",
 			category = "Developer/FeatureToggles",
 			tooltip = "",
-			defaultValue = true,
 		},
 		{
 			item = "HideFPPAvatar",
-			name = "Show player avatar in reflections (except for head)",
+			name = "Hide player avatar in reflections (except for head)",
 			category = "RayTracing",
 			tooltip = "(Default: Off)",
-			defaultValue = false,
 		},
 		{
 			item = "CharacterRimEnhancement",
 			name = "Object (and character) rim enhancement",
 			category = "Developer/FeatureToggles",
 			tooltip = "Only works in raster and RT modes (Default: On)",
-			defaultValue = false,
 		},
 		{
 			item = "EnableCustomMipBias",
-			name = "Force -1.0 Mip Bias",
+			name = "Force INI Mip Bias",
 			category = "Editor/MipBias",
 			tooltip = "Caution: Not recommended for 12GB VRAM or less (Default: Off)",
 			defaultValue = false,
@@ -103,44 +93,30 @@ local defaults = {
 			name = "Distant Volumetric Fog",
 			category = "Developer/FeatureToggles",
 			tooltip = "Can be less obvious depending on which weather env you're using (Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "DistantFog",
 			name = "Distant Fog",
 			category = "Developer/FeatureToggles",
 			tooltip = "Makes buildings and mountains fade into the atmosphere (Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "DistantGI",
 			name = "Distant Global Illumination",
 			category = "Developer/FeatureToggles",
 			tooltip = "Distant global illumination (Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "DistantGiFix",
 			name = "Distant GI Fix",
 			category = "Rendering",
 			tooltip = "Appears to be a distant GI hack (Default: On)",
-			defaultValue = true,
 		},
 		{
 			item = "DistantShadows",
 			name = "Distant Shadows",
 			category = "Developer/FeatureToggles",
 			tooltip = "(Default: On)",
-			defaultValue = true,
-		},
-	},
-	SkinHair = {
-		{
-			item = "AAAA_HACK_hairModifiedLocalLightIntensity",
-			name = "Reduce light intensity for hair in ray/path tracing",
-			category = "Editor/Characters/Hair/HACKS",
-			tooltip = "(Default: On)",
-			defaultValue = false,
 		},
 	},
 --[[
@@ -168,4 +144,4 @@ local defaults = {
 ]]--
 }
 
-return defaults
+return options
