@@ -1,9 +1,9 @@
 local ultraplus = {
-	__VERSION	 	= '3.4',
+	__VERSION	 	= '3.4.2',
 	__DESCRIPTION	= 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
 	__URL			= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE		= [[
-	Copyright (c) 2024 SammiLucia
+	Copyright (c) 2024 SammiLucia and Xerme
 
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the
@@ -42,12 +42,33 @@ local timer = {
 	LAZY = 20.0,
 	FAST = 1.0,
 }
+local Detector = {
+	isGameActive = false
+}
+
+function Detector.UpdateGameStatus()
+	-- check if ingame or not
+	local player = Game.GetPlayer()
+	local isInMenu = GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():IsPreGame()
+
+	if player and not isInMenu then
+		if not Detector.isGameActive then
+			debug( "The player is ingame." )
+			Detector.isGameActive = true
+		end
+	else
+		if Detector.isGameActive then
+			debug( "The player is on menu." )
+			Detector.isGameActive = false
+		end
+	end
+end
 
 function debug( ... )
 	if not config.__DEBUG then return end
 
-    local args = { ... }
-    print( "DEBUG:", table.concat( args, " " ) )
+	local args = { ... }
+	print( "DEBUG:", table.concat( args, " " ) )
 end
 
 function Wait( seconds, callback )
@@ -91,10 +112,10 @@ end
 
 function SetOption( category, item, value )
 
-    if value == nil then
-        debug( "Skipping nil value:", category .. "/" .. item)
-        return
-    end
+	if value == nil then
+		debug( "Skipping nil value:", category .. "/" .. item)
+		return
+	end
 
 	if category == "internal" then
 		var.settings[item] = value
@@ -315,43 +336,36 @@ function ResetEngine()
 	GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-local function doNrdFix()
-	-- if var.settings.mode ~= var.mode.PT21 or var.settings.nrdFix == false then return end
-	if not var.settings.nrdFix then return end
-
-	SetOption( "RayTracing", "EnableNRD", false )
-end
-
 local function updateState()
 	-- if testRain > 0 then testRain = 1
-    local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and 1 or 0
-    local testIndoors = IsEntityInInteriorArea(GetPlayer())
+	local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and 1 or 0
+	local testIndoors = IsEntityInInteriorArea(GetPlayer())
 
-    if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors
+	if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors
 	then
-        var.settings.rain = testRain
-        var.settings.indoors = testIndoors
+		var.settings.rain = testRain
+		var.settings.indoors = testIndoors
 
-        return true
-    end
+		return true
+	end
 
-    return false
+	return false
 end
 
 local function doTurboHack()
 	-- disable RTXDI spatial sampling if player is outdoors
-    if not var.settings.turboHack
+	if not var.settings.turboHack
 	or var.settings.indoors
 	then
-        config.setSamples( var.settings.samples )
+		config.setSamples( var.settings.samples )
 		return
 	end
 
-    if var.settings.turboHack
+	if var.settings.turboHack
 	and not var.settings.indoors
 	then
-        print( "---------- Ultra+: Reducing SpatialNumSamples" )
-        
+		print( "---------- Ultra+: Reducing SpatialNumSamples" )
+
 		if var.settings.samples == var.samples.VANILLA then
 
 			SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
@@ -394,39 +408,50 @@ local function doTurboHack()
 			end
 		end
 
-    else
-        config.setSamples( var.settings.samples )
-    end
+	else
+		config.setSamples( var.settings.samples )
+	end
 end
 
 local function doRainFix()
 	-- emable particle PT integration unless player is outdoors AND it's raining
-    if not var.settings.rainFix
+	if not var.settings.rainFix
 	then
-        print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
+		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
 		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
 		return
 	end
 
-    if var.settings.rain == 1
+	if var.settings.rain == 1
 	or var.settings.indoors
 	then
 		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
-        SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
-    else
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
+	else
 		print( "---------- Ultra+: Disabling DLSSDSeparateParticleColor" )
-        SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
-    end
+		SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
+	end
+end
+
+local function doRRFix()
+	-- if ray reconstruction is enabled, continually disable NRD
+	local rayReconstruction = GetOption( '/graphics/presets', 'DLSS_D' )
+	
+	if not rayReconstruction then return end
+
+	debug( "Disabling NRD" )
+	SetOption( "RayTracing", "EnableNRD", false )
 end
 
 local function doFastUpdate()
 	-- runs every timer.FAST seconds
-    local stateChanged = updateState()
+	local stateChanged = updateState()
 
-    if stateChanged then
-        doRainFix()
-        doTurboHack()
-    end
+	if stateChanged then
+		doRainFix()
+		doTurboHack()
+		doRRFix()
+	end
 
 	if var.settings.nrdFix then
 		doNrdFix()
@@ -439,22 +464,24 @@ local function doLazyUpdate()
 end
 
 registerForEvent( 'onUpdate', function( delta )
+	Detector.UpdateGameStatus()
 
 	timer.fast = timer.fast + delta
 	timer.lazy = timer.lazy + delta
 
-	if timer.fast > timer.FAST then
-		doFastUpdate()
-		timer.fast = 0
+	if Detector.isGameActive then
+		if timer.fast > timer.FAST then
+			doFastUpdate()
+			timer.fast = 0
+		end
+
+		if timer.lazy > timer.LAZY then
+			doLazyUpdate()
+			timer.lazy = 0
+		end
 	end
 
-	if timer.lazy > timer.LAZY then
-		doLazyUpdate()
-		timer.lazy = 0
-	end
-
-	for i = #activeTimers, 1, -1
-	do
+	for i = #activeTimers, 1, -1 do
 		local timer = activeTimers[i]
 		timer.countdown = timer.countdown - delta
 
@@ -490,7 +517,7 @@ registerForEvent( "onDraw", function()
 	if WindowOpen then
 
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 510, 770, ImGuiCond.Appearing )
+		ImGui.SetNextWindowSize( 440, 672, ImGuiCond.Appearing )
 
 		if ImGui.Begin( "Ultra+ Control v" .. ultraplus.__VERSION, true ) then
 

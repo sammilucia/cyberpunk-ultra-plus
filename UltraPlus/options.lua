@@ -18,12 +18,6 @@ local options = {
 			defaultValue = true,
 		},
 		{
-			item = "nrdFix",
-			name = "Enable Ray Reconstruction FPS Fix",
-			category = "internal",
-			tooltip = "When using ray reconstruction, it's possible for FPS to drop during cut-\nscenes or while driving. Enabling this fix attempts to work around this\nproblem.",
-		},
-		{
 			item = "DLSS_D",
 			name = "Enable PT Denoiser: Ray Reconstruction",
 			category = "/graphics/presets",
