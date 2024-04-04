@@ -9,7 +9,7 @@
 4. **Fix PT / RT bugs** that can be fixed via engine manipulation
 5. **Improve game stability**
 
-![10490-1708321202-196311043](https://github.com/sammilucia/cyberpunk-ultra-plus/assets/3295286/d3817a27-0c99-4d86-91b1-ffde77f3b5b3)
+![image](https://github.com/sammilucia/cyberpunk-ultra-plus/assets/3295286/a815f4b9-534d-4a2a-a2dc-b48feed671f6)
 
 ## Progress Video
 
