@@ -12,6 +12,10 @@ local ui = {
         ImGui.Spacing()
 	end,
 
+	align = function()
+		ImGui.SameLine()
+	end,
+
 	text = function( text )
 		ImGui.Text( text)
 	end,

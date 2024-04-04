@@ -1,26 +1,37 @@
 -- variables.lua
 
-local var =
-{
-	mode =
-	{
+local var = {
+
+	mode = {
 		VANILLA = "Vanilla",
 		PT20 = "PT20",
 		PT21 = "PT21",
+		REGIR = "ReGIR",
 		RT_PT = "RTPT",
 		RT_ONLY = "RTOnly",
 		RASTER = "Raster",
 	},
-	samples =
-	{
+	samples = {
 		VANILLA = "Vanilla",
-		PERFORMANCE = "Performance",
-		BALANCED = "Balanced",
-		QUALITY = "Quality",
-		CINEMATIC = "Cinematic",
+		LOW = "Low",
+		MEDIUM = "Medium",
+		HIGH = "High",
+		INSANE = "Insane",
 	},
-	dlss =
-	{
+    quality = {
+		VANILLA = "Vanilla",
+        LOW = "Low",
+        MEDIUM = "Medium",
+        HIGH = "High",
+        INSANE = "Insane",
+	},
+	streaming = {
+        LOW = "Low",
+        MEDIUM = "Medium",
+        HIGH = "High",
+        INSANE = "Insane",
+	},
+	dlss = {
 		AUTO = "Auto",
 		DYNAMIC = "Dynamic",
 		DLAA = "DLAA",
@@ -29,13 +40,13 @@ local var =
 		PERFORMANCE = "Performance",
 		ULTRA_PERFORMANCE = "Ultra Performance",
 	},
-	settings =
-	{
+	settings = {
 		mode = "Unknown",
 		samples = "Unknown",
-		nrdFix = false,
-		turboHack = nil,
-		particleFix = nil,
+		quality = "Unknown",
+		streaming = "Unknown",
+		turboHack = false,
+		reGIR = false,
 		indoors = nil,
 		rain = nil,
 	},

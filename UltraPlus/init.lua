@@ -1,5 +1,5 @@
 local ultraplus = {
-	__VERSION	 	= '3.4.2',
+	__VERSION	 	= '4.0-alpha08',
 	__DESCRIPTION	= 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
 	__URL			= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE		= [[
@@ -30,15 +30,19 @@ local options = require( "options" )
 local var = require( "variables" )
 local ui = require( "ui" )
 local config = {
-	setSamples = require( "setsamples" ).setSamples,
-	setMode = require( "setmode" ).setMode,
-	commonFixes = require( "commonfixes" ).commonFixes,
-	__DEBUG = false,
+	SetSamples = require( "setsamples" ).SetSamples,
+	SetMode = require( "setmode" ).SetMode,
+	SetQuality = require( "setquality" ).SetQuality,
+	SetStreaming = require( "setstreaming" ).SetStreaming,
+	DEBUG = false,
+	reGIR = false,
+--	turboHack = false,
 }
 local activeTimers = {}
 local timer = {
 	lazy = 0,
 	fast = 0,
+	paused = false,
 	LAZY = 20.0,
 	FAST = 1.0,
 }
@@ -49,31 +53,43 @@ local Detector = {
 function Detector.UpdateGameStatus()
 	-- check if ingame or not
 	local player = Game.GetPlayer()
-	local isInMenu = GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():IsPreGame()
+	local isInMenu = GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():IsPreGame()
 
 	if player and not isInMenu then
 		if not Detector.isGameActive then
-			debug( "The player is ingame." )
+			Debug( "Player is in-game" )
 			Detector.isGameActive = true
 		end
 	else
 		if Detector.isGameActive then
-			debug( "The player is on menu." )
+			Debug( "Player is in menu" )
 			Detector.isGameActive = false
 		end
 	end
 end
 
-function debug( ... )
-	if not config.__DEBUG then return end
+function Debug( ... )
+	if not config.DEBUG then return end
 
 	local args = { ... }
 	print( "DEBUG:", table.concat( args, " " ) )
 end
 
 function Wait( seconds, callback )
-	-- non-blocking wait
+	-- non-blocking wait()
 	table.insert( activeTimers, { countdown = seconds, callback = callback } )
+end
+
+function PushChanges()
+	-- confirm menu changes and save UserSettings.json to try to prevent it getting out of sync
+	-- currently crashes CP 2.0+ and idk why
+	Wait( 1.0, function()
+		GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():RequestSaveUserSettings()
+	end )
+
+	Wait( 1.0, function()
+		Game.GetSettingsSystem():ConfirmChanges()
+	end )
 end
 
 function SplitOption( string )
@@ -84,11 +100,14 @@ function SplitOption( string )
 end
 
 function GetOption( category, item )
-
+	-- gets a live game setting
 	local value = nil
 
 	if category == "internal" then
 		value = var.settings[item]
+		if value == nil then
+			value = false
+		end
 
 	elseif category:match( "^/" ) then
 		value = Game.GetSettingsSystem():GetVar( category, item ):GetValue()
@@ -111,9 +130,9 @@ function GetOption( category, item )
 end
 
 function SetOption( category, item, value )
-
+	-- sets a live game setting, working out which method to use for different setting types
 	if value == nil then
-		debug( "Skipping nil value:", category .. "/" .. item)
+		Debug( "Skipping nil value:", category .. "/" .. item)
 		return
 	end
 
@@ -134,117 +153,208 @@ function SetOption( category, item, value )
 			GameOptions.SetInt( category, item, tonumber( value ) )
 
 		else
-			debug( "Unsupported GameOption:", category .. "/" .. item, "=", value )
+			Debug( "Unsupported GameOption:", category .. "/" .. item, "=", value )
 		end
 	end
 end
 
-function PushChanges()
-	-- confirm menu changes and save UserSettings.json to try to prevent it getting out of sync
-	Wait( 1.0, function()
-		Game.GetSettingsSystem():ConfirmChanges()
-	end )
+function GuessMode()
+	-- tries to guess current rendering mode
+	local guess = "Unknown"
 
-	Wait( 1.0, function()
-		GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():RequestSaveUserSettings()
-	end )
-end
+	local proxyLightRejection = GetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection" )
+	local nrdEnabled = GetOption( "Raytracing", "EnableNRD" )
+	local reStir = GetOption( "Editor/ReSTIRGI", "Enable" )
+	local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
+	local rayTracing = GetOption( "/graphics/raytracing", "RayTracing" )
 
-local function forceDlssd()
-	local testDlssd = GetOption( '/graphics/presets', 'DLSS_D' )
+	if not rayTracing
+	then
+		guess = var.mode.RASTER
 
-	while testDlssd == false
-	do
-		debug( "/graphics/presets/DLSS_D =", testDlssd )
+	elseif rayTracing and not pathTracing and not nrdEnabled then
+		guess = var.mode.RT_ONLY
 
-		SetOption( "/graphics/presets", "DLSS_D", true )
+	elseif rayTracing and not pathTracing and nrdEnabled then
+		guess = var.mode.RT_PT
 
-		Wait( 1.0, function()
-			testDlssd = GetOption( '/graphics/presets', 'DLSS_D' )
-		end )
+	elseif pathTracing and proxyLightRejection and not reStir then
+		guess = var.mode.PT20
+
+	elseif pathTracing and proxyLightRejection and reStir then
+		guess = var.mode.PT21
+
+	elseif pathTracing and not proxyLightRejection and reStir then
+		guess = var.mode.VANILLA
 	end
 
-	PushChanges()
+	print( "---------- Ultra+: Guessed rendering mode is", guess )
+	return guess
+end
 
-	SetOption( "RayTracing", "EnableNRD", false )
+function GuessQuality()
+	-- tries to guess current mode quality
+	local guess = "Low"
 
-	SaveSettings()
+	local initialBounces = GetOption( "RayTracing/Reference", "BounceNumber" )
+	local initialRays = GetOption( "RayTracing/Reference", "RayNumber" )
+
+	if initialBounces == 1 then
+		guess = var.quality.LOW
+
+	elseif initialBounces == 2 then
+		guess = var.quality.MEDIUM
+
+	elseif initialBounces == 2 and initialRays == 3 then
+		guess = var.quality.HIGH
+
+	elseif initialBounces == 3 then
+		guess = var.quality.INSANE
+
+	elseif initialBounces == 2 and initialRays == 2 then
+		guess = var.quality.VANILLA
+
+	end
+
+	print( "---------- Ultra+: Guessed sample mode is", guess )
+	return guess
+end
+
+function GuessSamples()
+	-- tries to guess RTXDI samples
+	local guess = "Medium"
+
+	local initialSamples = GetOption( "Editor/RTXDI", "NumInitialSamples" )
+
+	if initialSamples == 14 then
+		guess = var.samples.LOW
+
+	elseif initialSamples == 16 then
+		guess = var.samples.MEDIUM
+
+	elseif initialSamples == 20 then
+		guess = var.samples.HIGH
+
+	elseif initialSamples == 24 then
+		guess = var.samples.INSANE
+
+	elseif initialSamples == 8 then
+		guess = var.samples.VANILLA
+
+	end
+
+	print( "---------- Ultra+: Guessed sample mode is", guess )
+	return guess
+end
+
+function LoadIni( path )
+    -- pushes an ini file into live game settings
+    local iniData = {}
+    local category
+
+    local file = io.open( path, "r" )
+    if not file then
+        print( "---------- Ultra+: Failed to open file:", path )
+        return
+    end
+
+    print( "---------- Ultra+: Loading common fixes..." )
+    for line in file:lines() do
+        line = line:match("^%s*(.-)%s*$") -- trim whitespace
+        -- print("Line:", line) -- Debug print
+
+        if line ~= "" and not line:match("^;") then
+
+            local currentCategory = line:match("%[(.+)%]") -- check if line is a category
+            if currentCategory then
+                category = currentCategory
+                iniData[category] = iniData[category] or {}
+
+            else
+                local item, value = line:match( "([^=]+)%s*=%s*([^;]+)" ) -- parse items and values, ignore comments
+                if item and value then
+                    item = item:match("^%s*(.-)%s*$")
+                    value = value:match("^%s*(.-)%s*$")
+                    iniData[category][item] = value
+                    local success, err = pcall( SetOption, category, item, value )
+                    if not success then
+                        print( "---------- Ultra+: SetOption failed:", err )
+                    end
+                end
+            end
+        end
+    end
+    file:close()
 end
 
 function LoadSettings()
--- load options (if they exist), then attempt to replace with user settings
-
+	-- get game's live settings, then replace with config.json settings (if they exist and are valid)
 	local settingsTable = {}
 	local settingsCategories = {
-		options.Experimental,
+		options.Tweaks,
 		options.Features,
-		options.Distance,
-		options.SkinHair,
 	}
 
-	for _, category in pairs( settingsCategories )
-	do
-		for _, setting in ipairs( category )
-		do
-			settingsTable[setting.item] = { category = setting.category , value = setting.defaultValue }
+	for _, category in pairs( settingsCategories ) do
+		for _, setting in ipairs( category ) do
+			local currentValue = GetOption( setting.category, setting.item )
+			settingsTable[setting.item] = { category = setting.category, value = currentValue }
 		end
 	end
 
 	local file = io.open( "config.json", "r" )
-	if file
-	then
+	if file then
 		local rawJson = file:read( "*a" )
 		file:close()
 
 		if not rawJson:match( "^%s*$" ) then
 			local success, result = pcall( json.decode, rawJson )
 
-			if success and result.UltraPlus
-			then
-				for item, value in pairs( result.UltraPlus )
-				do
-					if settingsTable[item] ~= nil then
-						settingsTable[item].value = value
-					end
-				end
-			else
-				print( "---------- Ultra+: Error loading config.json:", result )
-			end
-		else
-			print( "---------- Ultra+: config.json is empty or invalid." )
-		end
-	end
+            if success and result.UltraPlus then
+            	for item, value in pairs( result.UltraPlus ) do
 
-	print( "---------- Ultra+: Loading Settings..." )
+                    if settingsTable[item] and not string.match(item, "^internal") then
+                        settingsTable[item].value = value
 
-	for item, setting in pairs( settingsTable )
-	do
-		if setting.value ~= nil
-		then
-			SetOption( setting.category, item, setting.value )
-		else
-			debug( "Skipping nil value:", setting.category .. "/" .. item )
-		end
+                    elseif string.match( item, "internal" ) then
+						local key = string.match( item, "^internal%.(%w+)$" )
+                        if key then
+                            var.settings[key] = value
+                        end
+                    end
+                end
+            else
+                print("---------- Ultra+: Error loading config.json:", result)
+            end
+        else
+            print("---------- Ultra+: config.json is empty or invalid.")
+        end
+    end
+
+	print( "---------- Ultra+: Loading user settings..." )
+	for item, setting in pairs( settingsTable ) do
+		SetOption( setting.category, item, setting.value )
 	end
 end
 
 function SaveSettings()
-
+	-- save Ultra+ settings to config.json
 	local UltraPlus = {}
 	local settingsCategories = {
-		options.Experimental,
+		options.Tweaks,
 		options.Features,
-		options.Distance,
-		options.SkinHair,
 	}
 
-	for _, thisCategory in pairs( settingsCategories )
-	do
-		for _, thisSetting in pairs( thisCategory )
-		do
-			UltraPlus[ thisSetting.item ] = thisSetting.value
+	for _, currentCategory in pairs( settingsCategories ) do
+		for _, currentSetting in pairs( currentCategory ) do
+			UltraPlus[currentSetting.item] = currentSetting.value
 		end
 	end
+
+	UltraPlus["internal.mode"] = var.settings.mode
+	UltraPlus["internal.samples"] = var.settings.samples
+	UltraPlus["internal.quality"] = var.settings.quality
+	UltraPlus["internal.streaming"] = var.settings.streaming
 
 	local settingsTable = { UltraPlus = UltraPlus }
 
@@ -263,124 +373,80 @@ function SaveSettings()
 	end
 end
 
-local function guessMode()
+local function ForceDlssd()
+	local testDlssd = GetOption( '/graphics/presets', 'DLSS_D' )
 
-	local guess = "Unknown"
+	while testDlssd == false do
+		Debug( "/graphics/presets/DLSS_D =", testDlssd )
 
-	local proxyLightRejection = GetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection" )
-	local nrdEnabled = GetOption( "Raytracing", "EnableNRD" )
-	local reStir = GetOption( "Editor/ReSTIRGI", "Enable" )
-	local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
-	local rayTracing = GetOption( "/graphics/raytracing", "RayTracing" )
+		SetOption( "/graphics/presets", "DLSS_D", true )
 
-	if not rayTracing
-	then
-		guess = var.mode.RASTER
-
-	elseif rayTracing and not pathTracing and not nrdEnabled
-	then
-		guess = var.mode.RT_ONLY
-
-	elseif rayTracing and not pathTracing and nrdEnabled
-	then
-		guess = var.mode.RT_PT
-
-	elseif pathTracing and proxyLightRejection and not reStir
-	then
-		guess = var.mode.PT20
-
-	elseif pathTracing and proxyLightRejection and reStir
-	then
-		guess = var.mode.PT21
-
-	elseif pathTracing and not proxyLightRejection and reStir
-	then
-		guess = var.mode.VANILLA
+		Wait( 1.0, function()
+			testDlssd = GetOption( '/graphics/presets', 'DLSS_D' )
+		end )
 	end
 
-	print( "---------- Ultra+: Guessed rendering mode is", guess )
-	return guess
-end
+	PushChanges()
 
-local function guessSamples()
-
-	local guess = "Unknown"
-
-	local initialSamples = GetOption( "Editor/RTXDI", "NumInitialSamples" )
-	local spatialSamples = GetOption( "Editor/RTXDI", "SpatialNumSamples" )
-
-
-	if initialSamples == 14 and spatialSamples == 1 then
-		guess = var.samples.PERFORMANCE
-
-	elseif initialSamples == 14 and spatialSamples == 2 then
-		guess = var.samples.BALANCED
-
-	elseif initialSamples == 20 and spatialSamples == 3 then
-		guess = var.samples.QUALITY
-
-	elseif initialSamples == 24 and spatialSamples == 8 then
-		guess = var.samples.CINEMATIC
-
-	elseif initialSamples == 8 and spatialSamples == 1 then
-		guess = var.samples.VANILLA
-
-	end
-
-	print( "---------- Ultra+: Guessed sample mode is", guess )
-	return guess
+	SetOption( "RayTracing", "EnableNRD", false )
+	SaveSettings()
 end
 
 function ResetEngine()
-	print( "---------- Ultra+: Reloading redENGINE" )
+	print( "---------- Ultra+: Reloading REDengine" )
 	GetSingleton( "inkMenuScenario" ):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-local function updateState()
-	-- if testRain > 0 then testRain = 1
-	local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and 1 or 0
-	local testIndoors = IsEntityInInteriorArea(GetPlayer())
+local function DoReGIR()
+    -- fully enable/disable ReGIR
+	if var.settings.reGIR then
+		print( "---------- Ultra+: Enabling ReGIR" )
 
-	if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors
-	then
-		var.settings.rain = testRain
-		var.settings.indoors = testIndoors
+		SetOption( "Editor/ReGIR", "Enable", true )
+		SetOption( "Editor/ReGIR", "UseForDI", true )
+		SetOption( "Editor/RTXDI", "EnableSeparateDenoising", false )
+	else
+		print( "---------- Ultra+: Disabling ReGIR" )
 
-		return true
+		SetOption( "Editor/ReGIR", "Enable", false )
+		SetOption( "Editor/ReGIR", "UseForDI", false )
+		SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
 	end
-
-	return false
 end
 
-local function doTurboHack()
-	-- disable RTXDI spatial sampling if player is outdoors
-	if not var.settings.turboHack
-	or var.settings.indoors
-	then
-		config.setSamples( var.settings.samples )
-		return
-	end
-
-	if var.settings.turboHack
-	and not var.settings.indoors
-	then
-		print( "---------- Ultra+: Reducing SpatialNumSamples" )
+--[[
+local function DoTurboHack()
+	-- reduce detail outdoors
+	if not var.settings.turboHack or var.settings.indoors then
+		config.SetSamples( var.settings.samples )
+		config.SetQuality( var.settings.quality )
+	else
+		print( "---------- Ultra+: PT Turbo - reducing detail oudoors" )
 
 		if var.settings.samples == var.samples.VANILLA then
-
 			SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
 
-		elseif var.settings.samples == var.samples.PERFORMANCE
-		then
+		elseif var.settings.samples == var.samples.LOW then
 			if var.settings.mode == var.mode.PT20 then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+				SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
+				SetOption( "Editor/SHARC", "SceneScale", "35.7142857143" )
 			elseif var.settings.mode == var.mode.RT_PT then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
+				SetOption( "Editor/SHARC", "DownscaleFactor", "7" )
+				SetOption( "Editor/SHARC", "SceneScale", "35.7142857143" )
 			elseif var.settings.mode == var.mode.PT21 then
 				SetOption( "Editor/RTXDI", "SpatialNumSamples", "0" )
 			end
 
-		elseif var.settings.samples == var.samples.BALANCED then
+		elseif var.settings.samples == var.samples.MEDIUM then
+			if var.settings.mode == var.mode.PT20 then
+
+			elseif var.settings.mode == var.mode.RT_PT then
+
+			elseif var.settings.mode == var.mode.PT21 then
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
+			end
+
+		elseif var.settings.samples == var.samples.HIGH then
 			if var.settings.mode == var.mode.PT20 then
 				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
 			elseif var.settings.mode == var.mode.RT_PT then
@@ -389,42 +455,39 @@ local function doTurboHack()
 				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
 			end
 
-		elseif var.settings.samples == var.samples.QUALITY then
+		elseif var.settings.samples == var.samples.INSANE then
 			if var.settings.mode == var.mode.PT20 then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "2" )
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "3" )
 			elseif var.settings.mode == var.mode.RT_PT then
 				SetOption( "Editor/RTXDI", "SpatialNumSamples", "1" )
 			elseif var.settings.mode == var.mode.PT21 then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "2" )
-			end
-
-		elseif var.settings.samples == var.samples.CINEMATIC then
-			if var.settings.mode == var.mode.PT20 then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "4" )
-			elseif var.settings.mode == var.mode.RT_PT then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "2" )
-			elseif var.settings.mode == var.mode.PT21 then
-				SetOption( "Editor/RTXDI", "SpatialNumSamples", "4" )
+				SetOption( "Editor/RTXDI", "SpatialNumSamples", "3" )
 			end
 		end
 
-	else
-		config.setSamples( var.settings.samples )
+		if var.quality.mode == var.quality.MEDIUM then
+			SetOption( "RayTracing/Reference", "BounceNumber", "1" )
+		elseif var.quality.mode == var.quality.HIGH then
+			SetOption( "RayTracing/Reference", "RayNumber", "2" )
+			SetOption( "RayTracing/Reference", "EnableProbabilisticSampling", true )
+		elseif var.quality.mode == var.quality.INSANE then
+			SetOption( "RayTracing/Reference", "RayNumber", "3" )
+			SetOption( "RayTracing/Reference", "EnableProbabilisticSampling", false )
+		end
 	end
 end
+]]
 
-local function doRainFix()
+local function DoRainFix()
 	-- emable particle PT integration unless player is outdoors AND it's raining
-	if not var.settings.rainFix
-	then
+--[[
+	if not var.settings.rainFix then
 		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
 		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
 		return
 	end
-
-	if var.settings.rain == 1
-	or var.settings.indoors
-	then
+]]
+	if var.settings.rain == 1 or var.settings.indoors then
 		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
 		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
 	else
@@ -433,50 +496,80 @@ local function doRainFix()
 	end
 end
 
-local function doRRFix()
-	-- if ray reconstruction is enabled, continually disable NRD
+local function DoRRFix()
+	-- if RR is enabled, continually disable NRD to work around FPS slowdown bug in CP 2.0+
+	timer.paused = true
 	local rayReconstruction = GetOption( '/graphics/presets', 'DLSS_D' )
 	
 	if not rayReconstruction then return end
 
-	debug( "Disabling NRD" )
+	Debug( "Disabling NRD" )
 	SetOption( "RayTracing", "EnableNRD", false )
+	timer.paused = false
 end
 
-local function doFastUpdate()
+local function DoFastUpdate()
 	-- runs every timer.FAST seconds
-	local stateChanged = updateState()
+	DoRRFix()
 
-	if stateChanged then
-		doRainFix()
-		doTurboHack()
-		doRRFix()
+	local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and 1
+	local testIndoors = IsEntityInInteriorArea(GetPlayer())
+
+	if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
+		DoRainFix()
+		var.settings.rain = testRain
+		var.settings.indoors = testIndoors
 	end
-
-	if var.settings.nrdFix then
-		doNrdFix()
+--[[
+	if config.turboHack ~= var.settings.turboHack then
+		DoTurboHack()
+		config.turboHack = var.settings.turboHack
+	end
+]]
+	if  config.reGIR ~= var.settings.reGIR then
+		DoReGIR()
+		config.reGIR = var.settings.reGIR
 	end
 end
 
-local function doLazyUpdate()
+local function DoLazyUpdate()
 	-- runs every timer.LAZY seconds
+end
 
+local function forcePTDenoiser()
+
+	if GetOption( "Developer/FeatureToggles", "DLSSD" ) then
+		print( "---------- Ultra+: Enabling RR, disabling NRD" )
+		SetOption( "Developer/FeatureToggles", "DLSSD", true )
+		SetOption( "RayTracing", "EnableNRD", false )
+		SetOption( "/graphics/presets", "DLSS_D", true )
+		--PushChanges()
+	else
+		print( "---------- Ultra+: Enabling NRD, disabling RR" )
+		SetOption( "/graphics/presets", "DLSS_D", false )
+		SetOption( "Developer/FeatureToggles", "DLSSD", false )
+		SetOption( "RayTracing", "EnableNRD", true )
+		--PushChanges()
+	end
 end
 
 registerForEvent( 'onUpdate', function( delta )
+	-- handle non-blocking background tasks
 	Detector.UpdateGameStatus()
 
-	timer.fast = timer.fast + delta
-	timer.lazy = timer.lazy + delta
+	if not timer.paused then
+		timer.fast = timer.fast + delta
+		timer.lazy = timer.lazy + delta
+	end
 
 	if Detector.isGameActive then
 		if timer.fast > timer.FAST then
-			doFastUpdate()
+			DoFastUpdate()
 			timer.fast = 0
 		end
 
 		if timer.lazy > timer.LAZY then
-			doLazyUpdate()
+			DoLazyUpdate()
 			timer.lazy = 0
 		end
 	end
@@ -492,16 +585,34 @@ registerForEvent( 'onUpdate', function( delta )
 	end
 end)
 
+registerForEvent( "onTweak", function()
+
+	LoadIni( "commonfixes.ini" )
+--[[
+	var.settings.mode = GuessMode()
+	config.SetMode( var.settings.mode )
+
+	var.settings.samples = GuessSamples()
+	config.SetSamples( var.settings.samples )
+
+	var.settings.quality = GuessQuality()
+	config.SetQuality( var.settings.quality )
+]]
+	LoadSettings()
+end)
+
 registerForEvent( "onInit", function()
 
-	config.commonFixes()
-	LoadSettings()
+	local file = io.open( "debug", "r" )
+	if file then
+		config.DEBUG = true
+		Debug( "Enabling debug output" )
+	end
 
-	var.settings.mode = guessMode()
-	config.setMode( var.settings.mode )
-
-	var.settings.samples = guessSamples()
-	config.setSamples( var.settings.samples )
+	config.SetMode( var.settings.mode )
+	config.SetStreaming( var.settings.streaming )
+	config.SetSamples( var.settings.samples )
+	config.SetQuality( var.settings.quality )
 end)
 
 registerForEvent( "onOverlayOpen", function()
@@ -517,7 +628,7 @@ registerForEvent( "onDraw", function()
 	if WindowOpen then
 
 		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 440, 672, ImGuiCond.Appearing )
+		ImGui.SetNextWindowSize( 436, 615, ImGuiCond.Appearing )
 
 		if ImGui.Begin( "Ultra+ Control v" .. ultraplus.__VERSION, true ) then
 
@@ -525,104 +636,162 @@ registerForEvent( "onDraw", function()
 
 			if ImGui.BeginTabBar( "Tabs" ) then
 
-				-- Ultra+ Tab
 				if ImGui.BeginTabItem( "Engine Config" ) then
 
-					local newMode = var.settings.mode
+					ui.text( "NOTE: Wait for FPS to stabilise after changing settings.")
 
-					if ImGui.CollapsingHeader( "Mode", ImGuiTreeNodeFlags.DefaultOpen )
-					then
-						if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", newMode == var.mode.RASTER )
-						then
+					if ImGui.CollapsingHeader( "Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen ) then
+--[[
+						if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
 							var.settings.mode = var.mode.RASTER
-							config.setMode( var.settings.mode )
-							config.setSamples( var.settings.samples )
+							config.SetMode( var.settings.mode )
+							config.SetSamples( var.settings.samples )
 						end
-
-						if ImGui.RadioButton( "Ray Tracing: Normal Ray Tracing", newMode == var.mode.RT_ONLY )
-						then
+]]
+						if ImGui.RadioButton( "RT Only", var.settings.mode == var.mode.RT_ONLY ) then
 							var.settings.mode = var.mode.RT_ONLY
-							config.setMode( var.settings.mode )
-							config.setSamples( var.settings.samples )
+							config.SetMode( var.settings.mode )
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "RT+PT: Ray Tracing plus Path Tracing", newMode == var.mode.RT_PT )
-						then
+						ui.align()
+						if ImGui.RadioButton( "RT+PT", var.settings.mode == var.mode.RT_PT ) then
 							var.settings.mode = var.mode.RT_PT
-							config.setMode( var.settings.mode )
-							config.setSamples( var.settings.samples )
+							config.SetMode( var.settings.mode )
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "Vanilla Path Tracing (no tweaks, bugfixes only)", newMode == var.mode.VANILLA )
-						then
-							var.settings.mode = var.mode.VANILLA
-							config.setMode( var.settings.mode )
-							config.setSamples( var.settings.samples )
-						end
-
-						if ImGui.RadioButton( "PT20: Fast Path Tracing (RTXDI+ReLAX, tweaked)", newMode == var.mode.PT20 )
-						then
+						ui.align()
+						if ImGui.RadioButton( "PT20", var.settings.mode == var.mode.PT20 ) then
 							var.settings.mode = var.mode.PT20
-							config.setMode( var.settings.mode )
-							config.setSamples( var.settings.samples )
+							config.SetMode( var.settings.mode )
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "PT21: Ultra+ Path Tracing (RTXDI+ReSTIR, tweaked)", newMode == var.mode.PT21 )
-						then
+						ui.align()
+						if ImGui.RadioButton( "PT21", var.settings.mode == var.mode.PT21 ) then
 							var.settings.mode = var.mode.PT21
-							config.setMode( var.settings.mode )
-							config.setSamples( var.settings.samples )
+							config.SetMode( var.settings.mode )
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 					end
 
 					ui.space()
-					if ImGui.CollapsingHeader( "Path Tracing Samples", ImGuiTreeNodeFlags.DefaultOpen )
-					then
-						if ImGui.RadioButton( "Vanilla", var.settings.samples == var.samples.VANILLA )
-						then
+					if ImGui.CollapsingHeader( "RTXDI and ReGIR Quality", ImGuiTreeNodeFlags.DefaultOpen ) then
+						ui.tooltip( "RTXDI is path traced direct illumination." )
+
+						if ImGui.RadioButton( "Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA ) then
 							var.settings.samples = var.samples.VANILLA
-							config.setSamples( var.settings.samples )
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "Performance", var.settings.samples == var.samples.PERFORMANCE )
-						then
-							var.settings.samples = var.samples.PERFORMANCE
-							config.setSamples( var.settings.samples )
+						ui.align()
+						if ImGui.RadioButton( "Low##SamplesLow", var.settings.samples == var.samples.LOW ) then
+							var.settings.samples = var.samples.LOW
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "Balanced", var.settings.samples == var.samples.BALANCED )
-						then
-							var.settings.samples = var.samples.BALANCED
-							config.setSamples( var.settings.samples )
+						ui.align()
+						if ImGui.RadioButton( "Medium##SamplesMedium", var.settings.samples == var.samples.MEDIUM ) then
+							var.settings.samples = var.samples.MEDIUM
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "Quality", var.settings.samples == var.samples.QUALITY )
-						then
-							var.settings.samples = var.samples.QUALITY
-							config.setSamples( var.settings.samples )
+						ui.align()
+						if ImGui.RadioButton( "High##SamplesHigh", var.settings.samples == var.samples.HIGH ) then
+							var.settings.samples = var.samples.HIGH
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 
-						if ImGui.RadioButton( "Cinematic", var.settings.samples == var.samples.CINEMATIC )
-						then
-							var.settings.samples = var.samples.CINEMATIC
-							config.setSamples( var.settings.samples )
+						ui.align()
+						if ImGui.RadioButton( "Insane##SamplesInsane", var.settings.samples == var.samples.INSANE ) then
+							var.settings.samples = var.samples.INSANE
+							config.SetSamples( var.settings.samples )
+							SaveSettings()
 						end
 					end
 
 					ui.space()
-					if ImGui.CollapsingHeader( "Experimental", ImGuiTreeNodeFlags.DefaultOpen )
-					then
-						for _, setting in pairs( options.Experimental )
-						do
+					if ImGui.CollapsingHeader( var.settings.mode.." Indirect Illumination Sampling", ImGuiTreeNodeFlags.DefaultOpen ) then
+
+						if ImGui.RadioButton( "Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA ) then
+							var.settings.quality = var.quality.VANILLA
+							config.SetQuality( var.settings.quality )
+							SaveSettings()
+						end
+
+						ui.align()
+						if ImGui.RadioButton( "Low##QualityLow", var.settings.quality == var.quality.LOW ) then
+							var.settings.quality = var.quality.LOW
+							config.SetQuality( var.settings.quality )
+							SaveSettings()
+						end
+
+						ui.align()
+						if ImGui.RadioButton( "Medium##QualityMedium", var.settings.quality == var.quality.MEDIUM ) then
+							var.settings.quality = var.quality.MEDIUM
+							config.SetQuality( var.settings.quality )
+							SaveSettings()
+						end
+
+						ui.align()
+						if ImGui.RadioButton( "High##QualityHigh", var.settings.quality == var.quality.HIGH ) then
+							var.settings.quality = var.quality.HIGH
+							config.SetQuality( var.settings.quality )
+							SaveSettings()
+						end
+						
+						ui.align()
+						if ImGui.RadioButton( "Insane##QualityInsane", var.settings.quality == var.quality.INSANE ) then
+							var.settings.quality = var.quality.INSANE
+							config.SetQuality( var.settings.quality )
+							SaveSettings()
+						end
+					end
+
+					ui.space()
+					if ImGui.CollapsingHeader( "Streaming Boost", ImGuiTreeNodeFlags.DefaultOpen ) then
+
+						if ImGui.RadioButton( "20 metres##StreamingLow", var.settings.streaming == var.streaming.LOW ) then
+							var.settings.streaming = var.streaming.LOW
+							config.SetStreaming( var.settings.streaming )
+							SaveSettings()
+						end
+
+						ui.align()
+						if ImGui.RadioButton( "40 metres##StreamingMedium", var.settings.streaming == var.streaming.MEDIUM ) then
+							var.settings.streaming = var.streaming.MEDIUM
+							config.SetStreaming( var.settings.streaming )
+							SaveSettings()
+						end
+
+						ui.align()
+						if ImGui.RadioButton( "80 metres##StreamingHigh", var.settings.streaming == var.streaming.HIGH ) then
+							var.settings.streaming = var.streaming.HIGH
+							config.SetStreaming( var.settings.streaming )
+							SaveSettings()
+						end
+					end
+
+					ui.space()
+					if ImGui.CollapsingHeader( "Tweaks", ImGuiTreeNodeFlags.DefaultOpen ) then
+
+						for _, setting in pairs( options.Tweaks ) do
 							setting.value = GetOption( setting.category, setting.item )
 							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-								ui.tooltip( setting.tooltip )
+							ui.tooltip( setting.tooltip )
 
-							if toggled
-							then
+							if toggled then
 								SetOption( setting.category, setting.item, setting.value )
 								setting.value = setting.value
-
 								SaveSettings()
 							end
 						end
@@ -631,41 +800,19 @@ registerForEvent( "onDraw", function()
 					ImGui.EndTabItem()
 				end
 
-				if ImGui.BeginTabItem( "Tweaks" )
-				then
-					ui.space()
-					if ImGui.CollapsingHeader( "Features", ImGuiTreeNodeFlags.DefaultOpen )
-					then
-						for _, setting in pairs( options.Features )
-						do
-							setting.value = GetOption( setting.category, setting.item )
-							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-							ui.tooltip( setting.tooltip )
-
-							if toggled then
-								SetOption( setting.category, setting.item, setting.value )
-								setting.value = setting.value
-
-								SaveSettings()
-							end
-						end
-					end
+				if ImGui.BeginTabItem( "Rendering Features" ) then
 
 					ui.space()
-					if ImGui.CollapsingHeader( "Distance", ImGuiTreeNodeFlags.DefaultOpen )
-					then
-						for _, setting in pairs( options.Distance )
-						do
-							setting.value = GetOption( setting.category, setting.item )
-							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-							ui.tooltip( setting.tooltip )
+					for _, setting in pairs( options.Features ) do
+						setting.value = GetOption( setting.category, setting.item )
+						setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+						ui.tooltip( setting.tooltip )
 
-							if toggled then
-								SetOption( setting.category, setting.item, setting.value )
-								setting.value = setting.value
+						if toggled then
+							SetOption( setting.category, setting.item, setting.value )
+							setting.value = setting.value
 
-								SaveSettings()
-							end
+							SaveSettings()
 						end
 					end
 

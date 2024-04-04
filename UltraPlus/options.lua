@@ -1,27 +1,30 @@
--- defaults.lua
+-- options.lua
 
 local options = {
 
-	Experimental = {
-		{
+	Tweaks = {
+--[[		{
 			item = "turboHack",
-			name = "Enable PT Turbo while outdoors",
+			name = "Enable PT Turbo (slightly reduce quality outdoors)",
 			category = "internal",
 			tooltip = "RTXDI spatial sampling is mostly needed indoors. This tweak reduces it while\noutdoors to try and maintain FPS in complex outdoor areas. It CAN reduce\nvisual quality outdoors in certain situations (white cars\nand highly reflective surfaces in particular).",
-			defaultValue = true,
 		},
 		{
 			item = "rainFix",
 			name = "Enable PT Rain Fix",
 			category = "internal",
-			tooltip = "Enables full particle integration with path tracing while it's not raining\nor you're indoors.",
-			defaultValue = true,
-		},
+			tooltip = "Enables full particle integration with path tracing while it's not raining\nor you're indoors." },]]
 		{
 			item = "DLSS_D",
 			name = "Enable PT Denoiser: Ray Reconstruction",
 			category = "/graphics/presets",
 			tooltip = "Ultra+ allows the engine to override this avoid crashes, so this option will\nappear not to save (Default: N/A)",
+		},
+		{
+            item = "reGIR",
+			name = "Enable ReGIR Optimisation",
+			category = "internal",
+			tooltip = "Enables Reservoir-based Grid Importance Resampling. Performance optimisation\n and attempts to add detail to the areas that need it most (Default: Off)",
 		},
 		{
 			item = "EnableNRD",
@@ -31,9 +34,27 @@ local options = {
 		},
 		{
 			item = "EnableRIS",
-			name = "Enable Resampled importance sampling (RIS)",
+			name = "Enable resampled importance sampling (RIS)",
 			category = "RayTracing/Reference",
 			tooltip = "RIS is resampled importance sampling. It is enabled by default, but disable\nit for reLIGHT.",
+		},
+		{
+			item = "Enable",
+			name = "Enable SHaRC Bounce Cache",
+			category = "Editor/SHARC",
+			tooltip = "(Default: On)",
+		},
+		{
+			item = "EnableGradients",
+			name = "Enable RTXDI Gradients",
+			category = "Editor/RTXDI",
+			tooltip = "(Default: Off)",
+		},
+		{
+			item = "EnableSeparateDenoising",
+			name = "Enable RTXDI Separate Denoising",
+			category = "Editor/RTXDI",
+			tooltip = "(Default: On)",
 		},
 	},
 	Features = {
@@ -62,27 +83,6 @@ local options = {
 			tooltip = "",
 		},
 		{
-			item = "HideFPPAvatar",
-			name = "Hide player avatar in reflections (except for head)",
-			category = "RayTracing",
-			tooltip = "(Default: Off)",
-		},
-		{
-			item = "CharacterRimEnhancement",
-			name = "Object (and character) rim enhancement",
-			category = "Developer/FeatureToggles",
-			tooltip = "Only works in raster and RT modes (Default: On)",
-		},
-		{
-			item = "EnableCustomMipBias",
-			name = "Force INI Mip Bias",
-			category = "Editor/MipBias",
-			tooltip = "Caution: Not recommended for 12GB VRAM or less (Default: Off)",
-			defaultValue = false,
-		},
-	},
-	Distance = {
-		{
 			item = "DistantVolFog",
 			name = "Distant Volumetric Fog",
 			category = "Developer/FeatureToggles",
@@ -101,41 +101,31 @@ local options = {
 			tooltip = "Distant global illumination (Default: On)",
 		},
 		{
-			item = "DistantGiFix",
-			name = "Distant GI Fix",
-			category = "Rendering",
-			tooltip = "Appears to be a distant GI hack (Default: On)",
-		},
-		{
 			item = "DistantShadows",
 			name = "Distant Shadows",
 			category = "Developer/FeatureToggles",
 			tooltip = "(Default: On)",
 		},
+		{
+			item = "HideFPPAvatar",
+			name = "Hide player in reflections (except for head)",
+			category = "RayTracing",
+			tooltip = "Because why would we want the head? (Default: Off)",
+		},
+		{
+			item = "CharacterRimEnhancement",
+			name = "Object (and character) rim enhancement",
+			category = "Developer/FeatureToggles",
+			tooltip = "Only works in raster and RT modes (Default: On)",
+		},
+		{
+			item = "EnableCustomMipBias",
+			name = "Force INI Mip Bias",
+			category = "Editor/MipBias",
+			tooltip = "Caution: Not recommended for 12GB VRAM or less (Default: Off)",
+		},
 	},
---[[
-	Graphics = {
-		graphics/advanced/AmbientOcclusion, "Off", "Low", "Medium", "High"			-- redraw
-		graphics/advanced/ScreenSpaceReflectionsQuality, "Off", "Low", "Medium", "High", "Ultra", "Insane"		-- redraw
-		graphics/advanced/SubsurfaceScatteringQuality, "Low", "Medium", "High"
-		graphics/advanced/VolumetricFogResolution, "Low", "Medium", "High", "Ultra"
-		graphics/advanced/VolumetricCloudsQuality, "Off", "Medium", "High", "Ultra"	-- redraw
-		graphics/advanced/ContactShadows ?
-		graphics/advanced/LocalShadowsQuality, "Off", "Low", "Medium", "High"		-- redraw
-		graphics/advanced/ShadowMeshQuality, "Low", "Medium", "High"
-		graphics/advanced/DistantShadowsResolution, "Low", "High"
-		graphics/advanced/CascadedShadowsRange, "Low", "Medium", "High"
-		graphics/advanced/CascadedShadowsResolution, "Low", "Medium", "High"
-		graphics/basic/LensFlares, true, false
-		graphics/basic/MotionBlur, "Off", "Low", "High"
-		graphics/basic/FilmGrain, true, false
-		graphics/basic/DepthOfField, true, false
-		graphics/basic/ChromaticAberration, true, false
-		graphics/advanced/FacialTangentUpdates, true, false
-		graphics/raytracing/RayTracing, true, false
-		graphics/advanced/MaxDynamicDecals, "Low", "Medium", "High", "Ultra"
-	}
-]]--
+
 }
 
 return options
