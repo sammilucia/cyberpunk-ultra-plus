@@ -7,18 +7,18 @@ function config.SetMode( mode )
 
 	print( "---------- Ultra+: Setting mode to", mode )
 
-	if mode == var.mode.RASTER
-	then
+	if mode == var.mode.RASTER then
 		SetOption( '/graphics/raytracing', 'RayTracing', false )
 		PushChanges()
 
 		SetOption( "Developer/FeatureToggles", "RTXDI", false )
-		SetOption( "RayTracing", "EnableNRD", false )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
 		SetOption( "Editor/SHARC", "Enable", "false" )
 		SaveSettings()
+		return
+	end
 
-	elseif mode == var.mode.RT_ONLY then
+	if mode == var.mode.RT_ONLY then
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		PushChanges()
@@ -26,7 +26,6 @@ function config.SetMode( mode )
 		SetOption( "Developer/FeatureToggles", "RTXDI", false )
 		SetOption( "Editor/ReGIR", "Enable", false )
 		SetOption( "Editor/ReGIR", "UseForDI", false )
-		SetOption( "RayTracing", "EnableNRD", false )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "EnableShadowCascades", false )					-- test
@@ -38,16 +37,18 @@ function config.SetMode( mode )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.35" )
 		SetOption( "Editor/SHARC", "Enable", "false" )
 		SaveSettings()
+		return
+	end
 
-	elseif mode == var.mode.RT_PT then
+	if mode == var.mode.RT_PT then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( '/graphics/raytracing', 'RayTracedPathTracing', false )
 		PushChanges()
 
 		SetOption( "Developer/FeatureToggles", "RTXDI", true )
+		SetOption( "RayTracing", "EnableNRD", true )
 		SetOption( "Editor/ReGIR", "Enable", false )
 		SetOption( "Editor/ReGIR", "UseForDI", false )
-		SetOption( "RayTracing", "EnableNRD", true )
 		SetOption( "RayTracing", "AmbientOcclusionRayNumber", "1" )
 		SetOption( "RayTracing", "EnableImportanceSampling", true )
 		SetOption( "RayTracing", "SunAngularSize", "0.15" )
@@ -67,8 +68,10 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.15" )
 		SaveSettings()
+		return
+	end
 
-	elseif mode == var.mode.VANILLA then
+	if mode == var.mode.VANILLA then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 		PushChanges()
@@ -98,8 +101,10 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 		SaveSettings()
+		return
+	end
 
-	elseif mode == var.mode.PT21 then
+	if mode == var.mode.PT21 then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 		PushChanges()
@@ -129,8 +134,10 @@ function config.SetMode( mode )
 		SetOption( "Editor/SHARC", "Enable", "true" )
 		SetOption( "Editor/Characters/Eyes", "DiffuseBoost", "0.4" )
 		SaveSettings()
+		return
+	end
 
-	elseif mode == var.mode.PT20 then
+	if mode == var.mode.PT20 then
 		SetOption( '/graphics/raytracing', 'RayTracing', true )
 		SetOption( "/graphics/raytracing", "RayTracedPathTracing", true )
 		PushChanges()

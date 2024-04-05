@@ -5,7 +5,7 @@ local config = {}
 
 function config.SetQuality( quality )
 
-	print( "---------- Ultra+: Setting", quality, "quality to", quality )
+	print( "---------- Ultra+: Setting", var.settings.mode, "quality to", quality )
 
 	if quality == var.quality.VANILLA then
 		SetOption( "RayTracing/Reference", "RayNumber", "1" )
@@ -20,8 +20,10 @@ function config.SetQuality( quality )
 		SetOption( "Editor/ReGIR", "ShadingCandidatesCount", "4" )
 		SetOption( "Editor/ReGIR", "BuildCandidatesCount", "8" )
 		SetOption( "Editor/ReGIR", "LightSlotsCount", "128" )
+		return
+	end
 
-	elseif quality == var.quality.LOW then
+	if quality == var.quality.LOW then
 		SetOption( "RayTracing/Reference", "RayNumber", "1" )
 		SetOption( "RayTracing/Reference", "BounceNumber", "1" )
 		SetOption( "RayTracing/Reference", "EnableProbabilisticSampling", true )
@@ -36,17 +38,25 @@ function config.SetQuality( quality )
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "6" )
 			SetOption( "Editor/SHARC", "SceneScale", "30.0" )
-		elseif var.settings.mode == var.mode.RT_PT then
+			return
+		end
+
+		if var.settings.mode == var.mode.RT_PT then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "6" )
 			SetOption( "Editor/SHARC", "SceneScale", "30.0" )
-		elseif var.settings.mode == var.mode.PT21 then
+			return
+		end
+
+		if var.settings.mode == var.mode.PT21 then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "6" )
 			SetOption( "Editor/SHARC", "SceneScale", "30.0" )
+			return
 		end
+	end
 
-	elseif quality == var.quality.MEDIUM then
+	if quality == var.quality.MEDIUM then
 		SetOption( "RayTracing/Reference", "RayNumber", "1" )
 		SetOption( "RayTracing/Reference", "BounceNumber", "2" )
 		SetOption( "RayTracing/Reference", "EnableProbabilisticSampling", true )
@@ -61,17 +71,25 @@ function config.SetQuality( quality )
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "4" )
 			SetOption( "Editor/SHARC", "SceneScale", "50.0" )
-		elseif var.settings.mode == var.mode.RT_PT then
+			return
+		end
+
+		if var.settings.mode == var.mode.RT_PT then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "4" )
 			SetOption( "Editor/SHARC", "SceneScale", "50.0" )
-		elseif var.settings.mode == var.mode.PT21 then
+			return
+		end
+
+		if var.settings.mode == var.mode.PT21 then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "4" )
 			SetOption( "Editor/SHARC", "SceneScale", "50.0" )
+			return
 		end
+	end
 
-	elseif quality == var.quality.HIGH then
+	if quality == var.quality.HIGH then
 		SetOption( "RayTracing/Reference", "RayNumber", "3" )
 		SetOption( "RayTracing/Reference", "BounceNumber", "2" )
 		SetOption( "RayTracing/Reference", "EnableProbabilisticSampling", false )
@@ -86,17 +104,26 @@ function config.SetQuality( quality )
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "4" )
 			SetOption( "Editor/SHARC", "SceneScale", "75.0" )
-		elseif var.settings.mode == var.mode.RT_PT then
+			return
+		end
+
+		if var.settings.mode == var.mode.RT_PT then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "4" )
 			SetOption( "Editor/SHARC", "SceneScale", "75.0" )
-		elseif var.settings.mode == var.mode.PT21 then
+			return
+		end
+
+		if var.settings.mode == var.mode.PT21 then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "4" )
 			SetOption( "Editor/SHARC", "SceneScale", "75.0" )
+			return
 		end
 
-	elseif quality == var.quality.INSANE then
+	end
+
+	if quality == var.quality.INSANE then
 		SetOption( "RayTracing/Reference", "RayNumber", "5" )
 		SetOption( "RayTracing/Reference", "BounceNumber", "2" )
 		SetOption( "RayTracing/Reference", "EnableProbabilisticSampling", false )
@@ -111,14 +138,21 @@ function config.SetQuality( quality )
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "3" )
 			SetOption( "Editor/SHARC", "SceneScale", "100.0" )
-		elseif var.settings.mode == var.mode.RT_PT then
+			return
+		end
+
+		if var.settings.mode == var.mode.RT_PT then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.16" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "3" )
 			SetOption( "Editor/SHARC", "SceneScale", "100.0" )
-		elseif var.settings.mode == var.mode.PT21 then
+			return
+		end
+
+		if var.settings.mode == var.mode.PT21 then
 			SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
 			SetOption( "Editor/SHARC", "DownscaleFactor", "3" )
 			SetOption( "Editor/SHARC", "SceneScale", "100.0" )
+			return
 		end
 	end
 end

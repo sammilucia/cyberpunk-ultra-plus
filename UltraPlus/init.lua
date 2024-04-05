@@ -1,5 +1,5 @@
 local ultraplus = {
-	__VERSION	 	= '4.0-alpha08',
+	__VERSION	 	= '4.0-alpha09',
 	__DESCRIPTION	= 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
 	__URL			= 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE		= [[
@@ -108,25 +108,32 @@ function GetOption( category, item )
 		if value == nil then
 			value = false
 		end
-
-	elseif category:match( "^/" ) then
-		value = Game.GetSettingsSystem():GetVar( category, item ):GetValue()
-
-	else
-		value = GameOptions.Get( category, item )
-
-		if value == "true" then
-			value = true
-
-		elseif value == "false" then
-			value = false
-
-		elseif string.match( value, "^%-?%d+$" ) then
-			value = tonumber( value )
-		end
+		return value
 	end
 
-	return value
+	if category:match( "^/" ) then
+		value = Game.GetSettingsSystem():GetVar( category, item ):GetValue()
+		return value
+	end
+
+	value = GameOptions.Get( category, item )
+
+	if value == "true" then
+		value = true
+		return value
+	end
+
+	if value == "false" then
+		value = false
+		return value
+	end
+
+	if string.match( value, "^%-?%d+$" ) then
+		value = tonumber( value )
+		return value
+	end
+
+	Debug( "Error reading game value:", category .. "/" .. item )
 end
 
 function SetOption( category, item, value )
@@ -137,25 +144,32 @@ function SetOption( category, item, value )
 	end
 
 	if category == "internal" then
+		Debug( "Setting value", item, value )
 		var.settings[item] = value
-
-	elseif category:match( "^/" ) then
-		Game.GetSettingsSystem():GetVar( category, item ):SetValue( value )
-
-	else
-		if type( value ) == "boolean" then
-			GameOptions.SetBool( category, item, value )
-
-		elseif tostring(value):match( "^%-?%d+%.%d+$" ) then
-			GameOptions.SetFloat( category, item, tonumber( value ) )
-
-		elseif tostring(value):match( "^%-?%d+$" ) then
-			GameOptions.SetInt( category, item, tonumber( value ) )
-
-		else
-			Debug( "Unsupported GameOption:", category .. "/" .. item, "=", value )
-		end
+		return
 	end
+
+	if category:match( "^/" ) then
+		Game.GetSettingsSystem():GetVar( category, item ):SetValue( value )
+		return
+	end
+
+	if type( value ) == "boolean" then
+		GameOptions.SetBool( category, item, value )
+		return
+	end
+
+	if tostring(value):match( "^%-?%d+%.%d+$" ) then
+		GameOptions.SetFloat( category, item, tonumber( value ) )
+		return
+	end
+
+	if tostring(value):match( "^%-?%d+$" ) then
+		GameOptions.SetInt( category, item, tonumber( value ) )
+		return
+	end
+
+	Debug( "Error setting value:", category .. "/" .. item, "=", value )
 end
 
 function GuessMode()
@@ -168,28 +182,43 @@ function GuessMode()
 	local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
 	local rayTracing = GetOption( "/graphics/raytracing", "RayTracing" )
 
-	if not rayTracing
-	then
+	if not rayTracing then
 		guess = var.mode.RASTER
-
-	elseif rayTracing and not pathTracing and not nrdEnabled then
-		guess = var.mode.RT_ONLY
-
-	elseif rayTracing and not pathTracing and nrdEnabled then
-		guess = var.mode.RT_PT
-
-	elseif pathTracing and proxyLightRejection and not reStir then
-		guess = var.mode.PT20
-
-	elseif pathTracing and proxyLightRejection and reStir then
-		guess = var.mode.PT21
-
-	elseif pathTracing and not proxyLightRejection and reStir then
-		guess = var.mode.VANILLA
+		print( "---------- Ultra+: Guessed rendering mode is", guess )
+		return guess
 	end
 
-	print( "---------- Ultra+: Guessed rendering mode is", guess )
-	return guess
+	if rayTracing and not pathTracing and not nrdEnabled then
+		guess = var.mode.RT_ONLY
+		print( "---------- Ultra+: Guessed rendering mode is", guess )
+		return guess
+	end
+
+	if rayTracing and not pathTracing and nrdEnabled then
+		guess = var.mode.RT_PT
+		print( "---------- Ultra+: Guessed rendering mode is", guess )
+		return guess
+	end
+
+	if pathTracing and proxyLightRejection and not reStir then
+		guess = var.mode.PT20
+		print( "---------- Ultra+: Guessed rendering mode is", guess )
+		return guess
+	end
+
+	if pathTracing and proxyLightRejection and reStir then
+		guess = var.mode.PT21
+		print( "---------- Ultra+: Guessed rendering mode is", guess )
+		return guess
+	end
+
+	if pathTracing and not proxyLightRejection and reStir then
+		guess = var.mode.VANILLA
+		print( "---------- Ultra+: Guessed rendering mode is", guess )
+		return guess
+	end
+
+	print( "---------- Ultra+: Could not guess rendering mode" )
 end
 
 function GuessQuality()
@@ -201,23 +230,35 @@ function GuessQuality()
 
 	if initialBounces == 1 then
 		guess = var.quality.LOW
-
-	elseif initialBounces == 2 then
-		guess = var.quality.MEDIUM
-
-	elseif initialBounces == 2 and initialRays == 3 then
-		guess = var.quality.HIGH
-
-	elseif initialBounces == 3 then
-		guess = var.quality.INSANE
-
-	elseif initialBounces == 2 and initialRays == 2 then
-		guess = var.quality.VANILLA
-
+		print( "---------- Ultra+: Guessed quality is", guess )
+		return guess
 	end
 
-	print( "---------- Ultra+: Guessed sample mode is", guess )
-	return guess
+	if initialBounces == 2 then
+		guess = var.quality.MEDIUM
+		print( "---------- Ultra+: Guessed quality is", guess )
+		return guess
+	end
+
+	if initialBounces == 2 and initialRays == 3 then
+		guess = var.quality.HIGH
+		print( "---------- Ultra+: Guessed quality is", guess )
+		return guess
+	end
+
+	if initialBounces == 3 then
+		guess = var.quality.INSANE
+		print( "---------- Ultra+: Guessed quality is", guess )
+		return guess
+	end
+
+	if initialBounces == 2 and initialRays == 2 then
+		guess = var.quality.VANILLA
+		print( "---------- Ultra+: Guessed quality is", guess )
+		return guess
+	end
+
+	print( "---------- Ultra+: Could not guess quality" )
 end
 
 function GuessSamples()
@@ -228,23 +269,35 @@ function GuessSamples()
 
 	if initialSamples == 14 then
 		guess = var.samples.LOW
-
-	elseif initialSamples == 16 then
-		guess = var.samples.MEDIUM
-
-	elseif initialSamples == 20 then
-		guess = var.samples.HIGH
-
-	elseif initialSamples == 24 then
-		guess = var.samples.INSANE
-
-	elseif initialSamples == 8 then
-		guess = var.samples.VANILLA
-
+		print( "---------- Ultra+: Guessed sample mode is", guess )
+		return guess
 	end
 
-	print( "---------- Ultra+: Guessed sample mode is", guess )
-	return guess
+	if initialSamples == 16 then
+		guess = var.samples.MEDIUM
+		print( "---------- Ultra+: Guessed sample mode is", guess )
+		return guess
+	end
+
+	if initialSamples == 20 then
+		guess = var.samples.HIGH
+		print( "---------- Ultra+: Guessed sample mode is", guess )
+		return guess
+	end
+
+	if initialSamples == 24 then
+		guess = var.samples.INSANE
+		print( "---------- Ultra+: Guessed sample mode is", guess )
+		return guess
+	end
+
+	if initialSamples == 8 then
+		guess = var.samples.VANILLA
+		print( "---------- Ultra+: Guessed sample mode is", guess )
+		return guess
+	end
+
+	print( "---------- Ultra+: Could not guess samples" )
 end
 
 function LoadIni( path )
@@ -260,29 +313,30 @@ function LoadIni( path )
 
     print( "---------- Ultra+: Loading common fixes..." )
     for line in file:lines() do
-        line = line:match("^%s*(.-)%s*$") -- trim whitespace
-        -- print("Line:", line) -- Debug print
+        line = line:match( "^%s*(.-)%s*$" ) -- trim whitespace
 
-        if line ~= "" and not line:match("^;") then
+        if line == "" or line:match( "^;" ) then
+			goto continue
+		end
 
-            local currentCategory = line:match("%[(.+)%]") -- check if line is a category
-            if currentCategory then
-                category = currentCategory
-                iniData[category] = iniData[category] or {}
+		local currentCategory = line:match( "%[(.+)%]" )
+		if currentCategory then
+			category = currentCategory
+			iniData[category] = iniData[category] or {}
+			goto continue
 
-            else
-                local item, value = line:match( "([^=]+)%s*=%s*([^;]+)" ) -- parse items and values, ignore comments
-                if item and value then
-                    item = item:match("^%s*(.-)%s*$")
-                    value = value:match("^%s*(.-)%s*$")
-                    iniData[category][item] = value
-                    local success, err = pcall( SetOption, category, item, value )
-                    if not success then
-                        print( "---------- Ultra+: SetOption failed:", err )
-                    end
-                end
-            end
-        end
+		else local item, value = line:match( "([^=]+)%s*=%s*([^;]+)" )
+			if item and value then
+				item = item:match( "^%s*(.-)%s*$" )
+				value = value:match( "^%s*(.-)%s*$" )
+				iniData[category][item] = value
+				local success, result = pcall( SetOption, category, item, value )
+				if not success then
+					print( "---------- Ultra+: SetOption failed:", result )
+				end
+			end
+		end
+		::continue::
     end
     file:close()
 end
@@ -292,8 +346,7 @@ function LoadSettings()
 	local settingsTable = {}
 	local settingsCategories = {
 		options.Tweaks,
-		options.Features,
-	}
+		options.Features }
 
 	for _, category in pairs( settingsCategories ) do
 		for _, setting in ipairs( category ) do
@@ -303,33 +356,43 @@ function LoadSettings()
 	end
 
 	local file = io.open( "config.json", "r" )
-	if file then
-		local rawJson = file:read( "*a" )
-		file:close()
+	if not file then
+		return
+	end
 
-		if not rawJson:match( "^%s*$" ) then
-			local success, result = pcall( json.decode, rawJson )
+	local rawJson = file:read( "*a" )
+	file:close()
 
-            if success and result.UltraPlus then
-            	for item, value in pairs( result.UltraPlus ) do
+	if rawJson:match( "^%s*$" ) then
+		print( "---------- Ultra+: config.json is empty or invalid." )
+		return
+	end
 
-                    if settingsTable[item] and not string.match(item, "^internal") then
-                        settingsTable[item].value = value
+	local success, result = pcall( json.decode, rawJson )
 
-                    elseif string.match( item, "internal" ) then
-						local key = string.match( item, "^internal%.(%w+)$" )
-                        if key then
-                            var.settings[key] = value
-                        end
-                    end
-                end
-            else
-                print("---------- Ultra+: Error loading config.json:", result)
-            end
-        else
-            print("---------- Ultra+: config.json is empty or invalid.")
-        end
-    end
+	if not success or not result.UltraPlus then
+		print( "---------- Ultra+: Could not read config.json error:", result )
+		return
+	end
+
+	for item, value in pairs( result.UltraPlus ) do
+		if not settingsTable[item] then
+			goto continue
+		end
+
+		if string.match( item, "internal" ) then
+			local key = string.match( item, "^internal%.(%w+)$" )
+			if key then
+				var.settings[key] = value
+			end
+			goto continue
+		end
+
+		if value ~= nil then
+			settingsTable[item].value = value
+		end
+		::continue::
+	end
 
 	print( "---------- Ultra+: Loading user settings..." )
 	for item, setting in pairs( settingsTable ) do
@@ -342,8 +405,7 @@ function SaveSettings()
 	local UltraPlus = {}
 	local settingsCategories = {
 		options.Tweaks,
-		options.Features,
-	}
+		options.Features }
 
 	for _, currentCategory in pairs( settingsCategories ) do
 		for _, currentSetting in pairs( currentCategory ) do
@@ -365,12 +427,15 @@ function SaveSettings()
 	end
 
 	local rawJson = result
-	local file = io.open( "config.json", "w" )
 
-	if file then
-		file:write( rawJson )
-		file:close()
+	local file = io.open( "config.json", "w" )
+	if not file then
+		print( "---------- Ultra+: Could not open file for writing" )
+		return
 	end
+
+	file:write( rawJson )
+	file:close()
 end
 
 local function ForceDlssd()
@@ -405,13 +470,14 @@ local function DoReGIR()
 		SetOption( "Editor/ReGIR", "Enable", true )
 		SetOption( "Editor/ReGIR", "UseForDI", true )
 		SetOption( "Editor/RTXDI", "EnableSeparateDenoising", false )
-	else
-		print( "---------- Ultra+: Disabling ReGIR" )
-
-		SetOption( "Editor/ReGIR", "Enable", false )
-		SetOption( "Editor/ReGIR", "UseForDI", false )
-		SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
+		return
 	end
+
+	print( "---------- Ultra+: Disabling ReGIR" )
+
+	SetOption( "Editor/ReGIR", "Enable", false )
+	SetOption( "Editor/ReGIR", "UseForDI", false )
+	SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
 end
 
 --[[
@@ -479,21 +545,15 @@ end
 ]]
 
 local function DoRainFix()
-	-- emable particle PT integration unless player is outdoors AND it's raining
---[[
-	if not var.settings.rainFix then
+	-- emable particle PT integration unless it's raining AND player is outdoors
+	if var.settings.rain == 1 or var.settings.indoors then
 		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
 		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
 		return
 	end
-]]
-	if var.settings.rain == 1 or var.settings.indoors then
-		print( "---------- Ultra+: Enabling DLSSDSeparateParticleColor" )
-		SetOption( "Rendering", "DLSSDSeparateParticleColor", true )
-	else
-		print( "---------- Ultra+: Disabling DLSSDSeparateParticleColor" )
-		SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
-	end
+
+	print( "---------- Ultra+: It's raining... (Disabling DLSSDSeparateParticleColor)" )
+	SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
 end
 
 local function DoRRFix()
@@ -598,7 +658,6 @@ registerForEvent( "onTweak", function()
 	var.settings.quality = GuessQuality()
 	config.SetQuality( var.settings.quality )
 ]]
-	LoadSettings()
 end)
 
 registerForEvent( "onInit", function()
@@ -613,6 +672,8 @@ registerForEvent( "onInit", function()
 	config.SetStreaming( var.settings.streaming )
 	config.SetSamples( var.settings.samples )
 	config.SetQuality( var.settings.quality )
+
+	LoadSettings()
 end)
 
 registerForEvent( "onOverlayOpen", function()
@@ -625,185 +686,168 @@ end)
 
 registerForEvent( "onDraw", function()
 
-	if WindowOpen then
+	if not WindowOpen then
+		return
+	end
 
-		ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
-		ImGui.SetNextWindowSize( 436, 615, ImGuiCond.Appearing )
+	ImGui.SetNextWindowPos( 200, 200, ImGuiCond.FirstUseEver )
+	ImGui.SetNextWindowSize( 436, 615, ImGuiCond.Appearing )
 
-		if ImGui.Begin( "Ultra+ Control v" .. ultraplus.__VERSION, true ) then
+	if ImGui.Begin( "Ultra+ Control v" .. ultraplus.__VERSION, true ) then
 
-			ImGui.SetWindowFontScale(0.9)
+		ImGui.SetWindowFontScale(0.9)
 
-			if ImGui.BeginTabBar( "Tabs" ) then
+		if ImGui.BeginTabBar( "Tabs" ) then
 
-				if ImGui.BeginTabItem( "Engine Config" ) then
+			if ImGui.BeginTabItem( "Engine Config" ) then
 
-					ui.text( "NOTE: Wait for FPS to stabilise after changing settings.")
+				ui.text( "NOTE: Wait for FPS to stabilise after changing settings.")
 
-					if ImGui.CollapsingHeader( "Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen ) then
+				if ImGui.CollapsingHeader( "Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen ) then
 --[[
-						if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
-							var.settings.mode = var.mode.RASTER
-							config.SetMode( var.settings.mode )
-							config.SetSamples( var.settings.samples )
-						end
+					if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
+						var.settings.mode = var.mode.RASTER
+						config.SetMode( var.settings.mode )
+						config.SetSamples( var.settings.samples )
+					end
 ]]
-						if ImGui.RadioButton( "RT Only", var.settings.mode == var.mode.RT_ONLY ) then
-							var.settings.mode = var.mode.RT_ONLY
-							config.SetMode( var.settings.mode )
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "RT+PT", var.settings.mode == var.mode.RT_PT ) then
-							var.settings.mode = var.mode.RT_PT
-							config.SetMode( var.settings.mode )
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "PT20", var.settings.mode == var.mode.PT20 ) then
-							var.settings.mode = var.mode.PT20
-							config.SetMode( var.settings.mode )
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "PT21", var.settings.mode == var.mode.PT21 ) then
-							var.settings.mode = var.mode.PT21
-							config.SetMode( var.settings.mode )
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
+					if ImGui.RadioButton( "RT Only", var.settings.mode == var.mode.RT_ONLY ) then
+						var.settings.mode = var.mode.RT_ONLY
+						config.SetMode( var.settings.mode )
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
 					end
 
-					ui.space()
-					if ImGui.CollapsingHeader( "RTXDI and ReGIR Quality", ImGuiTreeNodeFlags.DefaultOpen ) then
-						ui.tooltip( "RTXDI is path traced direct illumination." )
-
-						if ImGui.RadioButton( "Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA ) then
-							var.settings.samples = var.samples.VANILLA
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "Low##SamplesLow", var.settings.samples == var.samples.LOW ) then
-							var.settings.samples = var.samples.LOW
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "Medium##SamplesMedium", var.settings.samples == var.samples.MEDIUM ) then
-							var.settings.samples = var.samples.MEDIUM
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "High##SamplesHigh", var.settings.samples == var.samples.HIGH ) then
-							var.settings.samples = var.samples.HIGH
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "Insane##SamplesInsane", var.settings.samples == var.samples.INSANE ) then
-							var.settings.samples = var.samples.INSANE
-							config.SetSamples( var.settings.samples )
-							SaveSettings()
-						end
+					ui.align()
+					if ImGui.RadioButton( "RT+PT", var.settings.mode == var.mode.RT_PT ) then
+						var.settings.mode = var.mode.RT_PT
+						config.SetMode( var.settings.mode )
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
 					end
 
-					ui.space()
-					if ImGui.CollapsingHeader( var.settings.mode.." Indirect Illumination Sampling", ImGuiTreeNodeFlags.DefaultOpen ) then
-
-						if ImGui.RadioButton( "Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA ) then
-							var.settings.quality = var.quality.VANILLA
-							config.SetQuality( var.settings.quality )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "Low##QualityLow", var.settings.quality == var.quality.LOW ) then
-							var.settings.quality = var.quality.LOW
-							config.SetQuality( var.settings.quality )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "Medium##QualityMedium", var.settings.quality == var.quality.MEDIUM ) then
-							var.settings.quality = var.quality.MEDIUM
-							config.SetQuality( var.settings.quality )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "High##QualityHigh", var.settings.quality == var.quality.HIGH ) then
-							var.settings.quality = var.quality.HIGH
-							config.SetQuality( var.settings.quality )
-							SaveSettings()
-						end
-						
-						ui.align()
-						if ImGui.RadioButton( "Insane##QualityInsane", var.settings.quality == var.quality.INSANE ) then
-							var.settings.quality = var.quality.INSANE
-							config.SetQuality( var.settings.quality )
-							SaveSettings()
-						end
+					ui.align()
+					if ImGui.RadioButton( "PT20", var.settings.mode == var.mode.PT20 ) then
+						var.settings.mode = var.mode.PT20
+						config.SetMode( var.settings.mode )
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
 					end
 
-					ui.space()
-					if ImGui.CollapsingHeader( "Streaming Boost", ImGuiTreeNodeFlags.DefaultOpen ) then
-
-						if ImGui.RadioButton( "20 metres##StreamingLow", var.settings.streaming == var.streaming.LOW ) then
-							var.settings.streaming = var.streaming.LOW
-							config.SetStreaming( var.settings.streaming )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "40 metres##StreamingMedium", var.settings.streaming == var.streaming.MEDIUM ) then
-							var.settings.streaming = var.streaming.MEDIUM
-							config.SetStreaming( var.settings.streaming )
-							SaveSettings()
-						end
-
-						ui.align()
-						if ImGui.RadioButton( "80 metres##StreamingHigh", var.settings.streaming == var.streaming.HIGH ) then
-							var.settings.streaming = var.streaming.HIGH
-							config.SetStreaming( var.settings.streaming )
-							SaveSettings()
-						end
+					ui.align()
+					if ImGui.RadioButton( "PT21", var.settings.mode == var.mode.PT21 ) then
+						var.settings.mode = var.mode.PT21
+						config.SetMode( var.settings.mode )
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
 					end
-
-					ui.space()
-					if ImGui.CollapsingHeader( "Tweaks", ImGuiTreeNodeFlags.DefaultOpen ) then
-
-						for _, setting in pairs( options.Tweaks ) do
-							setting.value = GetOption( setting.category, setting.item )
-							setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-							ui.tooltip( setting.tooltip )
-
-							if toggled then
-								SetOption( setting.category, setting.item, setting.value )
-								setting.value = setting.value
-								SaveSettings()
-							end
-						end
-					end
-
-					ImGui.EndTabItem()
 				end
 
-				if ImGui.BeginTabItem( "Rendering Features" ) then
+				ui.space()
+				if ImGui.CollapsingHeader( "RTXDI and ReGIR Quality", ImGuiTreeNodeFlags.DefaultOpen ) then
+					ui.tooltip( "RTXDI is path traced direct illumination." )
 
-					ui.space()
-					for _, setting in pairs( options.Features ) do
+					if ImGui.RadioButton( "Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA ) then
+						var.settings.samples = var.samples.VANILLA
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "Low##SamplesLow", var.settings.samples == var.samples.LOW ) then
+						var.settings.samples = var.samples.LOW
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "Medium##SamplesMedium", var.settings.samples == var.samples.MEDIUM ) then
+						var.settings.samples = var.samples.MEDIUM
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "High##SamplesHigh", var.settings.samples == var.samples.HIGH ) then
+						var.settings.samples = var.samples.HIGH
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "Insane##SamplesInsane", var.settings.samples == var.samples.INSANE ) then
+						var.settings.samples = var.samples.INSANE
+						config.SetSamples( var.settings.samples )
+						SaveSettings()
+					end
+				end
+
+				ui.space()
+				if ImGui.CollapsingHeader( var.settings.mode.." Indirect Illumination Sampling", ImGuiTreeNodeFlags.DefaultOpen ) then
+
+					if ImGui.RadioButton( "Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA ) then
+						var.settings.quality = var.quality.VANILLA
+						config.SetQuality( var.settings.quality )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "Low##QualityLow", var.settings.quality == var.quality.LOW ) then
+						var.settings.quality = var.quality.LOW
+						config.SetQuality( var.settings.quality )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "Medium##QualityMedium", var.settings.quality == var.quality.MEDIUM ) then
+						var.settings.quality = var.quality.MEDIUM
+						config.SetQuality( var.settings.quality )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "High##QualityHigh", var.settings.quality == var.quality.HIGH ) then
+						var.settings.quality = var.quality.HIGH
+						config.SetQuality( var.settings.quality )
+						SaveSettings()
+					end
+					
+					ui.align()
+					if ImGui.RadioButton( "Insane##QualityInsane", var.settings.quality == var.quality.INSANE ) then
+						var.settings.quality = var.quality.INSANE
+						config.SetQuality( var.settings.quality )
+						SaveSettings()
+					end
+				end
+
+				ui.space()
+				if ImGui.CollapsingHeader( "Streaming Boost", ImGuiTreeNodeFlags.DefaultOpen ) then
+
+					if ImGui.RadioButton( "20 metres##StreamingLow", var.settings.streaming == var.streaming.LOW ) then
+						var.settings.streaming = var.streaming.LOW
+						config.SetStreaming( var.settings.streaming )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "40 metres##StreamingMedium", var.settings.streaming == var.streaming.MEDIUM ) then
+						var.settings.streaming = var.streaming.MEDIUM
+						config.SetStreaming( var.settings.streaming )
+						SaveSettings()
+					end
+
+					ui.align()
+					if ImGui.RadioButton( "80 metres##StreamingHigh", var.settings.streaming == var.streaming.HIGH ) then
+						var.settings.streaming = var.streaming.HIGH
+						config.SetStreaming( var.settings.streaming )
+						SaveSettings()
+					end
+				end
+
+				ui.space()
+				if ImGui.CollapsingHeader( "Tweaks", ImGuiTreeNodeFlags.DefaultOpen ) then
+
+					for _, setting in pairs( options.Tweaks ) do
 						setting.value = GetOption( setting.category, setting.item )
 						setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
 						ui.tooltip( setting.tooltip )
@@ -811,18 +855,35 @@ registerForEvent( "onDraw", function()
 						if toggled then
 							SetOption( setting.category, setting.item, setting.value )
 							setting.value = setting.value
-
 							SaveSettings()
 						end
 					end
-
-					ImGui.EndTabItem()
 				end
 
-				ImGui.EndTabBar()
+				ImGui.EndTabItem()
 			end
 
-		ImGui.End()
+			if ImGui.BeginTabItem( "Rendering Features" ) then
+
+				ui.space()
+				for _, setting in pairs( options.Features ) do
+					setting.value = GetOption( setting.category, setting.item )
+					setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+					ui.tooltip( setting.tooltip )
+
+					if toggled then
+						SetOption( setting.category, setting.item, setting.value )
+						setting.value = setting.value
+						SaveSettings()
+					end
+				end
+
+				ImGui.EndTabItem()
+			end
+
+			ImGui.EndTabBar()
 		end
+
+	ImGui.End()
 	end
 end)
