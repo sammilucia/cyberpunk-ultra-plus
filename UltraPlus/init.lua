@@ -152,7 +152,7 @@ function LoadIni(path)
     for line in file:lines() do
         line = line:match("^%s*(.-)%s*$") -- trim whitespace
         -- print("Line:", line) -- Debug print
-        if line == "" or string.sub(line, 0) == ";" then
+        if line == "" or string.sub(line, 1, 1) == ";" then
             goto continue
         end
 
