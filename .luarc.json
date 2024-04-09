@@ -1,0 +1,19 @@
+{
+    "Lua.format.defaultConfig": {
+        "indent_style": "space",
+        "indent_size": "4"
+    },
+    "diagnostics.globals": [
+        "Game",
+        "GameOptions",
+        "json",
+        "ImGui",
+        "ImGuiCol",
+        "GetSingleton",
+        "registerForEvent",
+        "ImGuiCond",
+        "ImGuiTreeNodeFlags",
+        "IsEntityInInteriorArea",
+        "GetPlayer"
+    ]
+}
