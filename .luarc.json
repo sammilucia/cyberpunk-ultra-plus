@@ -2,6 +2,7 @@
     "Lua.format.defaultConfig": {
         "indent_style": "space",
         "indent_size": "4"
+<<<<<<< HEAD
     },
     "diagnostics.globals": [
         "Game",
@@ -16,4 +17,7 @@
         "IsEntityInInteriorArea",
         "GetPlayer"
     ]
+=======
+    }
+>>>>>>> fa229d5103cae59276b216466b943d1ddc834b6e
 }
