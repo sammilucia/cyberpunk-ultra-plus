@@ -207,7 +207,7 @@ function GuessQuality()
     local shadeCount = GetOption("Editor/ReGIR", "ShadingCandidatesCount")
 
     if reGIR then
-        if shadeCount == 20 then
+        if shadeCount == 18 then
             guess = var.quality.INSANE
             print("---------- Ultra+: Guessed quality is", guess)
             return guess
