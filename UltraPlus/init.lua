@@ -310,7 +310,8 @@ function LoadSettings()
     local settingsTable = {}
     local settingsCategories = {
         options.Tweaks,
-        options.Features }
+        options.Features,
+}
 
     for _, category in pairs(settingsCategories) do
         for _, setting in ipairs(category) do
@@ -356,7 +357,8 @@ function SaveSettings()
     local UltraPlus = {}
     local settingsCategories = {
         options.Tweaks,
-        options.Features }
+        options.Features,
+}
 
     for _, currentCategory in pairs(settingsCategories) do
         for _, currentSetting in pairs(currentCategory) do
@@ -491,7 +493,7 @@ end
 
 local function DoRainFix()
     -- enable particle PT integration unless player is outdoors AND it's raining
-    if var.settings.rain or var.settings.indoors then
+    if var.settings.indoors or not var.settings.rain then
 		logger.info("It's not raining... Enabling separate particle colour")
         SetOption("Rendering", "DLSSDSeparateParticleColor", true)
         return
