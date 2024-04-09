@@ -32,7 +32,7 @@ local config = {
     SetStreaming = require("setstreaming").SetStreaming,
 --    turboHack = false,
     DEBUG = false,
-    reGIR = false }
+    reGIRDIHackApplied = false }
 local timer = {
     lazy = 0,
     fast = 0,
@@ -41,6 +41,9 @@ local timer = {
     FAST = 1.0 }
 
 local Detector = { isGameActive = false }
+
+local isLoaded = false
+
 function Detector.UpdateGameStatus()
     -- check if ingame or not
     local player = Game.GetPlayer()
@@ -146,10 +149,17 @@ function GuessMode()
     local reStir = GetOption( "Editor/ReSTIRGI", "Enable" )
     local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
     local rayTracing = GetOption( "/graphics/raytracing", "RayTracing" )
+    local reGIR = GetOption( "Editor/ReGIR", "Enable" )
 
     if not rayTracing then
         guess = var.mode.RASTER
         logger.info("Guessed rendering mode is", guess)
+        return guess
+    end
+
+    if pathTracing and reGIR then
+        guess = var.mode.REGIR
+        print( "---------- Ultra+: Guessed rendering mode is", guess )
         return guess
     end
 
@@ -191,6 +201,34 @@ function GuessQuality()
 
     local initialBounces = GetOption( "RayTracing/Reference", "BounceNumber" )
     local initialRays = GetOption( "RayTracing/Reference", "RayNumber" )
+    local reGIR = GetOption( "Editor/ReGIR", "Enable" )
+    local shadeCount = GetOption( "Editor/ReGIR", "ShadingCandidatesCount" )
+
+    if reGIR then
+        if shadeCount == 20 then
+            guess = var.quality.INSANE
+            print( "---------- Ultra+: Guessed quality is", guess )
+            return guess
+        end
+    
+        if shadeCount == 14 then
+            guess = var.quality.HIGH
+            print( "---------- Ultra+: Guessed quality is", guess )
+            return guess
+        end
+    
+        if shadeCount == 10 then
+            guess = var.quality.MEDIUM
+            print( "---------- Ultra+: Guessed quality is", guess )
+            return guess
+        end
+        
+        if shadeCount == 8 then
+            guess = var.quality.LOW
+            print( "---------- Ultra+: Guessed quality is", guess )
+            return guess
+        end
+    end
 
     if initialBounces == 1 then
         guess = var.quality.LOW
@@ -229,6 +267,34 @@ function GuessSamples()
     local guess = "Medium"
 
     local initialSamples = GetOption( "Editor/RTXDI", "NumInitialSamples" )
+    local reGIR = GetOption( "Editor/ReGIR", "Enable" )
+
+    if reGIR then
+
+        if initialSamples == 6 then
+            guess = var.samples.LOW
+            print( "---------- Ultra+: Guessed sample mode is", guess )
+            return guess
+        end
+    
+        if initialSamples == 8 then
+            guess = var.samples.MEDIUM
+            print( "---------- Ultra+: Guessed sample mode is", guess )
+            return guess
+        end
+    
+        if initialSamples == 10 then
+            guess = var.samples.HIGH
+            print( "---------- Ultra+: Guessed sample mode is", guess )
+            return guess
+        end
+    
+        if initialSamples == 12 then
+            guess = var.samples.INSANE
+            print( "---------- Ultra+: Guessed sample mode is", guess )
+            return guess
+        end
+    end
 
     if initialSamples == 14 then
         guess = var.samples.LOW
@@ -411,45 +477,40 @@ function ResetEngine()
     GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-local function DoReGIR()
-    -- fully enable/disable ReGIR
-    if var.settings.reGIR then
-        logger.info("Enabling ReGIR")
-    else
-        logger.info("Disabling ReGIR")
-    end
-
-    SetOption("Editor/ReGIR", "Enable", var.settings.reGIR)
-    SetOption("Editor/ReGIR", "UseForDI", var.settings.reGIR)
-    SetOption("Editor/RTXDI", "EnableSeparateDenoising", var.settings.reGIR)
-    return var.settings.reGIR
+local function DoReGIRDI()
+    config.reGIRDIHackApplied = true
+    SetOption( "Editor/ReGIR", "UseForDI", false )
+    Wait( 0.5, function()
+        SetOption( "Editor/ReGIR", "UseForDI", true )
+        SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
+    end )
 end
 
 --[[
 local function DoTurboHack()
-	-- reduce detail outdoors
-	if not var.settings.turboHack or var.settings.indoors then
-		config.SetSamples(var.settings.samples)
-		config.SetQuality(var.settings.quality)
-	else
-		logger.info("PT Turbo - reducing detail oudoors")
+    -- reduce detail outdoors
+    if not var.settings.turboHack or var.settings.indoors then
+        config.SetSamples(var.settings.samples)
+        config.SetQuality(var.settings.quality)
+    else
+        logger.info("PT Turbo - reducing detail oudoors")
 
-		if var.settings.samples == var.samples.VANILLA then
-			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
+        if var.settings.samples == var.samples.VANILLA then
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
-		elseif var.settings.samples == var.samples.LOW then
-			if var.settings.mode == var.mode.PT20 then
-				SetOption("Editor/SHARC", "DownscaleFactor", "7")
-				SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
-			elseif var.settings.mode == var.mode.RT_PT then
-				SetOption("Editor/SHARC", "DownscaleFactor", "7")
-				SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
-			elseif var.settings.mode == var.mode.PT21 then
-				SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
-			end
+        elseif var.settings.samples == var.samples.LOW then
+            if var.settings.mode == var.mode.PT20 then
+                SetOption("Editor/SHARC", "DownscaleFactor", "7")
+                SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
+            elseif var.settings.mode == var.mode.RT_PT then
+                SetOption("Editor/SHARC", "DownscaleFactor", "7")
+                SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
+            elseif var.settings.mode == var.mode.PT21 then
+                SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
+            end
 
-		elseif var.settings.samples == var.samples.MEDIUM then
-			if var.settings.mode == var.mode.PT20 then
+        elseif var.settings.samples == var.samples.MEDIUM then
+            if var.settings.mode == var.mode.PT20 then
 
             elseif var.settings.mode == var.mode.RT_PT then
 
@@ -492,7 +553,7 @@ end
 local function DoRainFix()
     -- enable particle PT integration unless player is outdoors AND it's raining
     if var.settings.rain or var.settings.indoors then
-		logger.info("It's not raining... Enabling separate particle colour")
+        logger.info("It's not raining... Enabling separate particle colour")
         SetOption("Rendering", "DLSSDSeparateParticleColor", true)
         return
     end
@@ -532,7 +593,10 @@ local function DoFastUpdate()
     end
 ]]
 
-    config.reGIR = DoReGIR()
+    local reGIRGI = GetOption( "Editor/ReGIR", "Enable" )
+    if reGIRGI and not config.reGIRDIHackApplied then
+        DoReGIRDI()
+    end
 end
 
 local function DoLazyUpdate()
@@ -599,19 +663,41 @@ registerForEvent("onTweak", function()
     var.settings.quality = GuessQuality()
     config.SetQuality(var.settings.quality)
 ]]
+    SetOption( "Editor/RTXDI", "EnableSeparateDenoising", false )
+    config.reGIRDIHackApplied = false
 end)
 
 registerForEvent("onInit", function()
+    isLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
+    
+    Observe('QuestTrackerGameController', 'OnInitialize', function()
+        if not isLoaded then
+            print('Game Session Started')
+            isLoaded = true
+        end
+    end)
+    
+    Observe('QuestTrackerGameController', 'OnUninitialize', function()
+        if Game.GetPlayer() == nil then
+            print('Game Session Ended')
+            isLoaded = false
+            SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
+            config.reGIRDIHackApplied = false
+        end
+    end)
+
     local file = io.open("debug", "r")
     if file then
         config.DEBUG = true
         Debug("Enabling debug output")
     end
 
+    SetOption( "Editor/RTXDI", "EnableSeparateDenoising", false )
     config.SetMode(var.settings.mode)
     config.SetStreaming(var.settings.streaming)
     config.SetSamples(var.settings.samples)
     config.SetQuality(var.settings.quality)
+    config.reGIRDIHackApplied = false
 end)
 
 registerForEvent("onOverlayOpen", function()

@@ -95,6 +95,15 @@ local function renderTabEngineDrawer()
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
+
+        ui.align()
+        if ImGui.RadioButton( "ReGIR", var.settings.mode == var.mode.REGIR ) then
+            var.settings.mode = var.mode.REGIR
+            config.SetMode( var.settings.mode )
+            config.SetSamples( var.settings.samples )
+            config.reGIRDIHackApplied = false
+            SaveSettings()
+        end
     end
 
     ui.space()
@@ -228,6 +237,115 @@ local function renderRenderingFeaturesDrawer()
     end
 end
 
+
+
+local function renderDebugDrawer()
+
+    ui.space()
+    for _, setting in pairs( options.RTXDI ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.RTXGI ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.REGIR ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.RELAX ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.NRD ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.RTOPTIONS ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.SHARC ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.space()
+    for _, setting in pairs( options.RTINT ) do
+        setting.value = GetOption( setting.category, setting.item )
+        setting.value, toggled = ImGui.InputInt( setting.name, setting.value )
+        ui.tooltip( setting.tooltip )
+
+        if toggled then
+            SetOption( setting.category, setting.item, setting.value )
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+end
+
 local function renderTabs()
     if ImGui.BeginTabBar("Tabs") then
         if ImGui.BeginTabItem("Engine Config") then
@@ -237,6 +355,11 @@ local function renderTabs()
 
         if ImGui.BeginTabItem("Rendering Features") then
             renderRenderingFeaturesDrawer()
+            ImGui.EndTabItem()
+        end
+
+        if ImGui.BeginTabItem("Debug") then
+            renderDebugDrawer()
             ImGui.EndTabItem()
         end
 

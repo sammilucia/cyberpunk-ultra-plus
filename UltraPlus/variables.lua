@@ -45,7 +45,6 @@ local var = {
         quality = "Unknown",
         streaming = "Unknown",
         turboHack = false,
-        reGIR = false,
         indoors = nil,
         rain = nil,
     },
