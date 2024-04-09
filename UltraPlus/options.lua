@@ -2,17 +2,17 @@
 
 local options = {
     Tweaks = {
---[[		{
-			item = "turboHack",
-			name = "Enable PT Turbo (slightly reduce quality outdoors)",
-			category = "internal",
-			tooltip = "RTXDI spatial sampling is mostly needed indoors. This tweak reduces it while\noutdoors to try and maintain FPS in complex outdoor areas. It CAN reduce\nvisual quality outdoors in certain situations (white cars\nand highly reflective surfaces in particular).",
-		},
-		{
-			item = "rainFix",
-			name = "Enable PT Rain Fix",
-			category = "internal",
-			tooltip = "Enables full particle integration with path tracing while it's not raining\nor you're indoors." },]]
+--[[        {
+            item = "turboHack",
+            name = "Enable PT Turbo (slightly reduce quality outdoors)",
+            category = "internal",
+            tooltip = "RTXDI spatial sampling is mostly needed indoors. This tweak reduces it while\noutdoors to try and maintain FPS in complex outdoor areas. It CAN reduce\nvisual quality outdoors in certain situations (white cars\nand highly reflective surfaces in particular).",
+        },
+        {
+            item = "rainFix",
+            name = "Enable PT Rain Fix",
+            category = "internal",
+            tooltip = "Enables full particle integration with path tracing while it's not raining\nor you're indoors." },]]
         {
             item = "DLSS_D",
             name = "Enable PT Denoiser: Ray Reconstruction",

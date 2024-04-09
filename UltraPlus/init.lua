@@ -429,29 +429,29 @@ end
 
 --[[
 local function DoTurboHack()
-	-- reduce detail outdoors
-	if not var.settings.turboHack or var.settings.indoors then
-		config.SetSamples(var.settings.samples)
-		config.SetQuality(var.settings.quality)
-	else
-		logger.info("PT Turbo - reducing detail oudoors")
+    -- reduce detail outdoors
+    if not var.settings.turboHack or var.settings.indoors then
+        config.SetSamples(var.settings.samples)
+        config.SetQuality(var.settings.quality)
+    else
+        logger.info("PT Turbo - reducing detail oudoors")
 
-		if var.settings.samples == var.samples.VANILLA then
-			SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
+        if var.settings.samples == var.samples.VANILLA then
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
-		elseif var.settings.samples == var.samples.LOW then
-			if var.settings.mode == var.mode.PT20 then
-				SetOption("Editor/SHARC", "DownscaleFactor", "7")
-				SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
-			elseif var.settings.mode == var.mode.RT_PT then
-				SetOption("Editor/SHARC", "DownscaleFactor", "7")
-				SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
-			elseif var.settings.mode == var.mode.PT21 then
-				SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
-			end
+        elseif var.settings.samples == var.samples.LOW then
+            if var.settings.mode == var.mode.PT20 then
+                SetOption("Editor/SHARC", "DownscaleFactor", "7")
+                SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
+            elseif var.settings.mode == var.mode.RT_PT then
+                SetOption("Editor/SHARC", "DownscaleFactor", "7")
+                SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
+            elseif var.settings.mode == var.mode.PT21 then
+                SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
+            end
 
-		elseif var.settings.samples == var.samples.MEDIUM then
-			if var.settings.mode == var.mode.PT20 then
+        elseif var.settings.samples == var.samples.MEDIUM then
+            if var.settings.mode == var.mode.PT20 then
 
             elseif var.settings.mode == var.mode.RT_PT then
 
@@ -494,7 +494,7 @@ end
 local function DoRainFix()
     -- enable particle PT integration unless player is outdoors AND it's raining
     if var.settings.indoors or not var.settings.rain then
-		logger.info("It's not raining... Enabling separate particle colour")
+        logger.info("It's not raining... Enabling separate particle colour")
         SetOption("Rendering", "DLSSDSeparateParticleColor", true)
         return
     end

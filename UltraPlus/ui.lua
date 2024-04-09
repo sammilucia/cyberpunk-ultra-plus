@@ -7,51 +7,51 @@ local config = {
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
     SetStreaming = require("setstreaming").SetStreaming,
-    --	turboHack = false,
+    -- turboHack = false,
     DEBUG = false,
     reGIR = false }
 local toggled
 
 local ui = {
 
-	line = function()
-		ImGui.Spacing()
-		ImGui.Separator()
-		ImGui.Spacing()
-	end,
-
-	space = function()
+    line = function()
         ImGui.Spacing()
-	end,
+        ImGui.Separator()
+        ImGui.Spacing()
+    end,
 
-	align = function()
-		ImGui.SameLine()
-	end,
+    space = function()
+        ImGui.Spacing()
+    end,
 
-	text = function( text )
-		ImGui.Text( text)
-	end,
+    align = function()
+        ImGui.SameLine()
+    end,
 
-	section = function( text )
-		ImGui.Spacing()
-		ImGui.Separator()
-		ImGui.TextWrapped( text )
-		ImGui.Spacing()
-	end,
+    text = function( text )
+        ImGui.Text( text)
+    end,
 
-	heading = function( text )
-		ImGui.Spacing()
-		ImGui.Text( "Skin/Hair" )
-		ImGui.Spacing()
-	end,
+    section = function( text )
+        ImGui.Spacing()
+        ImGui.Separator()
+        ImGui.TextWrapped( text )
+        ImGui.Spacing()
+    end,
 
-	tooltip = function( text )
-		if ImGui.IsItemHovered() and text ~= "" then
-			ImGui.BeginTooltip()
-			ImGui.SetTooltip( text )
-			ImGui.EndTooltip()
-		end
-	end,
+    heading = function( text )
+        ImGui.Spacing()
+        ImGui.Text( "Skin/Hair" )
+        ImGui.Spacing()
+    end,
+
+    tooltip = function( text )
+        if ImGui.IsItemHovered() and text ~= "" then
+            ImGui.BeginTooltip()
+            ImGui.SetTooltip( text )
+            ImGui.EndTooltip()
+        end
+    end,
 }
 
 local function renderTabEngineDrawer()
@@ -59,11 +59,11 @@ local function renderTabEngineDrawer()
 
     if ImGui.CollapsingHeader("Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen) then
         --[[
-		if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
-			var.settings.mode = var.mode.RASTER
-			config.SetMode( var.settings.mode )
-			config.SetSamples( var.settings.samples )
-		end
+        if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
+            var.settings.mode = var.mode.RASTER
+            config.SetMode( var.settings.mode )
+            config.SetSamples( var.settings.samples )
+        end
 ]]
         if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
             var.settings.mode = var.mode.RT_ONLY
