@@ -2,7 +2,7 @@
 
 local options = {
     Tweaks = {
---[[		{
+--[[        {
             item = "turboHack",
             name = "Enable PT Turbo (slightly reduce quality outdoors)",
             category = "internal",

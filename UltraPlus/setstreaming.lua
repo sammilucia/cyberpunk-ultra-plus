@@ -27,7 +27,7 @@ function config.SetStreaming(streaming)
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
-	end
+    end
 
     if streaming == var.streaming.HIGH then
         SetOption("Streaming", "MaxNodesPerFrame", "800")
