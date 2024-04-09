@@ -17,7 +17,7 @@ function config.SetStreaming(streaming)
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
- 
+
     if streaming == var.streaming.MEDIUM then
         SetOption("Streaming", "MaxNodesPerFrame", "300")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")

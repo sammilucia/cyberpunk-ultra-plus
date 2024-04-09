@@ -19,28 +19,28 @@ function config.SetQuality(quality)
         SetOption("Editor/SHARC", "Bounces", "4")
         SetOption("Editor/ReGIR", "ShadingCandidatesCount", "4")
         SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
-        SetOption( "Rendering", "CheckerboardGI", true )
+        SetOption("Rendering", "CheckerboardGI", true)
         return
     end
 
     if quality == var.quality.LOW then
-        SetOption( "Rendering", "CheckerboardGI", true )
-        SetOption( "Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "4" )
-        SetOption( "Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "4" )
-        SetOption( "Editor/ReGIR", "ShadingCandidatesCount", "8" )
-        SetOption( "Editor/ReGIR", "BuildCandidatesCount", "8" )
+        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "4")
+        SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "4")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "8")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
         SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
         SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
-        
+
         if var.settings.mode == var.mode.REGIR then
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true )
-            SetOption( "Editor/ReSTIRGI", "Enable", false )
-            SetOption( "Editor/SHARC", "Bounces", "2" )
-            SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
-            SetOption( "Editor/SHARC", "DownscaleFactor", "5" )
-            SetOption( "Editor/SHARC", "SceneScale", "50.0" )
-            SetOption( "RayTracing/Reference", "RayNumber", "2" )
-            SetOption( "RayTracing/Reference", "BounceNumber", "2" )
+            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+            SetOption("Editor/ReSTIRGI", "Enable", false)
+            SetOption("Editor/SHARC", "Bounces", "2")
+            SetOption("Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("RayTracing/Reference", "RayNumber", "2")
+            SetOption("RayTracing/Reference", "BounceNumber", "2")
             return
         end
 
@@ -72,23 +72,23 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.MEDIUM then
-        SetOption( "Rendering", "CheckerboardGI", true )
-        SetOption( "Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "5" )
-        SetOption( "Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "5" )
-        SetOption( "Editor/ReGIR", "ShadingCandidatesCount", "10" )
-        SetOption( "Editor/ReGIR", "BuildCandidatesCount", "8" )
+        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "5")
+        SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "5")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "10")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
         SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
         SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption( "Editor/ReSTIRGI", "Enable", true )
-            SetOption( "Editor/SHARC", "Bounces", "3" )
-            SetOption( "RayTracing/Reference", "RayNumber", "2" )
-            SetOption( "RayTracing/Reference", "BounceNumber", "2" )
-            SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
-            SetOption( "Editor/SHARC", "DownscaleFactor", "5" )
-            SetOption( "Editor/SHARC", "SceneScale", "50.0" )
+            SetOption("Editor/ReSTIRGI", "Enable", true)
+            SetOption("Editor/SHARC", "Bounces", "3")
+            SetOption("RayTracing/Reference", "RayNumber", "2")
+            SetOption("RayTracing/Reference", "BounceNumber", "2")
+            SetOption("Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
             return
         end
 
@@ -120,23 +120,23 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.HIGH then
-        SetOption( "Rendering", "CheckerboardGI", true )
-        SetOption( "Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6" )
-        SetOption( "Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6" )
-        SetOption( "Editor/ReGIR", "ShadingCandidatesCount", "14" )
-        SetOption( "Editor/ReGIR", "BuildCandidatesCount", "12" )
+        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6")
+        SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "14")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "12")
         SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
         SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption( "Editor/ReSTIRGI", "Enable", true )
-            SetOption( "Editor/SHARC", "Bounces", "4" )
-            SetOption( "RayTracing/Reference", "RayNumber", "2" )
-            SetOption( "RayTracing/Reference", "BounceNumber", "2" )
-            SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
-            SetOption( "Editor/SHARC", "DownscaleFactor", "5" )
-            SetOption( "Editor/SHARC", "SceneScale", "50.0" )
+            SetOption("Editor/ReSTIRGI", "Enable", true)
+            SetOption("Editor/SHARC", "Bounces", "4")
+            SetOption("RayTracing/Reference", "RayNumber", "2")
+            SetOption("RayTracing/Reference", "BounceNumber", "2")
+            SetOption("Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
             return
         end
 
@@ -168,23 +168,23 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.INSANE then
-        SetOption( "Rendering", "CheckerboardGI", true )
-        SetOption( "Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "8" )
-        SetOption( "Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "8" )
-        SetOption( "Editor/ReGIR", "ShadingCandidatesCount", "20" )
-        SetOption( "Editor/ReGIR", "BuildCandidatesCount", "16" )
+        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "8")
+        SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "8")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")
         SetOption("RayTracing/Reference", "RayNumberScreenshot", "8")
         SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
-        
+
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption( "Editor/ReSTIRGI", "Enable", true )
-            SetOption( "Editor/SHARC", "Bounces", "5" )
-            SetOption( "RayTracing/Reference", "RayNumber", "2" )
-            SetOption( "RayTracing/Reference", "BounceNumber", "2" )
-            SetOption( "Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25" )
-            SetOption( "Editor/SHARC", "DownscaleFactor", "5" )
-            SetOption( "Editor/SHARC", "SceneScale", "50.0" )
+            SetOption("Editor/ReSTIRGI", "Enable", true)
+            SetOption("Editor/SHARC", "Bounces", "5")
+            SetOption("RayTracing/Reference", "RayNumber", "2")
+            SetOption("RayTracing/Reference", "BounceNumber", "2")
+            SetOption("Editor/SHARC", "UsePrevFrameBiasAllowance", "0.25")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
             return
         end
 

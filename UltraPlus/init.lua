@@ -1,8 +1,8 @@
 UltraPlus = {
-    __VERSION         = '4.0-alpha11',
-    __DESCRIPTION    = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
-    __URL            = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
-    __LICENSE        = [[
+    __VERSION     = '4.0-alpha11',
+    __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
+    __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
+    __LICENSE     = [[
     MIT No Attribution
 
     Copyright 2024 SammiLucia and Xerme
@@ -30,15 +30,17 @@ local config = {
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
     SetStreaming = require("setstreaming").SetStreaming,
---    turboHack = false,
+    --    turboHack = false,
     DEBUG = false,
-    reGIRDIHackApplied = false }
+    reGIRDIHackApplied = false
+}
 local timer = {
     lazy = 0,
     fast = 0,
     paused = false,
     LAZY = 20.0,
-    FAST = 1.0 }
+    FAST = 1.0
+}
 
 local Detector = { isGameActive = false }
 
@@ -117,7 +119,7 @@ function SetOption(category, item, value)
         var.settings[item] = value
         return
     end
-    
+
     if string.sub(category, 1, 1) == "/" then
         Game.GetSettingsSystem():GetVar(category, item):SetValue(value)
         return
@@ -144,12 +146,12 @@ end
 function GuessMode()
     local guess = "Unknown"
 
-    local proxyLightRejection = GetOption( "Editor/RTXDI", "EnableEmissiveProxyLightRejection" )
-    local nrdEnabled = GetOption( "Raytracing", "EnableNRD" )
-    local reStir = GetOption( "Editor/ReSTIRGI", "Enable" )
-    local pathTracing = GetOption( "/graphics/raytracing", "RayTracedPathTracing" )
-    local rayTracing = GetOption( "/graphics/raytracing", "RayTracing" )
-    local reGIR = GetOption( "Editor/ReGIR", "Enable" )
+    local proxyLightRejection = GetOption("Editor/RTXDI", "EnableEmissiveProxyLightRejection")
+    local nrdEnabled = GetOption("Raytracing", "EnableNRD")
+    local reStir = GetOption("Editor/ReSTIRGI", "Enable")
+    local pathTracing = GetOption("/graphics/raytracing", "RayTracedPathTracing")
+    local rayTracing = GetOption("/graphics/raytracing", "RayTracing")
+    local reGIR = GetOption("Editor/ReGIR", "Enable")
 
     if not rayTracing then
         guess = var.mode.RASTER
@@ -159,7 +161,7 @@ function GuessMode()
 
     if pathTracing and reGIR then
         guess = var.mode.REGIR
-        print( "---------- Ultra+: Guessed rendering mode is", guess )
+        print("---------- Ultra+: Guessed rendering mode is", guess)
         return guess
     end
 
@@ -199,33 +201,33 @@ end
 function GuessQuality()
     local guess = "Low"
 
-    local initialBounces = GetOption( "RayTracing/Reference", "BounceNumber" )
-    local initialRays = GetOption( "RayTracing/Reference", "RayNumber" )
-    local reGIR = GetOption( "Editor/ReGIR", "Enable" )
-    local shadeCount = GetOption( "Editor/ReGIR", "ShadingCandidatesCount" )
+    local initialBounces = GetOption("RayTracing/Reference", "BounceNumber")
+    local initialRays = GetOption("RayTracing/Reference", "RayNumber")
+    local reGIR = GetOption("Editor/ReGIR", "Enable")
+    local shadeCount = GetOption("Editor/ReGIR", "ShadingCandidatesCount")
 
     if reGIR then
         if shadeCount == 20 then
             guess = var.quality.INSANE
-            print( "---------- Ultra+: Guessed quality is", guess )
+            print("---------- Ultra+: Guessed quality is", guess)
             return guess
         end
-    
+
         if shadeCount == 14 then
             guess = var.quality.HIGH
-            print( "---------- Ultra+: Guessed quality is", guess )
+            print("---------- Ultra+: Guessed quality is", guess)
             return guess
         end
-    
+
         if shadeCount == 10 then
             guess = var.quality.MEDIUM
-            print( "---------- Ultra+: Guessed quality is", guess )
+            print("---------- Ultra+: Guessed quality is", guess)
             return guess
         end
-        
+
         if shadeCount == 8 then
             guess = var.quality.LOW
-            print( "---------- Ultra+: Guessed quality is", guess )
+            print("---------- Ultra+: Guessed quality is", guess)
             return guess
         end
     end
@@ -266,32 +268,31 @@ end
 function GuessSamples()
     local guess = "Medium"
 
-    local initialSamples = GetOption( "Editor/RTXDI", "NumInitialSamples" )
-    local reGIR = GetOption( "Editor/ReGIR", "Enable" )
+    local initialSamples = GetOption("Editor/RTXDI", "NumInitialSamples")
+    local reGIR = GetOption("Editor/ReGIR", "Enable")
 
     if reGIR then
-
         if initialSamples == 6 then
             guess = var.samples.LOW
-            print( "---------- Ultra+: Guessed sample mode is", guess )
+            print("---------- Ultra+: Guessed sample mode is", guess)
             return guess
         end
-    
+
         if initialSamples == 8 then
             guess = var.samples.MEDIUM
-            print( "---------- Ultra+: Guessed sample mode is", guess )
+            print("---------- Ultra+: Guessed sample mode is", guess)
             return guess
         end
-    
+
         if initialSamples == 10 then
             guess = var.samples.HIGH
-            print( "---------- Ultra+: Guessed sample mode is", guess )
+            print("---------- Ultra+: Guessed sample mode is", guess)
             return guess
         end
-    
+
         if initialSamples == 12 then
             guess = var.samples.INSANE
-            print( "---------- Ultra+: Guessed sample mode is", guess )
+            print("---------- Ultra+: Guessed sample mode is", guess)
             return guess
         end
     end
@@ -377,7 +378,7 @@ function LoadSettings()
     local settingsCategories = {
         options.Tweaks,
         options.Features,
-}
+    }
 
     for _, category in pairs(settingsCategories) do
         for _, setting in ipairs(category) do
@@ -424,7 +425,7 @@ function SaveSettings()
     local settingsCategories = {
         options.Tweaks,
         options.Features,
-}
+    }
 
     for _, currentCategory in pairs(settingsCategories) do
         for _, currentSetting in pairs(currentCategory) do
@@ -481,11 +482,11 @@ end
 
 local function DoReGIRDI()
     config.reGIRDIHackApplied = true
-    SetOption( "Editor/ReGIR", "UseForDI", false )
-    Wait( 0.5, function()
-        SetOption( "Editor/ReGIR", "UseForDI", true )
-        SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
-    end )
+    SetOption("Editor/ReGIR", "UseForDI", false)
+    Wait(0.5, function()
+        SetOption("Editor/ReGIR", "UseForDI", true)
+        SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+    end)
 end
 
 --[[
@@ -561,7 +562,7 @@ local function DoRainFix()
     end
 
     logger.info("It's raining... Disabling separate particle colour")
-    SetOption( "Rendering", "DLSSDSeparateParticleColor", false )
+    SetOption("Rendering", "DLSSDSeparateParticleColor", false)
 end
 
 local function DoRRFix()
@@ -588,14 +589,14 @@ local function DoFastUpdate()
         var.settings.rain = testRain
         var.settings.indoors = testIndoors
     end
---[[
+    --[[
     if config.turboHack ~= var.settings.turboHack then
         DoTurboHack()
         config.turboHack = var.settings.turboHack
     end
 ]]
 
-    local reGIRGI = GetOption( "Editor/ReGIR", "Enable" )
+    local reGIRGI = GetOption("Editor/ReGIR", "Enable")
     if reGIRGI and not config.reGIRDIHackApplied then
         DoReGIRDI()
     end
@@ -655,7 +656,7 @@ end)
 
 registerForEvent("onTweak", function()
     LoadIni("commonfixes.ini")
---[[
+    --[[
     var.settings.mode = GuessMode()
     config.SetMode(var.settings.mode)
 
@@ -665,25 +666,25 @@ registerForEvent("onTweak", function()
     var.settings.quality = GuessQuality()
     config.SetQuality(var.settings.quality)
 ]]
-    SetOption( "Editor/RTXDI", "EnableSeparateDenoising", false )
+    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false
 end)
 
 registerForEvent("onInit", function()
     isLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
-    
+
     Observe('QuestTrackerGameController', 'OnInitialize', function()
         if not isLoaded then
             print('Game Session Started')
             isLoaded = true
         end
     end)
-    
+
     Observe('QuestTrackerGameController', 'OnUninitialize', function()
         if Game.GetPlayer() == nil then
             print('Game Session Ended')
             isLoaded = false
-            SetOption( "Editor/RTXDI", "EnableSeparateDenoising", true )
+            SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
             config.reGIRDIHackApplied = false
         end
     end)
@@ -694,7 +695,7 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
-    SetOption( "Editor/RTXDI", "EnableSeparateDenoising", false )
+    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.SetMode(var.settings.mode)
     config.SetStreaming(var.settings.streaming)
     config.SetSamples(var.settings.samples)

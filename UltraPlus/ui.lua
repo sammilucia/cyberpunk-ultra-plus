@@ -9,7 +9,8 @@ local config = {
     SetStreaming = require("setstreaming").SetStreaming,
     -- turboHack = false,
     DEBUG = false,
-    reGIR = false }
+    reGIR = false
+}
 local toggled
 
 local ui = {
@@ -28,27 +29,27 @@ local ui = {
         ImGui.SameLine()
     end,
 
-    text = function( text )
-        ImGui.Text( text)
+    text = function(text)
+        ImGui.Text(text)
     end,
 
-    section = function( text )
+    section = function(text)
         ImGui.Spacing()
         ImGui.Separator()
-        ImGui.TextWrapped( text )
+        ImGui.TextWrapped(text)
         ImGui.Spacing()
     end,
 
-    heading = function( text )
+    heading = function(text)
         ImGui.Spacing()
-        ImGui.Text( "Skin/Hair" )
+        ImGui.Text("Skin/Hair")
         ImGui.Spacing()
     end,
 
-    tooltip = function( text )
+    tooltip = function(text)
         if ImGui.IsItemHovered() and text ~= "" then
             ImGui.BeginTooltip()
-            ImGui.SetTooltip( text )
+            ImGui.SetTooltip(text)
             ImGui.EndTooltip()
         end
     end,
@@ -97,10 +98,10 @@ local function renderTabEngineDrawer()
         end
 
         ui.align()
-        if ImGui.RadioButton( "ReGIR", var.settings.mode == var.mode.REGIR ) then
+        if ImGui.RadioButton("ReGIR", var.settings.mode == var.mode.REGIR) then
             var.settings.mode = var.mode.REGIR
-            config.SetMode( var.settings.mode )
-            config.SetSamples( var.settings.samples )
+            config.SetMode(var.settings.mode)
+            config.SetSamples(var.settings.samples)
             config.reGIRDIHackApplied = false
             SaveSettings()
         end
@@ -240,106 +241,105 @@ end
 
 
 local function renderDebugDrawer()
-
     ui.space()
-    for _, setting in pairs( options.RTXDI ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.RTXDI) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.RTXGI ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.RTXGI) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.REGIR ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.REGIR) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.RELAX ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.RELAX) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.NRD ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.NRD) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.RTOPTIONS ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.RTOPTIONS) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.SHARC ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.Checkbox( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.SHARC) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
     end
 
     ui.space()
-    for _, setting in pairs( options.RTINT ) do
-        setting.value = GetOption( setting.category, setting.item )
-        setting.value, toggled = ImGui.InputInt( setting.name, setting.value )
-        ui.tooltip( setting.tooltip )
+    for _, setting in pairs(options.RTINT) do
+        setting.value = GetOption(setting.category, setting.item)
+        setting.value, toggled = ImGui.InputInt(setting.name, setting.value)
+        ui.tooltip(setting.tooltip)
 
         if toggled then
-            SetOption( setting.category, setting.item, setting.value )
+            SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
             SaveSettings()
         end
