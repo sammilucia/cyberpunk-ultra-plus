@@ -141,55 +141,84 @@ function SetOption(category, item, value)
     Debug("Unsupported GameOption:", category .. "/" .. item, "=", value)
 end
 
+local function doGuess(againstTable, currentOpts, guessName)
+    for requiredOpts, mode in pairs(againstTable) do
+        if currentOpts == requiredOpts then
+            logger.info("Guessed", guessName, "mode is", mode)
+            return mode
+        end
+    end
+end
+
 function GuessMode()
-    local guess = "Unknown"
+    local opts = {
+        rayTracing = GetOption("/graphics/raytracing", "RayTracing"),
+        pathTracing = GetOption("/graphics/raytracing", "RayTracedPathTracing"),
+        reGIR = GetOption("Editor/ReGIR", "Enable"),
+        reSTIR = GetOption("Editor/ReSTIRGI", "Enable"),
+        NRD = GetOption("Raytracing", "EnableNRD"),
+        proxyLightRejection = GetOption("Editor/RTXDI", "EnableEmissiveProxyLightRejection"),
+    }
 
-    local proxyLightRejection = GetOption("Editor/RTXDI", "EnableEmissiveProxyLightRejection")
-    local nrdEnabled = GetOption("Raytracing", "EnableNRD")
-    local reStir = GetOption("Editor/ReSTIRGI", "Enable")
-    local pathTracing = GetOption("/graphics/raytracing", "RayTracedPathTracing")
-    local rayTracing = GetOption("/graphics/raytracing", "RayTracing")
-    local reGIR = GetOption("Editor/ReGIR", "Enable")
+    local renderingModes = {
+        -- [{rayTracing = bool, pathTracing = bool, reGIR = boolean, reSTIR = boolean, NRD = boolean, proxyLightRejection = boolean}] = mode
+        [{ -- VANILLA
+            rayTracing = true,
+            pathTracing = true,
+            reGIR = opts.reGIR,
+            reSTIR = true,
+            NRD = opts.NRD,
+            proxyLightRejection = false,
+        }] = var.mode.VANILLA,
 
-    if not rayTracing then
-        guess = var.mode.RASTER
-        logger.info("Guessed rendering mode is", guess)
-        return guess
-    end
+        [{ -- RASTER
+            rayTracing = false,
+            pathTracing = false,
+            reGIR = opts.reGIR,
+            reSTIR = opts.reSTIR,
+            NRD = opts.NRD,
+            proxyLightRejection = opts.proxyLightRejection,
+        }] = var.mode.RASTER,
 
-    if pathTracing and reGIR then
-        guess = var.mode.REGIR
-        logger.info("Guessed rendering mode is", guess)
-        return guess
-    end
+        [{ -- RT_ONLY
+            rayTracing = false,
+            pathTracing = false,
+            reGIR = opts.reGIR,
+            reSTIR = opts.reSTIR,
+            NRD = false,
+            proxyLightRejection = opts.proxyLightRejection,
+        }] = var.mode.RT_ONLY,
 
-    if rayTracing and not pathTracing and not nrdEnabled then
-        guess = var.mode.RT_ONLY
-        logger.info("Guessed rendering mode is", guess)
-        return guess
-    end
+        [{ -- RT_PT
+            rayTracing = true,
+            pathTracing = false,
+            reGIR = opts.reGIR,
+            reSTIR = opts.reSTIR,
+            NRD = true,
+            proxyLightRejection = opts.proxyLightRejection,
+        }] = var.mode.RT_PT,
 
-    if rayTracing and not pathTracing and nrdEnabled then
-        guess = var.mode.RT_PT
-        logger.info("Guessed rendering mode is", guess)
-        return guess
-    end
+        [{ -- PT20
+            rayTracing = true,
+            pathTracing = true,
+            reGIR = opts.reGIR,
+            reSTIR = false,
+            NRD = opts.NRD,
+            proxyLightRejection = true,
+        }] = var.mode.PT20,
 
-    if pathTracing and proxyLightRejection and not reStir then
-        guess = var.mode.PT20
-        logger.info("Guessed rendering mode is", guess)
-        return guess
-    end
+        [{ -- PT21
+            rayTracing = true,
+            pathTracing = true,
+            reGIR = opts.reGIR,
+            reSTIR = true,
+            NRD = opts.NRD,
+            proxyLightRejection = true,
+        }] = var.mode.PT21,
+    }
 
-    if pathTracing and proxyLightRejection and reStir then
-        guess = var.mode.PT21
-        logger.info("Guessed rendering mode is", guess)
-        return guess
-    end
-
-    if pathTracing and not proxyLightRejection and reStir then
-        guess = var.mode.VANILLA
-        logger.info("Guessed rendering mode is", guess)
+    local guess = doGuess(renderingModes, opts, "rendering")
+    if guess then
         return guess
     end
 
@@ -197,66 +226,83 @@ function GuessMode()
 end
 
 function GuessQuality()
-    local guess = "Low"
+    local opts = {
+        reGIR = GetOption("Editor/ReGIR", "Enable"),
+        shades = GetOption("Editor/ReGIR", "ShadingCandidatesCount"),
+        rays = GetOption("RayTracing/Reference", "RayNumber"),
+        bounces = GetOption("RayTracing/Reference", "BounceNumber"),
+    }
 
-    local initialBounces = GetOption("RayTracing/Reference", "BounceNumber")
-    local initialRays = GetOption("RayTracing/Reference", "RayNumber")
-    local reGIR = GetOption("Editor/ReGIR", "Enable")
-    local shadeCount = GetOption("Editor/ReGIR", "ShadingCandidatesCount")
+    local qualityModes = {
+        -- [{reGIR = boolean, shades = integer, rays = integer, bounces = integer}] = mode
+        [{ -- VANILLA
+            reGIR = false,
+            shades = opts.shades,
+            rays = 2,
+            bounces = 2,
+        }] = var.quality.VANILLA,
 
-    if reGIR then
-        if shadeCount == 8 then
-            guess = var.quality.LOW
-            logger.info("Guessed quality mode is", guess)
-            return guess
-        end
+        [{ -- LOW
+            reGIR = false,
+            shades = opts.shades,
+            rays = 1,
+            bounces = 1,
+        }] = var.quality.LOW,
 
-        if shadeCount == 10 then
-            guess = var.quality.MEDIUM
-            logger.info("Guessed quality mode is", guess)
-            return guess
-        end
+        [{ -- reGIR LOW
+            reGIR = true,
+            shades = 8,
+            rays = opts.rays,
+            bounces = opts.bounces,
 
-        if shadeCount == 14 then
-            guess = var.quality.HIGH
-            logger.info("Guessed quality mode is", guess)
-            return guess
-        end
+        }] = var.quality.LOW,
 
-        if shadeCount == 18 then
-            guess = var.quality.INSANE
-            logger.info("Guessed quality is", guess)
-            return guess
-        end
-    end
+        [{ -- MEDIUM
+            reGIR = false,
+            shades = opts.shades,
+            rays = opts.rays,
+            bounces = 2,
 
-    if initialBounces == 1 then
-        guess = var.quality.LOW
-        logger.info("Guessed quality mode is", guess)
-        return guess
-    end
+        }] = var.quality.MEDIUM,
 
-    if initialBounces == 2 then
-        guess = var.quality.MEDIUM
-        logger.info("Guessed quality mode is", guess)
-        return guess
-    end
+        [{ -- reGIR MEDIUM
+            reGIR = true,
+            shades = 10,
+            rays = opts.rays,
+            bounces = opts.bounces,
+        }] = var.quality.MEDIUM,
 
-    if initialBounces == 2 and initialRays == 3 then
-        guess = var.quality.HIGH
-        logger.info("Guessed quality mode is", guess)
-        return guess
-    end
+        [{ -- HIGH
+            reGIR = false,
+            shades = opts.shades,
+            rays = 3,
+            bounces = 2,
+        }] = var.quality.HIGH,
 
-    if initialBounces == 3 then
-        guess = var.quality.INSANE
-        logger.info("Guessed quality mode is", guess)
-        return guess
-    end
+        [{ -- reGIR HIGH
+            reGIR = true,
+            shades = 14,
+            rays = opts.rays,
+            bounces = opts.bounces,
+        }] = var.quality.HIGH,
 
-    if initialBounces == 2 and initialRays == 2 then
-        guess = var.quality.VANILLA
-        logger.info("Guessed quality mode is", guess)
+        [{ -- INSANE
+            reGIR = false,
+            shades = opts.shades,
+            rays = opts.rays,
+            bounces = 3,
+        }] = var.quality.INSANE,
+
+        [{ -- reGIR INSANE
+            reGIR = true,
+            shades = 18,
+            rays = opts.rays,
+            bounces = opts.bounces,
+        }] = var.quality.INSANE,
+    }
+
+    local guess = doGuess(qualityModes, opts, "quality")
+    if guess then
         return guess
     end
 
@@ -264,64 +310,61 @@ function GuessQuality()
 end
 
 function GuessSamples()
-    local guess = "Medium"
+    local opts = {
+        reGIR = GetOption("Editor/ReGIR", "Enable"),
+        samples = GetOption("Editor/RTXDI", "NumInitialSamples"),
+    }
 
-    local initialSamples = GetOption("Editor/RTXDI", "NumInitialSamples")
-    local reGIR = GetOption("Editor/ReGIR", "Enable")
+    local samplingModes = {
+        -- [{ reGIR = boolean, samples = integer}] = mode
+        [{ -- VANILLA
+            reGIR = false,
+            samples = 8,
+        }] = var.samples.VANILLA,
 
-    if reGIR then
-        if initialSamples == 6 then
-            guess = var.samples.LOW
-            logger.info("Guessed sample mode is", guess)
-            return guess
-        end
+        [{ -- LOW
+            reGIR = false,
+            samples = 16,
+        }] = var.samples.LOW,
 
-        if initialSamples == 8 then
-            guess = var.samples.MEDIUM
-            logger.info("Guessed sample mode is", guess)
-            return guess
-        end
+        [{ -- reGIR LOW
+            reGIR = true,
+            samples = 6,
+        }] = var.samples.LOW,
 
-        if initialSamples == 10 then
-            guess = var.samples.HIGH
-            logger.info("Guessed sample mode is", guess)
-            return guess
-        end
+        [{ -- MEDIUM
+            reGIR = false,
+            samples = 18,
+        }] = var.samples.MEDIUM,
 
-        if initialSamples == 12 then
-            guess = var.samples.INSANE
-            logger.info("Guessed sample mode is", guess)
-            return guess
-        end
-    end
+        [{ -- reGIR MEDIUM
+            reGIR = true,
+            samples = 8,
+        }] = var.samples.MEDIUM,
 
-    if initialSamples == 16 then
-        guess = var.samples.LOW
-        logger.info("Guessed sampling mode is", guess)
-        return guess
-    end
+        [{ -- HIGH
+            reGIR = false,
+            samples = 20,
+        }] = var.samples.HIGH,
 
-    if initialSamples == 18 then
-        guess = var.samples.MEDIUM
-        logger.info("Guessed sampling mode is", guess)
-        return guess
-    end
+        [{ -- reGIR HIGH
+            reGIR = true,
+            samples = 10,
+        }] = var.samples.HIGH,
 
-    if initialSamples == 20 then
-        guess = var.samples.HIGH
-        logger.info("Guessed sampling mode is", guess)
-        return guess
-    end
+        [{ -- INSANE
+            reGIR = false,
+            samples = 24,
+        }] = var.samples.INSANE,
 
-    if initialSamples == 24 then
-        guess = var.samples.INSANE
-        logger.info("Guessed sampling mode is", guess)
-        return guess
-    end
+        [{ -- reGIR INSANE
+            reGIR = true,
+            samples = 12,
+        }] = var.samples.INSANE,
+    }
 
-    if initialSamples == 8 then
-        guess = var.samples.VANILLA
-        logger.info("Guessed sampling mode is", guess)
+    local guess = doGuess(samplingModes, opts, "sampling")
+    if guess then
         return guess
     end
 
@@ -588,7 +631,7 @@ local function DoFastUpdate()
         var.settings.rain = testRain
         var.settings.indoors = testIndoors
     end
---[[
+    --[[
     if config.turboHack ~= var.settings.turboHack then
         DoTurboHack()
         config.turboHack = var.settings.turboHack
@@ -663,8 +706,8 @@ registerForEvent("onTweak", function()
     var.settings.quality = GuessQuality()
     config.SetQuality(var.settings.quality)
 ]]
---  SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
---  config.reGIRDIHackApplied = false -- already set at start
+    --  SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
+    --  config.reGIRDIHackApplied = false -- already set at start
 
     LoadSettings()
 end)
