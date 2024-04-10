@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-alpha13',
+    __VERSION     = '4.0-alpha14',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -295,13 +295,13 @@ function GuessSamples()
         end
     end
 
-    if initialSamples == 14 then
+    if initialSamples == 16 then
         guess = var.samples.LOW
         logger.info("Guessed sampling mode is", guess)
         return guess
     end
 
-    if initialSamples == 16 then
+    if initialSamples == 18 then
         guess = var.samples.MEDIUM
         logger.info("Guessed sampling mode is", guess)
         return guess
@@ -403,9 +403,10 @@ function LoadSettings()
     for item, value in pairs(result.UltraPlus) do
         if settingsTable[item] and not string.match(item, "^internal") then
             settingsTable[item].value = value
-        elseif string.match(item, "internal") then
+        elseif string.match(item, "^internal") then
             local key = string.match(item, "^internal%.(%w+)$")
             if key then
+                logger.info("Assigning internal setting:", key, "=", value)
                 var.settings[key] = value
             end
         end
@@ -664,6 +665,8 @@ registerForEvent("onTweak", function()
 ]]
 --  SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
 --  config.reGIRDIHackApplied = false -- already set at start
+
+    LoadSettings()
 end)
 
 registerForEvent("onInit", function()

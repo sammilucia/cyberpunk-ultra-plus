@@ -20,7 +20,7 @@ function config.SetStreaming(streaming)
 
     if streaming == var.streaming.MEDIUM then
         SetOption("Streaming", "MaxNodesPerFrame", "300")
-        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "500")
         SetOption("Streaming", "PrecacheDistance", "20.0")
         SetOption("Streaming", "MinStreamingDistance", "40.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")

@@ -98,7 +98,7 @@ local function renderTabEngineDrawer()
         end
 
         ui.align()
-        if ImGui.RadioButton("ReGIR", var.settings.mode == var.mode.REGIR) then
+        if ImGui.RadioButton("PT30", var.settings.mode == var.mode.REGIR) then
             var.settings.mode = var.mode.REGIR
             config.SetMode(var.settings.mode)
             config.SetSamples(var.settings.samples)
@@ -108,7 +108,7 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
-    if ImGui.CollapsingHeader("RTXDI and ReGIR Quality", ImGuiTreeNodeFlags.DefaultOpen) then
+    if ImGui.CollapsingHeader("RTXDI/ReGIR Direct Illumination Quality", ImGuiTreeNodeFlags.DefaultOpen) then
         ui.tooltip("RTXDI is path traced direct illumination.")
 
         if ImGui.RadioButton("Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA) then
@@ -147,7 +147,7 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
-    if ImGui.CollapsingHeader(var.settings.mode .. " Indirect Illumination Sampling", ImGuiTreeNodeFlags.DefaultOpen) then
+    if ImGui.CollapsingHeader(var.settings.mode .. "Indirect Illumination Sampling", ImGuiTreeNodeFlags.DefaultOpen) then
         if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
             var.settings.quality = var.quality.VANILLA
             config.SetQuality(var.settings.quality)
@@ -368,12 +368,12 @@ end
 
 ui.renderControlPanel = function()
     -- SET DEFAULTS
-    ImGui.SetWindowFontScale(0.9)
     ImGui.SetNextWindowPos(200, 200, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(436, 615, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(440, 584, ImGuiCond.Appearing)
 
     -- BEGIN ACTUAL RENDER
     if ImGui.Begin("Ultra+ Control v" .. UltraPlus.__VERSION, true) then
+        ImGui.SetWindowFontScale(0.90)
         renderTabs()
         ImGui.End()
     end
