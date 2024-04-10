@@ -9,7 +9,7 @@ local config = {
     SetStreaming = require("setstreaming").SetStreaming,
     -- turboHack = false,
     DEBUG = false,
-    reGIR = false
+    reGIR = false,
 }
 local toggled
 
@@ -237,8 +237,6 @@ local function renderRenderingFeaturesDrawer()
         end
     end
 end
-
-
 
 local function renderDebugDrawer()
     ui.space()

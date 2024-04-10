@@ -1,11 +1,11 @@
 UltraPlus = {
-    __VERSION     = '4.0-alpha11',
-    __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Stutter Hotfix for CyberPunk',
+    __VERSION     = '4.0-alpha12',
+    __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
     MIT No Attribution
 
-    Copyright 2024 SammiLucia and Xerme
+    Copyright 2024 SammiLucia, Xerme, FireKahuna, WoaDmulL
 
     Permission is hereby granted, free of charge, to any person obtaining a copy of this
     software and associated documentation files (the "Software"), to deal in the Software
@@ -25,6 +25,7 @@ local logger = require("logger")
 local options = require("options")
 local var = require("variables")
 local ui = require("ui")
+local isLoaded = false
 local config = {
     SetSamples = require("setsamples").SetSamples,
     SetMode = require("setmode").SetMode,
@@ -32,20 +33,17 @@ local config = {
     SetStreaming = require("setstreaming").SetStreaming,
     --    turboHack = false,
     DEBUG = false,
-    reGIRDIHackApplied = false
+    reGIRDIHackApplied = false,
 }
 local timer = {
     lazy = 0,
     fast = 0,
     paused = false,
     LAZY = 20.0,
-    FAST = 1.0
+    FAST = 1.0,
 }
 
 local Detector = { isGameActive = false }
-
-local isLoaded = false
-
 function Detector.UpdateGameStatus()
     -- check if ingame or not
     local player = Game.GetPlayer()
@@ -161,7 +159,7 @@ function GuessMode()
 
     if pathTracing and reGIR then
         guess = var.mode.REGIR
-        print("---------- Ultra+: Guessed rendering mode is", guess)
+        logger.info("Guessed rendering mode is", guess)
         return guess
     end
 
@@ -207,27 +205,27 @@ function GuessQuality()
     local shadeCount = GetOption("Editor/ReGIR", "ShadingCandidatesCount")
 
     if reGIR then
-        if shadeCount == 18 then
-            guess = var.quality.INSANE
-            print("---------- Ultra+: Guessed quality is", guess)
-            return guess
-        end
-
-        if shadeCount == 14 then
-            guess = var.quality.HIGH
-            print("---------- Ultra+: Guessed quality is", guess)
+        if shadeCount == 8 then
+            guess = var.quality.LOW
+            logger.info("Guessed quality mode is", guess)
             return guess
         end
 
         if shadeCount == 10 then
             guess = var.quality.MEDIUM
-            print("---------- Ultra+: Guessed quality is", guess)
+            logger.info("Guessed quality mode is", guess)
             return guess
         end
 
-        if shadeCount == 8 then
-            guess = var.quality.LOW
-            print("---------- Ultra+: Guessed quality is", guess)
+        if shadeCount == 14 then
+            guess = var.quality.HIGH
+            logger.info("Guessed quality mode is", guess)
+            return guess
+        end
+
+        if shadeCount == 18 then
+            guess = var.quality.INSANE
+            logger.info("Guessed quality is", guess)
             return guess
         end
     end
@@ -274,25 +272,25 @@ function GuessSamples()
     if reGIR then
         if initialSamples == 6 then
             guess = var.samples.LOW
-            print("---------- Ultra+: Guessed sample mode is", guess)
+            logger.info("Guessed sample mode is", guess)
             return guess
         end
 
         if initialSamples == 8 then
             guess = var.samples.MEDIUM
-            print("---------- Ultra+: Guessed sample mode is", guess)
+            logger.info("Guessed sample mode is", guess)
             return guess
         end
 
         if initialSamples == 10 then
             guess = var.samples.HIGH
-            print("---------- Ultra+: Guessed sample mode is", guess)
+            logger.info("Guessed sample mode is", guess)
             return guess
         end
 
         if initialSamples == 12 then
             guess = var.samples.INSANE
-            print("---------- Ultra+: Guessed sample mode is", guess)
+            logger.info("Guessed sample mode is", guess)
             return guess
         end
     end
@@ -589,15 +587,13 @@ local function DoFastUpdate()
         var.settings.rain = testRain
         var.settings.indoors = testIndoors
     end
-    --[[
+--[[
     if config.turboHack ~= var.settings.turboHack then
         DoTurboHack()
         config.turboHack = var.settings.turboHack
     end
 ]]
-
-    local reGIRGI = GetOption("Editor/ReGIR", "Enable")
-    if reGIRGI and not config.reGIRDIHackApplied then
+    if GetOption("Editor/ReGIR", "Enable") and not config.reGIRDIHackApplied then
         DoReGIRDI()
     end
 end
@@ -666,8 +662,8 @@ registerForEvent("onTweak", function()
     var.settings.quality = GuessQuality()
     config.SetQuality(var.settings.quality)
 ]]
-    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-    config.reGIRDIHackApplied = false
+--  SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
+--  config.reGIRDIHackApplied = false -- already set at start
 end)
 
 registerForEvent("onInit", function()
@@ -675,14 +671,14 @@ registerForEvent("onInit", function()
 
     Observe('QuestTrackerGameController', 'OnInitialize', function()
         if not isLoaded then
-            print('Game Session Started')
+            Debug('Game session started')
             isLoaded = true
         end
     end)
 
     Observe('QuestTrackerGameController', 'OnUninitialize', function()
         if Game.GetPlayer() == nil then
-            print('Game Session Ended')
+            Debug('Game session ended')
             isLoaded = false
             SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
             config.reGIRDIHackApplied = false
