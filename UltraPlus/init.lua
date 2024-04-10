@@ -482,7 +482,8 @@ end
 local function DoReGIRDI()
     config.reGIRDIHackApplied = true
     SetOption("Editor/ReGIR", "UseForDI", false)
-    Wait(0.5, function()
+    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
+    Wait(0.7, function()
         SetOption("Editor/ReGIR", "UseForDI", true)
         SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
     end)
@@ -628,7 +629,7 @@ registerForEvent('onUpdate', function(delta)
         timer.lazy = timer.lazy + delta
     end
 
-    if Detector.isGameActive then
+    if Detector.isGameActive and isLoaded then
         if timer.fast > timer.FAST then
             DoFastUpdate()
             timer.fast = 0
@@ -641,11 +642,11 @@ registerForEvent('onUpdate', function(delta)
     end
 
     for i = #activeTimers, 1, -1 do
-        timer = activeTimers[i]
-        timer.countdown = timer.countdown - delta
+        local tempTimer = activeTimers[i]
+        tempTimer.countdown = tempTimer.countdown - delta
 
-        if timer.countdown < 0 then
-            timer.callback()
+        if tempTimer.countdown < 0 then
+            tempTimer.callback()
             table.remove(activeTimers, i)
         end
     end
@@ -683,7 +684,7 @@ registerForEvent("onInit", function()
         if Game.GetPlayer() == nil then
             Debug('Game session ended')
             isLoaded = false
-            SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+            SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
             config.reGIRDIHackApplied = false
         end
     end)
