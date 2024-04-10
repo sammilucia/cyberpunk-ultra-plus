@@ -8,7 +8,7 @@ function config.SetMode(mode)
     logger.info("Setting mode to", mode)
 
     if mode == var.mode.RASTER then
-        SetOption('/graphics/raytracing', 'RayTracing', false)
+        SetOption("/graphics/raytracing", "RayTracing", false)
         PushChanges()
 
         SetOption("Developer/FeatureToggles", "RTXDI", false)
@@ -19,14 +19,14 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.RT_ONLY then
-        SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
-        SetOption('/graphics/raytracing', 'RayTracing', true)
+        SetOption("/graphics/raytracing", "RayTracedPathTracing", false)
+        SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
         SetOption("Editor/ReGIR", "UseForDI", false)
         PushChanges()
 
         SetOption("Developer/FeatureToggles", "RTXDI", false)
-        SetOption("Rendering", "AllowRTXDIRejitter", false) 
+        SetOption("Rendering", "AllowRTXDIRejitter", false)
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "EnableShadowCascades", false)                        -- test
@@ -42,8 +42,8 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.RT_PT then
-        SetOption('/graphics/raytracing', 'RayTracing', true)
-        SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
+        SetOption("/graphics/raytracing", "RayTracing", true)
+        SetOption("/graphics/raytracing", "RayTracedPathTracing", false)
         SetOption("Editor/ReGIR", "Enable", false)
         SetOption("Editor/ReGIR", "UseForDI", false)
         PushChanges()
@@ -83,7 +83,7 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.VANILLA then
-        SetOption('/graphics/raytracing', 'RayTracing', true)
+        SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
         SetOption("Editor/ReGIR", "UseForDI", false)
@@ -126,7 +126,7 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.PT21 then
-        SetOption('/graphics/raytracing', 'RayTracing', true)
+        SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
         SetOption("Editor/ReGIR", "UseForDI", false)
@@ -149,8 +149,8 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
         SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableGradients", false)
-        -- SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
-        -- SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
+        SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
+        SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")                    -- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
@@ -169,7 +169,7 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.PT20 then
-        SetOption('/graphics/raytracing', 'RayTracing', true)
+        SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", false)
         SetOption("Editor/ReGIR", "UseForDI", false)
@@ -208,7 +208,7 @@ function config.SetMode(mode)
     end
 
     if mode == var.mode.REGIR then
-        SetOption('/graphics/raytracing', 'RayTracing', true)
+        SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", true)
         SetOption("Editor/ReGIR", "UseForDI", true)
