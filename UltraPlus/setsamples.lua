@@ -23,14 +23,27 @@ function config.SetSamples(samples)
     end
 
     if samples == var.samples.LOW then
+        SetOption("DLSS", "SampleNumber", "16")
+        SetOption("FSR2", "SampleNumber", "16")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
+
+        if var.settings.mode == var.mode.REGIR then
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "6")
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "1")
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
+            SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "1")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
+            return
+        end
+
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
         SetOption("Editor/RTXDI", "NumInitialSamples", "14")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "16")
-
-        SetOption("DLSS", "SampleNumber", "16")
-        SetOption("FSR2", "SampleNumber", "16")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
@@ -58,14 +71,27 @@ function config.SetSamples(samples)
     end
 
     if samples == var.samples.BALANCED then
+        SetOption("DLSS", "SampleNumber", "24")
+        SetOption("FSR2", "SampleNumber", "24")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
+
+        if var.settings.mode == var.mode.REGIR then
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "8")
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
+            SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
+            return
+        end
+
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "NumInitialSamples", "14")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "16")
-
-        SetOption("DLSS", "SampleNumber", "24")
-        SetOption("FSR2", "SampleNumber", "24")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
@@ -90,14 +116,27 @@ function config.SetSamples(samples)
     end
 
     if samples == var.samples.HIGH then
+        SetOption("DLSS", "SampleNumber", "32")
+        SetOption("FSR2", "SampleNumber", "32")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
+
+        if var.settings.mode == var.mode.REGIR then
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "10")
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
+            SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
+            return
+        end
+
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "NumInitialSamples", "20")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "20")
-
-        SetOption("DLSS", "SampleNumber", "32")
-        SetOption("FSR2", "SampleNumber", "32")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
@@ -122,14 +161,27 @@ function config.SetSamples(samples)
     end
 
     if samples == var.samples.INSANE then
+        SetOption("DLSS", "SampleNumber", "32")
+        SetOption("FSR2", "SampleNumber", "32")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
+
+        if var.settings.mode == var.mode.REGIR then
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "12")
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "10")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
+            SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "10")
+            return
+        end
+
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "6")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "NumInitialSamples", "20")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "24")
-
-        SetOption("DLSS", "SampleNumber", "32")
-        SetOption("FSR2", "SampleNumber", "32")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
