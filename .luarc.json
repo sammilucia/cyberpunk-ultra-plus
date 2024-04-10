@@ -15,6 +15,7 @@
         "ImGuiCond",
         "ImGuiTreeNodeFlags",
         "IsEntityInInteriorArea",
-        "GetPlayer"
+        "GetPlayer",
+        "Observe"
     ]
 }

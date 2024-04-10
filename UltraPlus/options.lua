@@ -118,8 +118,6 @@ local options = {
             tooltip = "Caution: Not recommended for 12GB VRAM or less (Default: Off)",
         },
     },
-    
-
     RTXDI = {
         {
             item = "EnableLocalLightImportanceSampling",
@@ -254,7 +252,6 @@ local options = {
             tooltip = "Unknown",
         },
     },
-
     RTXGI = {
         {
             item = "Enable",
@@ -293,8 +290,6 @@ local options = {
             tooltip = "Unknown, likely no impact in FUSED",
         },
     },
-
-
     REGIR = {
         {
             item = "Enable",
@@ -309,8 +304,6 @@ local options = {
             tooltip = "Extends use of ReGIR to Direct Lighting, feeding ReSTIR",
         },
     },
-
-
     RELAX = {
         {
             item = "VirtualHistoryClamping",
@@ -373,8 +366,6 @@ local options = {
             tooltip = "Reprojection Test Skipping Without Motion (Indirect)",
         },
     },
-
-
     NRD = {
         {
             item = "UseReblurForDirectRadiance",
@@ -407,7 +398,6 @@ local options = {
             tooltip = "Enable Scaling Compensation",
         },
     },
-
     RTOPTIONS = {
         {
             item = "EnableShadowCascades",
@@ -727,9 +717,7 @@ local options = {
             category = "Developer/FeatureToggles",
             tooltip = "Unknown",
         },
-        
     },
-
     SHARC = {
         {
             item = "Enable",
@@ -792,7 +780,6 @@ local options = {
             tooltip = "Unknown",
         },
     },
-
     RTINT = {
         {
             item = "BiasCorrectionMode",
@@ -1017,7 +1004,6 @@ local options = {
             tooltip = "Feed data from RTXDI, optimisation",
         },
     },
-
     RTFLOAT = {
         {
             item = "ClipRadius",
