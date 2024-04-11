@@ -631,8 +631,8 @@ registerForEvent('onUpdate', function(delta)
 
         -- prevent skipping temporal updates
         -- jitter = timer.fast * 0.00001
-        -- Game.GetPlayer():GetFPPCameraComponent():SetFOV(fov + jitter) -- method may be expensive because setting FOV smooths the transition
-        Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
+        -- Game.GetPlayer():GetFPPCameraComponent():SetFOV(fov + jitter)        -- method may be expensive because setting FOV smooths the transition
+        Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()     -- seems to work just the same ??
     end
 
     if Detector.isGameActive and isLoaded then

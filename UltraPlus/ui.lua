@@ -67,47 +67,46 @@ local function renderTabEngineDrawer()
         end
 ]]
         if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
-            ui.tooltip("Regular ray tracing, with optimisations and fixes.")
             var.settings.mode = var.mode.RT_ONLY
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
+        ui.tooltip("Regular ray tracing, with optimisations and fixes.")
 
         ui.align()
         if ImGui.RadioButton("RT+PT", var.settings.mode == var.mode.RT_PT) then
-            ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
             var.settings.mode = var.mode.RT_PT
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
+        ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
 
         ui.align()
         if ImGui.RadioButton("PT20", var.settings.mode == var.mode.PT20) then
-            ui.tooltip("Path tracing from Cyberpunk 2.0.")
             var.settings.mode = var.mode.PT20
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
+        ui.tooltip("Path tracing from Cyberpunk 2.0.")
 
         ui.align()
         if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
-            ui.tooltip("Path tracing from Cyberpunk 2.10+.")
             var.settings.mode = var.mode.PT21
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
+        ui.tooltip("Path tracing from Cyberpunk 2.10+.")
 
         ui.align()
         if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.REGIR) then
-            ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics settings will also require a reload.\nUnlike all other PT modes, this works quite well with a lower DLSS setting.")
             var.settings.mode = var.mode.REGIR
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
@@ -115,6 +114,7 @@ local function renderTabEngineDrawer()
             config.reGIRDIHackApplied = false
             SaveSettings()
         end
+        ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics settings will also require a reload.\nUnlike all other PT modes, this works quite well with a lower DLSS setting.")
     end
 
     ui.space()
