@@ -70,6 +70,7 @@ local function renderTabEngineDrawer()
             ui.tooltip("Regular ray tracing, with optimisations and fixes.")
             var.settings.mode = var.mode.RT_ONLY
             config.SetMode(var.settings.mode)
+            config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
@@ -79,6 +80,7 @@ local function renderTabEngineDrawer()
             ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
             var.settings.mode = var.mode.RT_PT
             config.SetMode(var.settings.mode)
+            config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
@@ -88,6 +90,7 @@ local function renderTabEngineDrawer()
             ui.tooltip("Path tracing from Cyberpunk 2.0.")
             var.settings.mode = var.mode.PT20
             config.SetMode(var.settings.mode)
+            config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
@@ -97,6 +100,7 @@ local function renderTabEngineDrawer()
             ui.tooltip("Path tracing from Cyberpunk 2.10+.")
             var.settings.mode = var.mode.PT21
             config.SetMode(var.settings.mode)
+            config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
@@ -106,6 +110,7 @@ local function renderTabEngineDrawer()
             ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics settings will also require a reload.\nUnlike all other PT modes, this works quite well with a lower DLSS setting.")
             var.settings.mode = var.mode.REGIR
             config.SetMode(var.settings.mode)
+            config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
             config.reGIRDIHackApplied = false
             SaveSettings()
@@ -114,7 +119,6 @@ local function renderTabEngineDrawer()
 
     ui.space()
     if ImGui.CollapsingHeader("RTXDI/ReGIR Direct Illumination Quality", ImGuiTreeNodeFlags.DefaultOpen) then
-        ui.tooltip("RTXDI is path traced direct illumination.")
 
         if ImGui.RadioButton("Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA) then
             var.settings.samples = var.samples.VANILLA
