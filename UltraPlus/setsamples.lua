@@ -27,23 +27,22 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "16")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")      -- WAS 8 for PT21 Low
+        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- increase for same
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
+            
             return
         end
 
-        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
         SetOption("Editor/RTXDI", "NumInitialSamples", "16")
-        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                     -- test not required with LocalLights sampling to envmap instead of spatiotemporal
-        SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                     -- required for LL sampling to env map, almost no cost
+        SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                           -- required for LL sampling to env map, almost no cost
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
@@ -69,23 +68,21 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "24")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
+        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                       -- increase for same
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
             return
         end
 
-        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "NumInitialSamples", "18")
-        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                     -- test not required with LocalLights sampling to envmap instead of spatiotemporal
-        SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                     -- required for LL sampling to env map, almost no cost
+        SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                           -- required for LL sampling to env map, almost no cost
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
@@ -111,22 +108,20 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "32")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
+        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                       -- increase for same
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                  -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             return
         end
 
-        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "NumInitialSamples", "20")
-        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                     -- test not required with LocalLights sampling to envmap instead of spatiotemporal
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                     -- required for LL sampling to env map, almost no cost
 
         if var.settings.mode == var.mode.PT20 then
@@ -152,13 +147,14 @@ function config.SetSamples(samples)
         SetOption("DLSS", "SampleNumber", "32")
         SetOption("FSR2", "SampleNumber", "32")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
-        SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
+        SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "5")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
+        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                       -- increase for same
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
@@ -166,10 +162,8 @@ function config.SetSamples(samples)
             return
         end
 
-        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "NumInitialSamples", "24")
-        SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                     -- test not required with LocalLights sampling to envmap instead of spatiotemporal
-        SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                     -- required for LL sampling to env map, almost no cost
+        SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
