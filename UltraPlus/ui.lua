@@ -98,7 +98,7 @@ local function renderTabEngineDrawer()
         end
 
         ui.align()
-        if ImGui.RadioButton("PT30", var.settings.mode == var.mode.REGIR) then
+        if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.REGIR) then
             var.settings.mode = var.mode.REGIR
             config.SetMode(var.settings.mode)
             config.SetSamples(var.settings.samples)

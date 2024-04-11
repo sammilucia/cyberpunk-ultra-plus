@@ -233,8 +233,8 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "BoilingFilterStrength", "0.2")
         SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableGradients", true)
-        -- SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
-        -- SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
+        SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
+        SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")                    -- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", false)

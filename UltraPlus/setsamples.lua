@@ -29,14 +29,14 @@ function config.SetSamples(samples)
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
-            SetOption("Editor/RTXDI", "NumInitialSamples", "6")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "1")                       -- TEST 0 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")                        -- increase for same
-            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "16")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                       -- increase for same
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
             SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "1")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             return
         end
 
@@ -72,14 +72,14 @@ function config.SetSamples(samples)
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
-            SetOption("Editor/RTXDI", "NumInitialSamples", "8")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "2")                       -- TEST 0 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")                        -- increase for same
-            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "16")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                       -- increase for same
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
             SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "1")                     -- TEST 0 and LL sampling to env map
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             return
         end
 
@@ -115,14 +115,14 @@ function config.SetSamples(samples)
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
-            SetOption("Editor/RTXDI", "NumInitialSamples", "10")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "2")                       -- TEST 0 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")                        -- increase for same
-            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "16")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                       -- increase for same
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
             SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             return
         end
 
@@ -158,14 +158,14 @@ function config.SetSamples(samples)
 
         if var.settings.mode == var.mode.REGIR then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
-            SetOption("Editor/RTXDI", "NumInitialSamples", "12")
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "2")                       -- TEST 0 and LL sampling to env map
-            SetOption("Editor/RTXDI", "NumEnvMapSamples", "2")                        -- increase for same
-            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "16")
+            SetOption("Editor/RTXDI", "NumInitialSamples", "16")
+            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")                       -- WAS 2 and LL sampling to env map
+            SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")                       -- increase for same
+            SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
             SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "10")
+            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             return
         end
 
