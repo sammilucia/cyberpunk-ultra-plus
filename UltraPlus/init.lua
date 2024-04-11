@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-alpha14',
+    __VERSION     = '4.0-beta01',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -26,6 +26,7 @@ local options = require("options")
 local var = require("variables")
 local ui = require("ui")
 local isLoaded = false
+local jitter = 0
 local config = {
     SetSamples = require("setsamples").SetSamples,
     SetMode = require("setmode").SetMode,
@@ -627,6 +628,11 @@ registerForEvent('onUpdate', function(delta)
     if not timer.paused then
         timer.fast = timer.fast + delta
         timer.lazy = timer.lazy + delta
+
+        -- prevent skipping temporal updates
+        -- jitter = timer.fast * 0.00001
+        -- Game.GetPlayer():GetFPPCameraComponent():SetFOV(fov + jitter) -- method may be expensive because setting FOV smooths the transition
+        Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
     end
 
     if Detector.isGameActive and isLoaded then
@@ -654,20 +660,10 @@ end)
 
 registerForEvent("onTweak", function()
     LoadIni("commonfixes.ini")
-    --[[
-    var.settings.mode = GuessMode()
-    config.SetMode(var.settings.mode)
-
-    var.settings.samples = GuessSamples()
-    config.SetSamples(var.settings.samples)
-
-    var.settings.quality = GuessQuality()
-    config.SetQuality(var.settings.quality)
+--[[
+    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
+    config.reGIRDIHackApplied = false -- already set at start
 ]]
---  SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
---  config.reGIRDIHackApplied = false -- already set at start
-
-    LoadSettings()
 end)
 
 registerForEvent("onInit", function()
@@ -695,12 +691,16 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
-    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
+    LoadSettings()
     config.SetMode(var.settings.mode)
-    config.SetStreaming(var.settings.streaming)
-    config.SetSamples(var.settings.samples)
     config.SetQuality(var.settings.quality)
+    config.SetSamples(var.settings.samples)
+    config.SetStreaming(var.settings.streaming)
+
+    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false
+
+    local fov = Game.GetPlayer():GetFPPCameraComponent():GetFOV()
 end)
 
 registerForEvent("onOverlayOpen", function()
