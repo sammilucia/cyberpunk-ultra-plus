@@ -28,8 +28,8 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", false)
         SetOption("Rendering", "AllowRTXDIRejitter", false)
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
-        SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "EnableShadowCascades", false)                        -- test
+        SetOption("RayTracing", "EnableShadowCascades", false)                        -- test with RT
+        SetOption("RayTracing", "EnableReferenceSER", true)
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
         SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "0")
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
@@ -52,17 +52,16 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "EnableNRD", true)
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
-        SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "SunAngularSize", "0.15")
-        SetOption("RayTracing", "EnableShadowCascades", false)                        -- test
+        SetOption("RayTracing", "EnableShadowCascades", false)                        -- test with RT
+        SetOption("RayTracing", "EnableReferenceSER", true)                           -- mostly RT so required
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
         SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "0")
         SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0")
-        SetOption("Rendering","AllowRTXDIRejitter",true)
         SetOption("Editor/ReSTIRGI", "Enable", false)
-        SetOption("Editor/RTXDI", "EnableGradients", false)
+        SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")                    -- WAS 0.45
@@ -92,9 +91,9 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
-        SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "SunAngularSize", "0.5")
         SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableReferenceSER", true)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -135,9 +134,9 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
-        SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "SunAngularSize", "0.15")
-        SetOption("RayTracing", "EnableShadowCascades", true)
+        SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableReferenceSER", false)                          -- slightly slower with PT
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -148,7 +147,7 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", true)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
         SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
-        SetOption("Editor/RTXDI", "EnableGradients", false)
+        SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")                    -- WAS 0.45
@@ -178,17 +177,16 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
-        SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing", "SunAngularSize", "0.15")
-        SetOption("RayTracing", "EnableShadowCascades", true)
+        SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableReferenceSER", false)                          -- slightly slower with PT
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "50.0")          -- WAS 70.0 improves RTXDI light/shadow selection
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "50.0")         -- WAS 70.0
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
         SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "0")
         SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0")
-        SetOption("Rendering","AllowRTXDIRejitter",true)
         SetOption("Editor/ReSTIRGI", "Enable", false)
-        SetOption("Editor/RTXDI", "EnableGradients", false)
+        SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")                    -- WAS 0.45
@@ -217,9 +215,9 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "RTXDI", true)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
-        SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "SunAngularSize", "0.15")                             -- WAS 0.5
+        SetOption("RayTracing", "SunAngularSize", "0.15")
         SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableReferenceSER", false)                          -- slightly slower with PT
         SetOption("RayTracing/Collector", "VisibilityCullingRadius", "2000.0")
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
@@ -235,11 +233,11 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)        -- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "EnableFallbackLight", false)                       -- disabling so SpatialNumSamples not needed
-        SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")                    -- WAS 0.45
+        SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.0")                     -- WAS 0.35 TEST
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
-        SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", false)
+        SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)                 -- TEST
         SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
-        SetOption("Editor/RTXDI", "EnableEmissiveProxyLightRejection", false)
+        SetOption("Editor/RTXDI", "EnableEmissiveProxyLightRejection", true)          -- TEST
         SetOption("Editor/RTXDI", "EnableGlobalLight", true)
         SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
         SetOption("Editor/SHARC", "Enable", "true")
