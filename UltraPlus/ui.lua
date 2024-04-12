@@ -93,7 +93,7 @@ local function renderTabEngineDrawer()
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
-        ui.tooltip("Path tracing from Cyberpunk 2.0.")
+        ui.tooltip("Path tracing from Cyberpunk 2.0.\n\nNote: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
 
         ui.align()
         if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
@@ -103,7 +103,7 @@ local function renderTabEngineDrawer()
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
-        ui.tooltip("Path tracing from Cyberpunk 2.10+.")
+        ui.tooltip("Path tracing from Cyberpunk 2.10+.\n\nNote: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
 
         ui.align()
         if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.REGIR) then
@@ -114,7 +114,7 @@ local function renderTabEngineDrawer()
             config.reGIRDIHackApplied = false
             SaveSettings()
         end
-        ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics settings will also require a reload.\nUnlike all other PT modes, this works quite well with a lower DLSS setting.")
+        ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nFor other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality/samples for the best visuals. However for PTNext we recommend the\nopposite: Run PTNext as high as you can and turn upscaling down a step.")
     end
 
     ui.space()

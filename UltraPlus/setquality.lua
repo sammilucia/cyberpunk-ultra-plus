@@ -18,6 +18,7 @@ function config.SetQuality(quality)
         SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
         SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
         
+        SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
         SetOption("Editor/SHARC", "DownscaleFactor", "5")
         SetOption("Editor/SHARC", "SceneScale", "50.0")
         SetOption("Editor/SHARC", "Bounces", "4")
@@ -28,11 +29,11 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.LOW then
-        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")                -- TEST
         SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "4")
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "4")
         SetOption("Editor/ReGIR", "LightSlotsCount", "256")
-        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "12")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "16")
         SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
         SetOption("RayTracing", "TracingRadius", "100.0")
         SetOption("RayTracing", "TracingRadiusReflections", "800.0")
@@ -44,7 +45,7 @@ function config.SetQuality(quality)
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
             SetOption("Editor/ReSTIRGI", "Enable", false)
             SetOption("RayTracing/Reference", "RayNumber", "2")
             SetOption("RayTracing/Reference", "BounceNumber", "2")                      -- lower or higher is slower for some reason
@@ -84,11 +85,12 @@ function config.SetQuality(quality)
 
     if quality == var.quality.MEDIUM then
         SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
         SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "5")
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "5")
         SetOption("Editor/ReGIR", "LightSlotsCount", "384")
-        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "16")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "10")
         SetOption("RayTracing", "TracingRadius", "200.0")
         SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -99,7 +101,7 @@ function config.SetQuality(quality)
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
             SetOption("Editor/ReSTIRGI", "Enable", true)
             SetOption("RayTracing/Reference", "RayNumber", "2")
             SetOption("RayTracing/Reference", "BounceNumber", "2")                      -- lower or higher is slower for some reason
@@ -134,12 +136,12 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.HIGH then
-        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
         SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6")
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
-        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "10")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "12")
         SetOption("RayTracing", "TracingRadius", "200.0")
         SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -150,7 +152,7 @@ function config.SetQuality(quality)
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
             SetOption("Editor/ReSTIRGI", "Enable", true)
             SetOption("RayTracing/Reference", "RayNumber", "3")
             SetOption("RayTracing/Reference", "BounceNumber", "2")                      -- lower or higher is slower for some reason
@@ -185,12 +187,12 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.INSANE then
-        SetOption("Rendering", "CheckerboardGI", true)
+        SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")
         SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6")
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
-        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "12")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "32")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")
         SetOption("Editor/SHARC", "Bounces", "4")
         SetOption("RayTracing", "TracingRadius", "1000.0")
         SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
@@ -202,7 +204,7 @@ function config.SetQuality(quality)
         if var.settings.mode == var.mode.REGIR then
             SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
             SetOption("Editor/ReSTIRGI", "Enable", true)
             SetOption("RayTracing/Reference", "RayNumber", "3")
             SetOption("RayTracing/Reference", "BounceNumber", "2")                      -- lower or higher is slower for some reason

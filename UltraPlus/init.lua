@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta03',
+    __VERSION     = '4.0-beta04',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -297,7 +297,7 @@ local function DoReGIRDI()
     config.reGIRDIHackApplied = true
     SetOption("Editor/ReGIR", "UseForDI", false)
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-    Wait(0.7, function()
+    Wait(1.5, function()
         SetOption("Editor/ReGIR", "UseForDI", true)
         SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
     end)
