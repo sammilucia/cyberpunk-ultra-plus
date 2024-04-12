@@ -110,8 +110,8 @@ local function renderTabEngineDrawer()
         ui.tooltip("Path tracing from Cyberpunk 2.10+.\n\nNote: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
 
         ui.align()
-        if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.REGIR) then
-            var.settings.mode = var.mode.REGIR
+        if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
+            var.settings.mode = var.mode.PTNEXT
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
             config.SetSamples(var.settings.samples)
@@ -122,7 +122,7 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
-    if ImGui.CollapsingHeader("RTXDI/ReGIR Direct Illumination Quality", ImGuiTreeNodeFlags.DefaultOpen) then
+    if ImGui.CollapsingHeader("Direct Lighting Samples", ImGuiTreeNodeFlags.DefaultOpen) then
 
         if ImGui.RadioButton("Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA) then
             var.settings.samples = var.samples.VANILLA
@@ -160,7 +160,7 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
-    if ImGui.CollapsingHeader(var.settings.mode .. "Indirect Illumination Sampling", ImGuiTreeNodeFlags.DefaultOpen) then
+    if ImGui.CollapsingHeader("Indirect Lighting Quality", ImGuiTreeNodeFlags.DefaultOpen) then
         if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
             var.settings.quality = var.quality.VANILLA
             config.SetQuality(var.settings.quality)

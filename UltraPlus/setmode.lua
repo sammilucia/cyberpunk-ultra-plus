@@ -293,7 +293,7 @@ function config.SetMode(mode)
         SaveSettings()
     end
 
-    if mode == var.mode.REGIR then
+    if mode == var.mode.PTNEXT then
         SetOption("/graphics/raytracing", "RayTracing", true)
         SetOption("/graphics/raytracing", "RayTracedPathTracing", true)
         SetOption("Editor/ReGIR", "Enable", true)
@@ -326,7 +326,7 @@ function config.SetMode(mode)
         SetOption("RayTracing/Diffuse", "EnableHalfResolutionTracing", "1")
         SetOption("RayTracing/Diffuse", "AdaptiveSampling", false)
         SetOption("Rendering", "CheckerboardGI", false)
-        SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "1.0")
+        SetOption("Rendering/VariableRateShading", "ScreenEdgeFactor", "2.0")
         SetOption("Editor/ReSTIRGI", "Enable", true)
         SetOption("Editor/ReSTIRGI", "EnableFused", true)
         SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", true)				-- test 2.0

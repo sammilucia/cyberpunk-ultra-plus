@@ -70,6 +70,12 @@ local options = {
             tooltip = "Can distort badly with path tracing (Default: On)",
         },
         {
+            item = "UseScreenSpaceData",
+            name = "Enable Screen Space",
+            category = "Editor/PathTracing",
+            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
+        },
+        {
             item = "VolumetricFog",
             name = "Volumetric Fog",
             category = "Developer/FeatureToggles",
@@ -391,12 +397,6 @@ local options = {
             item = "EnableShadowCascades",
             name = "Enable Shadow Cascades",
             category = "RayTracing",
-            tooltip = "Unknown",
-        },
-        {
-            item = "UseScreenSpaceData",
-            name = "Enable Screen Space",
-            category = "Editor/PathTracing",
             tooltip = "Unknown",
         },
         {
