@@ -502,12 +502,6 @@ local options = {
             tooltip = "Unknown",
         },
         {
-            item = "EnableReferenceSER",
-            name = "EnableReferenceSER",
-            category = "RayTracing",
-            tooltip = "Unknown",
-        },
-        {
             item = "EnableGlobalShadow",
             name = "EnableGlobalShadow",
             category = "RayTracing",

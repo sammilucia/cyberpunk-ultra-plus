@@ -38,7 +38,6 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableReflection", true)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         -- SetOption("RayTracing", "EnableGlobalIllumination", false)
-        SetOption("RayTracing", "EnableReferenceSER", true)
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
@@ -76,7 +75,6 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableReflection", true)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         -- SetOption("RayTracing", "EnableGlobalIllumination", false)
-        SetOption("RayTracing", "EnableReferenceSER", true)							-- mostly RT so required
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
@@ -135,7 +133,6 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableReflection", true)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
-        SetOption("RayTracing", "EnableReferenceSER", true)
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
@@ -194,7 +191,6 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableReflection", false)							-- TEST
         SetOption("RayTracing", "EnableShadowOptimizations", false)					-- TEST
         SetOption("RayTracing", "EnableGlobalIllumination", false)					-- TEST
-        SetOption("RayTracing", "EnableReferenceSER", false)						-- slightly slower with PT
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
@@ -256,7 +252,6 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableReflection", false)							-- TEST
         SetOption("RayTracing", "EnableShadowOptimizations", false)					-- TEST
         SetOption("RayTracing", "EnableGlobalIllumination", false)					-- TEST
-        SetOption("RayTracing", "EnableReferenceSER", false)						-- slightly slower with PT
         SetOption("RayTracing", "EnableImportanceSampling", true)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "50.0")		-- WAS 70.0 improves RTXDI light/shadow selection
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "50.0")		-- WAS 70.0
@@ -315,7 +310,6 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableReflection", false)
         SetOption("RayTracing", "EnableShadowOptimizations", false)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
-        SetOption("RayTracing", "EnableReferenceSER", false)						-- slightly slower with PT
         SetOption("RayTracing", "EnableImportanceSampling", false)					-- TEST
         SetOption("RayTracing/Debug", "RTXDIRIS", true)								-- TEST
         SetOption("RayTracing/Debug", "HitDistance", true)							-- TEST
