@@ -306,16 +306,16 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.15")
-        SetOption("RayTracing", "EnableShadowCascades", false)
-        SetOption("RayTracing", "EnableGlobalShadow", false)
-        SetOption("RayTracing", "EnableLocalShadow", false)
+        SetOption("RayTracing", "EnableShadowCascades", true)
+        SetOption("RayTracing", "EnableGlobalShadow", true)
+        SetOption("RayTracing", "EnableLocalShadow", true)
         SetOption("RayTracing", "EnableTransparentReflection", false)
         SetOption("RayTracing", "EnableDiffuseIllumination", false)
         SetOption("RayTracing", "EnableAmbientOcclusion", false)
         SetOption("RayTracing", "EnableReflection", false)
-        SetOption("RayTracing", "EnableShadowOptimizations", false)
+        SetOption("RayTracing", "EnableShadowOptimizations", true)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
-        SetOption("RayTracing", "EnableImportanceSampling", true)					-- TEST
+        SetOption("RayTracing", "EnableImportanceSampling", false)					-- TEST
         -- SetOption("RayTracing/Debug", "RTXDIRIS", true)								-- TEST
         -- SetOption("RayTracing/Debug", "HitDistance", true)							-- TEST
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
@@ -330,18 +330,16 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "Enable", true)
         SetOption("Editor/ReSTIRGI", "EnableFused", true)
         SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", true)				-- test 2.0
-        SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", true)
+        SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", false)
         SetOption("Editor/ReSTIRGI", "BoilingFilterStrength", "0.2")
         SetOption("Editor/ReSTIRGI", "UseSpatialRGS", true)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)
-        SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
-        SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
         SetOption("Editor/ReSTIRGI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "EnableFallbackLight", false)						-- disabling so SpatialNumSamples not needed
-        SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.0")					-- WAS 0.35 TEST
+        SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.1")					-- WAS 0.35 TEST
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)				-- TEST
         SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
@@ -350,7 +348,7 @@ function config.SetMode(mode)
         SetOption("Editor/SHARC", "Enable", true)
         SetOption("Editor/SHARC", "UseRTXDIAtPrimary", true)
         SetOption("Editor/SHARC", "UseRTXDIWithAlbedo", false)
-        SetOption("Editor/SHARC", "UsePrevFrameBiasAllowance", "0.1")
+        SetOption("Editor/SHARC", "UsePrevFrameBiasAllowance", "0.15")
         SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.1")
         SetOption("Editor/PathTracing", "UseScreenSpaceData", false)
         SaveSettings()
