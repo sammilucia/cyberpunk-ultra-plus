@@ -25,6 +25,10 @@ local ui = {
         ImGui.Spacing()
     end,
 
+    width = function(px)
+        ImGui.SetNextItemWidth(px)
+    end,
+
     align = function()
         ImGui.SameLine()
     end,
@@ -241,14 +245,13 @@ local function renderRenderingFeaturesDrawer()
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
             setting.value = setting.value
-
             SaveSettings()
         end
     end
 end
 
 local function renderDebugDrawer()
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.RTXDI) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -261,7 +264,7 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.RTXGI) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -274,7 +277,7 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.REGIR) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -287,7 +290,7 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.RELAX) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -300,7 +303,7 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.NRD) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -313,7 +316,7 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.RTOPTIONS) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -326,7 +329,7 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.SHARC) do
         setting.value = GetOption(setting.category, setting.item)
         setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
@@ -339,14 +342,29 @@ local function renderDebugDrawer()
         end
     end
 
-    ui.space()
+    ui.line()
     for _, setting in pairs(options.RTINT) do
         setting.value = GetOption(setting.category, setting.item)
+		ui.width(120)
         setting.value, toggled = ImGui.InputInt(setting.name, setting.value)
         ui.tooltip(setting.tooltip)
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
+            setting.value = setting.value
+            SaveSettings()
+        end
+    end
+
+    ui.line()
+    for _, setting in pairs(options.RTFLOAT) do
+        setting.value = GetOption(setting.category, setting.item)
+		ui.width(100)
+        setting.value, toggled = ImGui.InputFloat(setting.name, tonumber(setting.value))
+        ui.tooltip(setting.tooltip)
+
+        if toggled then
+            SetOption(setting.category, setting.item, setting.value, "float")
             setting.value = setting.value
             SaveSettings()
         end

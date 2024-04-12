@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta04',
+    __VERSION     = '4.0-beta05',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -104,10 +104,12 @@ function GetOption(category, item)
 
     if string.match(value, "^%-?%d+$") then
         return tonumber(value)
-    end
+    end	
+	
+	return value
 end
 
-function SetOption(category, item, value)
+function SetOption(category, item, value, valueType)
     -- sets a live game setting, working out which method to use for different setting types
     if value == nil then
         Debug("Skipping nil value:", category .. "/" .. item)
@@ -129,7 +131,7 @@ function SetOption(category, item, value)
         return
     end
 
-    if tostring(value):match("^%-?%d+%.%d+$") then
+    if tostring(value):match("^%-?%d+%.%d+$") or valueType == "float" then
         GameOptions.SetFloat(category, item, tonumber(value))
         return
     end
