@@ -198,12 +198,6 @@ local options = {
             tooltip = "Appears to be a higher radiance/quality sunlight path, notably boosts daylight visuals with unknown compatibility",
         },
         {
-            item = "EnableEmissiveProxyLightRejection",
-            name = "Enable Emissive Proxy Light Rejection",
-            category = "Editor/RTXDI",
-            tooltip = "Potential minor performance impact",
-        },
-        {
             item = "UseCSReusePasses",
             name = "Use CS Reuse Passes",
             category = "Editor/RTXDI",
