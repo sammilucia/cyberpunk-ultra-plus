@@ -35,9 +35,8 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "8")
             return
         end
 
@@ -76,8 +75,8 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
             return
         end
 
@@ -116,8 +115,8 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                  -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
             return
         end
 
@@ -156,8 +155,8 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")                        -- not used for ReGIR?
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
-            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
+            SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "8")
+            SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             return
         end

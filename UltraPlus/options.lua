@@ -782,6 +782,30 @@ local options = {
     },
     RTINT = {
         {
+            item = "MaxFastAccumulatedFrameNum",
+            name = "ReLAX Direct Diffuse Fast",
+            category = "Editor/Denoising/ReLAX/Direct/Diffuse",
+            tooltip = "Enable use of SHARC cache for indirect lighting, accelerating indirect lighting and improving path tracing results",
+        },
+        {
+            item = "MaxFastAccumulatedFrameNum",
+            name = "ReLAX Indirect Diffuse Fast",
+            category = "Editor/Denoising/ReLAX/Indirect/Diffuse",
+            tooltip = "",
+        },
+        {
+            item = "MaxFastAccumulatedFrameNum",
+            name = "ReLAX Direct Specular Fast",
+            category = "Editor/Denoising/ReLAX/Direct/Specular",
+            tooltip = "",
+        },
+        {
+            item = "MaxFastAccumulatedFrameNum",
+            name = "ReLAX Indirect Specular Fast",
+            category = "Editor/Denoising/ReLAX/Indirect/Specular",
+            tooltip = "",
+        },
+        {
             item = "BiasCorrectionMode",
             name = "BiasCorrectionMode DI",
             category = "Editor/RTXDI",
@@ -989,6 +1013,30 @@ local options = {
             item = "LightSlotsCount",
             name = "LightSlotsCount",
             category = "Editor/ReGIR",
+            tooltip = "Feed data from RTXDI, optimisation",
+        },
+        {
+            item = "SpatialVarianceEstimationHistoryThreshold",
+            name = "SpatialVarianceEstimationHistoryThreshold DI",
+            category = "Editor/Denoising/ReLAX/Direct/Common",
+            tooltip = "Feed data from RTXDI, optimisation",
+        },
+        {
+            item = "SpatialVarianceEstimationHistoryThreshold",
+            name = "SpatialVarianceEstimationHistoryThreshold GI",
+            category = "Editor/Denoising/ReLAX/Indirect/Common",
+            tooltip = "Feed data from RTXDI, optimisation",
+        },
+        {
+            item = "HistoryFixFrameNum",
+            name = "HistoryFixFrameNum DI",
+            category = "Editor/Denoising/ReLAX/Direct/Common",
+            tooltip = "Feed data from RTXDI, optimisation",
+        },
+        {
+            item = "HistoryFixFrameNum",
+            name = "HistoryFixFrameNum GI",
+            category = "Editor/Denoising/ReLAX/Indirect/Common",
             tooltip = "Feed data from RTXDI, optimisation",
         },
         {

@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta02',
+    __VERSION     = '4.0-beta03',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -630,8 +630,10 @@ registerForEvent('onUpdate', function(delta)
         timer.lazy = timer.lazy + delta
 
         -- prevent skipping temporal updates
-        -- jitter = timer.fast * 0.00001
-        -- Game.GetPlayer():GetFPPCameraComponent():SetFOV(fov + jitter)        -- method may be expensive because setting FOV smooths the transition
+--[[
+        jitter = timer.fast * 0.00001
+        Game.GetPlayer():GetFPPCameraComponent():SetFOV(fov + jitter)                       -- method may be expensive because setting FOV smooths the transition
+]]
         Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()     -- seems to work just the same ??
     end
 
@@ -659,7 +661,7 @@ registerForEvent('onUpdate', function(delta)
 end)
 
 registerForEvent("onTweak", function()
-    LoadIni("commonfixes.ini")
+    LoadIni("commonfixes.ini") -- load as early as possible to prevent crashes
 --[[
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
     config.reGIRDIHackApplied = false -- already set at start
@@ -667,6 +669,7 @@ registerForEvent("onTweak", function()
 end)
 
 registerForEvent("onInit", function()
+    local fov = Game.GetPlayer():GetFPPCameraComponent():GetFOV()
     isLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
 
     Observe('QuestTrackerGameController', 'OnInitialize', function()
@@ -691,6 +694,8 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
+	
+	LoadIni("commonfixes.ini") -- load again to undo engine changing things
     LoadSettings()
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
@@ -699,8 +704,6 @@ registerForEvent("onInit", function()
 
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false
-
-    local fov = Game.GetPlayer():GetFPPCameraComponent():GetFOV()
 end)
 
 registerForEvent("onOverlayOpen", function()

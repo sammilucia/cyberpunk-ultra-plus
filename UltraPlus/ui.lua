@@ -8,7 +8,7 @@ local config = {
     SetQuality = require("setquality").SetQuality,
     SetStreaming = require("setstreaming").SetStreaming,
     -- turboHack = false,
-    DEBUG = false,
+    DEBUG = true,
     reGIR = false,
 }
 local toggled
@@ -365,7 +365,7 @@ local function renderTabs()
             ImGui.EndTabItem()
         end
 
-        if ImGui.BeginTabItem("Debug") then
+        if ImGui.BeginTabItem("Debug") and config.DEBUG then
             renderDebugDrawer()
             ImGui.EndTabItem()
         end
@@ -373,7 +373,6 @@ local function renderTabs()
         ImGui.EndTabBar()
     end
 end
-
 
 ui.renderControlPanel = function()
     -- SET DEFAULTS
