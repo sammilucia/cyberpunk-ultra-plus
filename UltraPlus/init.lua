@@ -481,6 +481,7 @@ registerForEvent("onTweak", function()
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
     config.reGIRDIHackApplied = false -- already set at start
 ]]
+    LoadIni("denoising.ini")
 end)
 
 registerForEvent("onInit", function()
@@ -512,6 +513,7 @@ registerForEvent("onInit", function()
 	
 	LoadIni("commonfixes.ini") -- load again to undo engine changing things
     LoadSettings()
+    LoadIni("denoising.ini")
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
     config.SetSamples(var.settings.samples)
