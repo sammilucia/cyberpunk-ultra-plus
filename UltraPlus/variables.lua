@@ -30,6 +30,15 @@ local var = {
         HIGH = "High",
         INSANE = "Insane",
     },
+    vram = {
+        GB4 = "4 GB",
+        GB6 = "6 GB",
+        GB8 = "8 GB",
+        GB10 = "10 GB",
+        GB12 = "12 GB",
+        GB16 = "16 GB",
+        GB24 = "24 GB",
+    },
     dlss = {
         AUTO = "Auto",
         DYNAMIC = "Dynamic",

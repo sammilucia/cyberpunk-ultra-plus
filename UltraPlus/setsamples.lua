@@ -31,6 +31,7 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "16")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "12")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.PTNEXT then
@@ -40,7 +41,6 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "7")
             SetOption("Editor/SHARC", "SceneScale", "30.0")
             SetOption("Editor/SHARC", "Bounces", "1")
@@ -66,7 +66,7 @@ function config.SetSamples(samples)
         end
 
         if var.settings.mode == var.mode.PT21 then
-            SetOption("Editor/RTXDI", "MaxHistoryLength", "4")
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "4")
             return
         end
@@ -77,6 +77,7 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "24")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.PTNEXT then
@@ -86,7 +87,6 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "7")
             SetOption("Editor/SHARC", "SceneScale", "40.0")
             SetOption("Editor/SHARC", "Bounces", "2")
@@ -112,7 +112,7 @@ function config.SetSamples(samples)
         end
 
         if var.settings.mode == var.mode.PT21 then
-            SetOption("Editor/RTXDI", "MaxHistoryLength", "4")
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
             return
         end
@@ -123,6 +123,7 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "32")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.PTNEXT then
@@ -132,7 +133,6 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "6")
             SetOption("Editor/SHARC", "SceneScale", "50.0")
             SetOption("Editor/SHARC", "Bounces", "2")
@@ -169,6 +169,7 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "32")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "5")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.PTNEXT then
@@ -178,7 +179,6 @@ function config.SetSamples(samples)
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
-            SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "5")
             SetOption("Editor/SHARC", "SceneScale", "50.0")
             SetOption("Editor/SHARC", "Bounces", "2")

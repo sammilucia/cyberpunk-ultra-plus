@@ -7,7 +7,7 @@ local config = {
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
     SetStreaming = require("setstreaming").SetStreaming,
-    -- turboHack = false,
+    SetVram = require("setvram").SetVram,
     DEBUG = true,
     reGIR = false,
 }
@@ -220,6 +220,57 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
+    if ImGui.CollapsingHeader("VRAM Configuration", ImGuiTreeNodeFlags.DefaultOpen) then
+        if ImGui.RadioButton("4GB", var.settings.vram == var.vram.GB4) then
+            var.settings.vram = var.vram.GB4
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("6GB", var.settings.vram == var.vram.GB6) then
+            var.settings.vram = var.vram.GB6
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("8GB", var.settings.vram == var.vram.GB8) then
+            var.settings.vram = var.vram.GB8
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("10GB", var.settings.vram == var.vram.GB10) then
+            var.settings.vram = var.vram.GB10
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("12GB", var.settings.vram == var.vram.GB12) then
+            var.settings.vram = var.vram.GB12
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("16GB", var.settings.vram == var.vram.GB16) then
+            var.settings.vram = var.vram.GB16
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
+        if ImGui.RadioButton("24GB", var.settings.vram == var.vram.GB24) then
+            var.settings.vram = var.vram.GB24
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+    end
+
+    ui.space()
     if ImGui.CollapsingHeader("Tweaks", ImGuiTreeNodeFlags.DefaultOpen) then
         for _, setting in pairs(options.Tweaks) do
             setting.value = GetOption(setting.category, setting.item)
@@ -395,7 +446,7 @@ end
 ui.renderControlPanel = function()
     -- SET DEFAULTS
     ImGui.SetNextWindowPos(200, 200, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(440, 584, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(440, 652, ImGuiCond.Appearing)
 
     -- BEGIN ACTUAL RENDER
     if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then

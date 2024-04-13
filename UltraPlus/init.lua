@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta06',
+    __VERSION     = '4.0-beta07',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -26,13 +26,12 @@ local options = require("options")
 local var = require("variables")
 local ui = require("ui")
 local isLoaded = false
-local jitter = 0
 local config = {
     SetSamples = require("setsamples").SetSamples,
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
     SetStreaming = require("setstreaming").SetStreaming,
-    --    turboHack = false,
+    SetVram = require("setvram").SetVram,
     DEBUG = false,
     reGIRDIHackApplied = false,
 }
@@ -47,10 +46,10 @@ local timer = {
 local Detector = { isGameActive = false }
 function Detector.UpdateGameStatus()
     -- check if ingame or not
-    local player = Game.GetPlayer()
+    Player = Game.GetPlayer()
     local isInMenu = GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():IsPreGame()
 
-    Detector.isGameActive = player and not isInMenu
+    Detector.isGameActive = Player and not isInMenu
     Debug("Player is", Detector.isGameActive and "" or "not", "in game")
 end
 
@@ -61,7 +60,7 @@ end
 
 local activeTimers = {}
 function Wait(seconds, callback)
-    -- non-blocking wait()
+    -- non-blocking wait
     table.insert(activeTimers, { countdown = seconds, callback = callback })
 end
 
@@ -252,6 +251,7 @@ function SaveSettings()
     UltraPlus["internal.samples"] = var.settings.samples
     UltraPlus["internal.quality"] = var.settings.quality
     UltraPlus["internal.streaming"] = var.settings.streaming
+    UltraPlus["internal.vram"] = var.settings.streaming
 
     local settingsTable = { UltraPlus = UltraPlus }
 
@@ -305,70 +305,6 @@ local function DoReGIRDI()
     end)
 end
 
---[[
-local function DoTurboHack()
-    -- reduce detail outdoors
-    if not var.settings.turboHack or var.settings.indoors then
-        config.SetSamples(var.settings.samples)
-        config.SetQuality(var.settings.quality)
-    else
-        logger.info("PT Turbo - reducing detail oudoors")
-
-        if var.settings.samples == var.samples.VANILLA then
-            SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
-
-        elseif var.settings.samples == var.samples.LOW then
-            if var.settings.mode == var.mode.PT20 then
-                SetOption("Editor/SHARC", "DownscaleFactor", "7")
-                SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
-            elseif var.settings.mode == var.mode.RT_PT then
-                SetOption("Editor/SHARC", "DownscaleFactor", "7")
-                SetOption("Editor/SHARC", "SceneScale", "35.7142857143")
-            elseif var.settings.mode == var.mode.PT21 then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
-            end
-
-        elseif var.settings.samples == var.samples.MEDIUM then
-            if var.settings.mode == var.mode.PT20 then
-
-            elseif var.settings.mode == var.mode.RT_PT then
-
-            elseif var.settings.mode == var.mode.PT21 then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "1")
-            end
-
-        elseif var.settings.samples == var.samples.HIGH then
-            if var.settings.mode == var.mode.PT20 then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "1")
-            elseif var.settings.mode == var.mode.RT_PT then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
-            elseif var.settings.mode == var.mode.PT21 then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "1")
-            end
-
-        elseif var.settings.samples == var.samples.INSANE then
-            if var.settings.mode == var.mode.PT20 then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "3")
-            elseif var.settings.mode == var.mode.RT_PT then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "1")
-            elseif var.settings.mode == var.mode.PT21 then
-                SetOption("Editor/RTXDI", "SpatialNumSamples", "3")
-            end
-        end
-
-        if var.quality.mode == var.quality.MEDIUM then
-            SetOption("RayTracing/Reference", "BounceNumber", "1")
-        elseif var.quality.mode == var.quality.HIGH then
-            SetOption("RayTracing/Reference", "RayNumber", "2")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-        elseif var.quality.mode == var.quality.INSANE then
-            SetOption("RayTracing/Reference", "RayNumber", "3")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-        end
-    end
-end
-]]
-
 local function DoRainFix()
     -- enable particle PT integration unless player is outdoors AND it's raining
     if var.settings.indoors or not var.settings.rain then
@@ -405,12 +341,7 @@ local function DoFastUpdate()
         var.settings.rain = testRain
         var.settings.indoors = testIndoors
     end
---[[
-    if config.turboHack ~= var.settings.turboHack then
-        DoTurboHack()
-        config.turboHack = var.settings.turboHack
-    end
-]]
+
     if GetOption("Editor/ReGIR", "Enable") and not config.reGIRDIHackApplied then
         DoReGIRDI()
     end
@@ -445,11 +376,7 @@ registerForEvent('onUpdate', function(delta)
         timer.lazy = timer.lazy + delta
 
         -- prevent skipping temporal updates
---[[
-        jitter = timer.fast * 0.00001
-        Game.GetPlayer():GetFPPCameraComponent():SetFOV(fov + jitter)                       -- method may be expensive because setting FOV smooths the transition
-]]
-        Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()     -- seems to work just the same ??
+        Player:GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
     end
 
     if Detector.isGameActive and isLoaded then
@@ -477,16 +404,11 @@ end)
 
 registerForEvent("onTweak", function()
     LoadIni("commonfixes.ini") -- load as early as possible to prevent crashes
---[[
-    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
-    config.reGIRDIHackApplied = false -- already set at start
-]]
     LoadIni("denoising.ini")
 end)
 
 registerForEvent("onInit", function()
-    local fov = Game.GetPlayer():GetFPPCameraComponent():GetFOV()
-    isLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
+    isLoaded = Player and Player:IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
 
     Observe('QuestTrackerGameController', 'OnInitialize', function()
         if not isLoaded then
@@ -496,7 +418,7 @@ registerForEvent("onInit", function()
     end)
 
     Observe('QuestTrackerGameController', 'OnUninitialize', function()
-        if Game.GetPlayer() == nil then
+        if Player == nil then
             Debug('Game session ended')
             isLoaded = false
             SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
@@ -510,14 +432,16 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
-	
 	LoadIni("commonfixes.ini") -- load again to undo engine changing things
     LoadSettings()
-    LoadIni("denoising.ini")
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
     config.SetSamples(var.settings.samples)
     config.SetStreaming(var.settings.streaming)
+    config.SetVram(var.settings.vram)
+    Wait(5.0, function()
+        LoadIni("denoising.ini")
+    end)
 
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false
