@@ -513,6 +513,7 @@ registerForEvent("onInit", function()
 	
 	LoadIni("commonfixes.ini") -- load again to undo engine changing things
     LoadSettings()
+    LoadIni("denoising.ini")
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
     config.SetSamples(var.settings.samples)
@@ -520,7 +521,6 @@ registerForEvent("onInit", function()
 
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false
-    LoadIni("denoising.ini")
 end)
 
 registerForEvent("onOverlayOpen", function()
