@@ -398,7 +398,7 @@ ui.renderControlPanel = function()
     ImGui.SetNextWindowSize(440, 584, ImGuiCond.Appearing)
 
     -- BEGIN ACTUAL RENDER
-    if ImGui.Begin("Ultra+ Control v" .. UltraPlus.__VERSION, true) then
+    if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
         ImGui.SetWindowFontScale(0.90)
         renderTabs()
         ImGui.End()
