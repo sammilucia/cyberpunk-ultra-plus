@@ -97,7 +97,7 @@ local function renderTabEngineDrawer()
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
-        ui.tooltip("Path tracing from Cyberpunk 2.0.\n\nNote: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
+        ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
 
         ui.align()
         if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
@@ -107,7 +107,7 @@ local function renderTabEngineDrawer()
             config.SetSamples(var.settings.samples)
             SaveSettings()
         end
-        ui.tooltip("Path tracing from Cyberpunk 2.10+.\n\nNote: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
+        ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
 
         ui.align()
         if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then

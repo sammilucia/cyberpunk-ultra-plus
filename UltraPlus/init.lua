@@ -46,10 +46,10 @@ local timer = {
 local Detector = { isGameActive = false }
 function Detector.UpdateGameStatus()
     -- check if ingame or not
-    Player = Game.GetPlayer()
+    local player = Game.GetPlayer()
     local isInMenu = GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():IsPreGame()
 
-    Detector.isGameActive = Player and not isInMenu
+    Detector.isGameActive = player and not isInMenu
     Debug("Player is", Detector.isGameActive and "" or "not", "in game")
 end
 
@@ -125,9 +125,13 @@ function SetOption(category, item, value, valueType)
         return
     end
 
-    if type(value) == "boolean" then
-        GameOptions.SetBool(category, item, value)
+    if value == "false" or value == false then
+        GameOptions.SetBool(category, item, false)
         return
+    end
+
+    if value == "true" or value == true then
+        GameOptions.SetBool(category, item, true)
     end
 
     if tostring(value):match("^%-?%d+%.%d+$") or valueType == "float" then
@@ -251,7 +255,7 @@ function SaveSettings()
     UltraPlus["internal.samples"] = var.settings.samples
     UltraPlus["internal.quality"] = var.settings.quality
     UltraPlus["internal.streaming"] = var.settings.streaming
-    UltraPlus["internal.vram"] = var.settings.streaming
+    UltraPlus["internal.vram"] = var.settings.vram
 
     local settingsTable = { UltraPlus = UltraPlus }
 
@@ -367,6 +371,17 @@ local function forcePTDenoiser()
     end
 end
 
+function LoadDenoiser()
+    if not GetOption("/graphics/presets", "DLSS_D") then
+        logger.info("Loading RR denoiser")
+        LoadIni("denoiser_nrd.ini")
+        return
+    end
+
+    logger.info("Loading NRD denoiser")
+    LoadIni("denoiser_rr.ini")
+end
+
 registerForEvent('onUpdate', function(delta)
     -- handle non-blocking background tasks
     Detector.UpdateGameStatus()
@@ -376,7 +391,7 @@ registerForEvent('onUpdate', function(delta)
         timer.lazy = timer.lazy + delta
 
         -- prevent skipping temporal updates
-        Player:GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
+        Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
     end
 
     if Detector.isGameActive and isLoaded then
@@ -404,11 +419,11 @@ end)
 
 registerForEvent("onTweak", function()
     LoadIni("commonfixes.ini") -- load as early as possible to prevent crashes
-    LoadIni("denoising.ini")
+    LoadDenoiser()
 end)
 
 registerForEvent("onInit", function()
-    isLoaded = Player and Player:IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
+    isLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
 
     Observe('QuestTrackerGameController', 'OnInitialize', function()
         if not isLoaded then
@@ -418,7 +433,7 @@ registerForEvent("onInit", function()
     end)
 
     Observe('QuestTrackerGameController', 'OnUninitialize', function()
-        if Player == nil then
+        if Game.GetPlayer() == nil then
             Debug('Game session ended')
             isLoaded = false
             SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
@@ -433,15 +448,13 @@ registerForEvent("onInit", function()
     end
 
 	LoadIni("commonfixes.ini") -- load again to undo engine changing things
+    LoadDenoiser()
     LoadSettings()
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
     config.SetSamples(var.settings.samples)
     config.SetStreaming(var.settings.streaming)
     config.SetVram(var.settings.vram)
-    Wait(5.0, function()
-        LoadIni("denoising.ini")
-    end)
 
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false

@@ -31,7 +31,7 @@ function config.SetSamples(samples)
         SetOption("FSR2", "SampleNumber", "16")
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
-        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "12")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.PTNEXT then
