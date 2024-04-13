@@ -481,6 +481,7 @@ registerForEvent("onTweak", function()
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false) -- already applied by commonfixes
     config.reGIRDIHackApplied = false -- already set at start
 ]]
+    LoadIni("denoising.ini")
 end)
 
 registerForEvent("onInit", function()
@@ -519,6 +520,7 @@ registerForEvent("onInit", function()
 
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     config.reGIRDIHackApplied = false
+    LoadIni("denoising.ini")
 end)
 
 registerForEvent("onOverlayOpen", function()
