@@ -14,6 +14,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "512")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "64")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "128")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "300")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
+        SetOption("Streaming", "PrecacheDistance", "10.0")
+        SetOption("Streaming", "MinStreamingDistance", "20.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
 
@@ -24,6 +32,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "512")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "64")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "192")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "300")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
+        SetOption("Streaming", "PrecacheDistance", "10.0")
+        SetOption("Streaming", "MinStreamingDistance", "20.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
 
@@ -34,6 +50,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "768")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "80")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "224")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "300")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
+        SetOption("Streaming", "PrecacheDistance", "10.0")
+        SetOption("Streaming", "MinStreamingDistance", "20.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
 
@@ -44,6 +68,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "1024")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "80")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "224")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "300")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
+        SetOption("Streaming", "PrecacheDistance", "10.0")
+        SetOption("Streaming", "MinStreamingDistance", "20.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
 
@@ -54,6 +86,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "1024")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "96")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "224")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "300")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "500")
+        SetOption("Streaming", "PrecacheDistance", "20.0")
+        SetOption("Streaming", "MinStreamingDistance", "40.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
 
@@ -64,6 +104,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "1024")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "112")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "256")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "500")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "500")
+        SetOption("Streaming", "PrecacheDistance", "20.0")
+        SetOption("Streaming", "MinStreamingDistance", "40.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "3")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "3")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
         return
     end
 
@@ -74,6 +122,14 @@ function config.SetVram(vram)
         SetOption("Rendering", "DistantShadowsMaxBatchSize", "1024")
         SetOption("RayTracing", "AccelerationStructureBuildNumMax", "128")
         SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "320")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "800")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "800")
+        SetOption("Streaming", "PrecacheDistance", "40.0")
+        SetOption("Streaming", "MinStreamingDistance", "80.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "4")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "4")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "2")
         return
     end
 end

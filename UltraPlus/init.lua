@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta07',
+    __VERSION     = '4.0-beta08',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -27,13 +27,12 @@ local var = require("variables")
 local ui = require("ui")
 local isLoaded = false
 local config = {
-    SetSamples = require("setsamples").SetSamples,
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
-    SetStreaming = require("setstreaming").SetStreaming,
     SetVram = require("setvram").SetVram,
     DEBUG = false,
-    reGIRDIHackApplied = false,
+    regirHackApplied = false,
+    nrdEnabled = false,
 }
 local timer = {
     lazy = 0,
@@ -252,9 +251,7 @@ function SaveSettings()
     end
 
     UltraPlus["internal.mode"] = var.settings.mode
-    UltraPlus["internal.samples"] = var.settings.samples
     UltraPlus["internal.quality"] = var.settings.quality
-    UltraPlus["internal.streaming"] = var.settings.streaming
     UltraPlus["internal.vram"] = var.settings.vram
 
     local settingsTable = { UltraPlus = UltraPlus }
@@ -299,8 +296,8 @@ function ResetEngine()
     GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-local function DoReGIRDI()
-    config.reGIRDIHackApplied = true
+local function DoRegirFix()
+    config.regirHackApplied = true
     SetOption("Editor/ReGIR", "UseForDI", false)
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     Wait(1.5, function()
@@ -333,12 +330,25 @@ local function DoRRFix()
     timer.paused = false
 end
 
+local function DoNrdFix(enabled)
+    -- auto-switch between NRD and RR denoiser settings
+    if enabled then
+        logger.info("Loading NRD denoiser")
+        LoadIni("denoiser_nrd.ini")
+        return
+    end
+
+    logger.info("Loading RR denoiser")
+    LoadIni("denoiser_rr.ini")
+end
+
 local function DoFastUpdate()
     -- runs every timer.FAST seconds
     DoRRFix()
 
     local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
     local testIndoors = IsEntityInInteriorArea(GetPlayer())
+    local testNrd = GetOption("RayTracing", "EnableNRD")
 
     if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
         DoRainFix()
@@ -346,8 +356,13 @@ local function DoFastUpdate()
         var.settings.indoors = testIndoors
     end
 
-    if GetOption("Editor/ReGIR", "Enable") and not config.reGIRDIHackApplied then
-        DoReGIRDI()
+    if testNrd ~= var.settings.nrdEnabled then
+        DoNrdFix(testNrd)
+        var.settings.nrdEnabled = testNrd
+    end
+
+    if GetOption("Editor/ReGIR", "Enable") and not config.regirHackApplied then
+        DoRegirFix()
     end
 end
 
@@ -369,17 +384,6 @@ local function forcePTDenoiser()
         SetOption("RayTracing", "EnableNRD", true)
         --PushChanges()
     end
-end
-
-function LoadDenoiser()
-    if not GetOption("/graphics/presets", "DLSS_D") then
-        logger.info("Loading RR denoiser")
-        LoadIni("denoiser_nrd.ini")
-        return
-    end
-
-    logger.info("Loading NRD denoiser")
-    LoadIni("denoiser_rr.ini")
 end
 
 registerForEvent('onUpdate', function(delta)
@@ -419,7 +423,6 @@ end)
 
 registerForEvent("onTweak", function()
     LoadIni("commonfixes.ini") -- load as early as possible to prevent crashes
-    LoadDenoiser()
 end)
 
 registerForEvent("onInit", function()
@@ -437,7 +440,7 @@ registerForEvent("onInit", function()
             Debug('Game session ended')
             isLoaded = false
             SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-            config.reGIRDIHackApplied = false
+            config.regirHackApplied = false
         end
     end)
 
@@ -448,16 +451,14 @@ registerForEvent("onInit", function()
     end
 
 	LoadIni("commonfixes.ini") -- load again to undo engine changing things
-    LoadDenoiser()
+    DoNrdFix(GetOption("RayTracing", "EnableNRD"))
     LoadSettings()
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
-    config.SetSamples(var.settings.samples)
-    config.SetStreaming(var.settings.streaming)
     config.SetVram(var.settings.vram)
 
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-    config.reGIRDIHackApplied = false
+    config.regirHackApplied = false
 end)
 
 registerForEvent("onOverlayOpen", function()

@@ -10,13 +10,6 @@ local var = {
         RT_ONLY = "RTOnly",
         RASTER = "Raster",
     },
-    samples = {
-        VANILLA = "Vanilla",
-        LOW = "Low",
-        MEDIUM = "Medium",
-        HIGH = "High",
-        INSANE = "Insane",
-    },
     quality = {
         VANILLA = "Vanilla",
         LOW = "Low",
@@ -50,12 +43,11 @@ local var = {
     },
     settings = {
         mode = "Unknown",
-        samples = "Unknown",
         quality = "Unknown",
         streaming = "Unknown",
-        turboHack = false,
         indoors = nil,
         rain = nil,
+        nrdEnabled = nil,
     },
 }
 

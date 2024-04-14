@@ -3,13 +3,10 @@
 local options = require("options")
 local var = require("variables")
 local config = {
-    SetSamples = require("setsamples").SetSamples,
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
-    SetStreaming = require("setstreaming").SetStreaming,
     SetVram = require("setvram").SetVram,
     DEBUG = true,
-    reGIR = false,
 }
 local toggled
 
@@ -60,21 +57,18 @@ local ui = {
 }
 
 local function renderTabEngineDrawer()
-    ui.text("NOTE: Wait for FPS to stabilise after changing settings.")
 
     if ImGui.CollapsingHeader("Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen) then
         --[[
         if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
             var.settings.mode = var.mode.RASTER
             config.SetMode( var.settings.mode )
-            config.SetSamples( var.settings.samples )
         end
 ]]
         if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
             var.settings.mode = var.mode.RT_ONLY
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
-            config.SetSamples(var.settings.samples)
             SaveSettings()
         end
         ui.tooltip("Regular ray tracing, with optimisations and fixes.")
@@ -84,7 +78,6 @@ local function renderTabEngineDrawer()
             var.settings.mode = var.mode.RT_PT
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
-            config.SetSamples(var.settings.samples)
             SaveSettings()
         end
         ui.tooltip("Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.")
@@ -94,69 +87,27 @@ local function renderTabEngineDrawer()
             var.settings.mode = var.mode.PT20
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
-            config.SetSamples(var.settings.samples)
             SaveSettings()
         end
-        ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
+        ui.tooltip("Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
 
         ui.align()
         if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
             var.settings.mode = var.mode.PT21
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
-            config.SetSamples(var.settings.samples)
             SaveSettings()
         end
-        ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality/samples.")
+        ui.tooltip("Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.")
 
         ui.align()
         if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
             var.settings.mode = var.mode.PTNEXT
             config.SetMode(var.settings.mode)
             config.SetQuality(var.settings.quality)
-            config.SetSamples(var.settings.samples)
-            config.reGIRDIHackApplied = false
             SaveSettings()
         end
-        ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nFor other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality/samples for the best visuals. However for PTNext we recommend the\nopposite: Run PTNext as high as you can and turn upscaling down a step.")
-    end
-
-    ui.space()
-    if ImGui.CollapsingHeader("Direct Lighting Samples", ImGuiTreeNodeFlags.DefaultOpen) then
-
-        if ImGui.RadioButton("Vanilla##SamplesVanilla", var.settings.samples == var.samples.VANILLA) then
-            var.settings.samples = var.samples.VANILLA
-            config.SetSamples(var.settings.samples)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("Low##SamplesLow", var.settings.samples == var.samples.LOW) then
-            var.settings.samples = var.samples.LOW
-            config.SetSamples(var.settings.samples)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("Medium##SamplesMedium", var.settings.samples == var.samples.MEDIUM) then
-            var.settings.samples = var.samples.MEDIUM
-            config.SetSamples(var.settings.samples)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("High##SamplesHigh", var.settings.samples == var.samples.HIGH) then
-            var.settings.samples = var.samples.HIGH
-            config.SetSamples(var.settings.samples)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("Insane##SamplesInsane", var.settings.samples == var.samples.INSANE) then
-            var.settings.samples = var.samples.INSANE
-            config.SetSamples(var.settings.samples)
-            SaveSettings()
-        end
+        ui.tooltip("For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics?DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.")
     end
 
     ui.space()
@@ -197,73 +148,50 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
-    if ImGui.CollapsingHeader("Streaming Boost", ImGuiTreeNodeFlags.DefaultOpen) then
-        if ImGui.RadioButton("20 metres##StreamingLow", var.settings.streaming == var.streaming.LOW) then
-            var.settings.streaming = var.streaming.LOW
-            config.SetStreaming(var.settings.streaming)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("40 metres##StreamingMedium", var.settings.streaming == var.streaming.MEDIUM) then
-            var.settings.streaming = var.streaming.MEDIUM
-            config.SetStreaming(var.settings.streaming)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("80 metres##StreamingHigh", var.settings.streaming == var.streaming.HIGH) then
-            var.settings.streaming = var.streaming.HIGH
-            config.SetStreaming(var.settings.streaming)
-            SaveSettings()
-        end
-    end
-
-    ui.space()
-    if ImGui.CollapsingHeader("VRAM Configuration", ImGuiTreeNodeFlags.DefaultOpen) then
-        if ImGui.RadioButton("4GB", var.settings.vram == var.vram.GB4) then
+    if ImGui.CollapsingHeader("VRAM Configuration (GB)", ImGuiTreeNodeFlags.DefaultOpen) then
+        if ImGui.RadioButton("4", var.settings.vram == var.vram.GB4) then
             var.settings.vram = var.vram.GB4
             config.SetVram(var.settings.vram)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("6GB", var.settings.vram == var.vram.GB6) then
+        if ImGui.RadioButton("6", var.settings.vram == var.vram.GB6) then
             var.settings.vram = var.vram.GB6
             config.SetVram(var.settings.vram)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("8GB", var.settings.vram == var.vram.GB8) then
+        if ImGui.RadioButton("8", var.settings.vram == var.vram.GB8) then
             var.settings.vram = var.vram.GB8
             config.SetVram(var.settings.vram)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("10GB", var.settings.vram == var.vram.GB10) then
+        if ImGui.RadioButton("10", var.settings.vram == var.vram.GB10) then
             var.settings.vram = var.vram.GB10
             config.SetVram(var.settings.vram)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("12GB", var.settings.vram == var.vram.GB12) then
+        if ImGui.RadioButton("12", var.settings.vram == var.vram.GB12) then
             var.settings.vram = var.vram.GB12
             config.SetVram(var.settings.vram)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("16GB", var.settings.vram == var.vram.GB16) then
+        if ImGui.RadioButton("16", var.settings.vram == var.vram.GB16) then
             var.settings.vram = var.vram.GB16
             config.SetVram(var.settings.vram)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("24GB", var.settings.vram == var.vram.GB24) then
+        if ImGui.RadioButton("24", var.settings.vram == var.vram.GB24) then
             var.settings.vram = var.vram.GB24
             config.SetVram(var.settings.vram)
             SaveSettings()
@@ -284,6 +212,9 @@ local function renderTabEngineDrawer()
             end
         end
     end
+	
+	ui.line()
+    ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 end
 
 local function renderRenderingFeaturesDrawer()
@@ -446,7 +377,7 @@ end
 ui.renderControlPanel = function()
     -- SET DEFAULTS
     ImGui.SetNextWindowPos(200, 200, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(440, 652, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(440, 540, ImGuiCond.Appearing)
 
     -- BEGIN ACTUAL RENDER
     if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
