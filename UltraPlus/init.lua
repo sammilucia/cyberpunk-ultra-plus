@@ -302,7 +302,10 @@ local function DoRegirFix()
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     Wait(1.5, function()
         SetOption("Editor/ReGIR", "UseForDI", true)
-        SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+
+        if not GetOption("RayTracing", "EnableNRD") then
+            SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+        end
     end)
 end
 

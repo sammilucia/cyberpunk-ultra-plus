@@ -58,18 +58,18 @@ function config.SetQuality(quality)
         SetOption("RayTracing", "CullingDistanceCharacter", "12.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "35.0")
         SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
+        SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+        SetOption("RayTracing/Reference", "RayNumber", "1")
+        SetOption("RayTracing/Reference", "BounceNumber", "1")
+        SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
+        SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "2")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
 
         if var.settings.mode == var.mode.PTNEXT then
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0") -- TEST
-            SetOption("RayTracing/Reference", "BounceNumber", "0") -- TEST
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
-            SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
@@ -84,40 +84,27 @@ function config.SetQuality(quality)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/RTXDI", "NumInitialSamples", "16")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
-        SetOption("Editor/SHARC", "DownscaleFactor", "7")
         SetOption("Editor/SHARC", "SceneScale", "30.0")
         SetOption("Editor/SHARC", "Bounces", "2")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption("RayTracing/Reference", "RayNumber", "1")
-            SetOption("RayTracing/Reference", "BounceNumber", "1")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
             return
         end
 
         if var.settings.mode == var.mode.RT_PT then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption("RayTracing/Reference", "RayNumber", "1")
-            SetOption("RayTracing/Reference", "BounceNumber", "1")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
             return
         end
 
         if var.settings.mode == var.mode.PT21 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "0")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "4")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
             return
         end
     end
@@ -136,19 +123,19 @@ function config.SetQuality(quality)
         SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "40.0")
+        SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+        SetOption("RayTracing/Reference", "RayNumber", "1")
+        SetOption("RayTracing/Reference", "BounceNumber", "2")
+        SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
+        SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "3")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 
         if var.settings.mode == var.mode.PTNEXT then
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "0")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
-            SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
@@ -164,40 +151,27 @@ function config.SetQuality(quality)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "22")
         SetOption("Editor/RTXDI", "NumInitialSamples", "18")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
-        SetOption("Editor/SHARC", "DownscaleFactor", "5")
         SetOption("Editor/SHARC", "SceneScale", "50.0")
         SetOption("Editor/SHARC", "Bounces", "2")
         
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption("RayTracing/Reference", "RayNumber", "1")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
+            SetOption("Editor/SHARC", "DownscaleFactor", "6")
             return
         end
 
         if var.settings.mode == var.mode.RT_PT then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption("RayTracing/Reference", "RayNumber", "1")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
+            SetOption("Editor/SHARC", "DownscaleFactor", "6")
             return
         end
 
         if var.settings.mode == var.mode.PT21 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "0")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
             return
         end
     end
@@ -216,19 +190,19 @@ function config.SetQuality(quality)
         SetOption("RayTracing", "TracingRadiusReflections", "4000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "50.0")
+        SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
+        SetOption("RayTracing/Reference", "RayNumber", "3")
+        SetOption("RayTracing/Reference", "BounceNumber", "2")
+        SetOption("RayTracing/Reference", "RayNumberScreenshot", "4")
+        SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "4")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
 
         if var.settings.mode == var.mode.PTNEXT then
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "0")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
-            SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
@@ -249,11 +223,6 @@ function config.SetQuality(quality)
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "3")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "5")
             return
@@ -261,23 +230,13 @@ function config.SetQuality(quality)
 
         if var.settings.mode == var.mode.RT_PT then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "3")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "3")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "4")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
             return
         end
 
         if var.settings.mode == var.mode.PT21 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "10")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "16")
             SetOption("Editor/SHARC", "DownscaleFactor", "3")
             return
@@ -298,19 +257,19 @@ function config.SetQuality(quality)
         SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "20.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "60.0")
+        SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
+        SetOption("RayTracing/Reference", "RayNumber", "5")
+        SetOption("RayTracing/Reference", "BounceNumber", "2")
+        SetOption("RayTracing/Reference", "RayNumberScreenshot", "8")
+        SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "5")
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
 
         if var.settings.mode == var.mode.PTNEXT then
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "0")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
-            SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
+            SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
@@ -331,11 +290,6 @@ function config.SetQuality(quality)
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "5")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "8")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "4")
             return
@@ -343,23 +297,13 @@ function config.SetQuality(quality)
 
         if var.settings.mode == var.mode.RT_PT then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "5")
-            SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "8")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "3")
+            SetOption("Editor/SHARC", "DownscaleFactor", "4")
             return
         end
 
         if var.settings.mode == var.mode.PT21 then
             SetOption("Editor/RTXDI", "MaxHistoryLength", "10")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "0")
-            SetOption("RayTracing/Reference", "BounceNumber", "0")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "0")
-            SetOption("RayTracing/Reference", "BounceNumberScreenshot", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "2")
         end
