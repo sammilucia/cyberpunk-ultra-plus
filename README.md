@@ -19,14 +19,18 @@
 
 Please feel free to pitch in! I don't know LUA or ImGui and have limited time, so help is wonderful. This is a proof of concept.
 
+## Done
+
 ## To Do
-- Put all feature / distance / etc. tabs onto one page
+- Enable no-ray/path tracing mode
+
+## Done
 - Saving of Ultra+'s mode (RTPT, PT20, samples, etc...)
 - Enable RTPT option (including changing the engine's ray tracing mode in real-time)
-- Enable no-ray/path tracing mode
 - Add streaming options (? vanilla, medium, high)
-- Remove options that are confusing or don't add any value
 - Separate settings into separate file(s)
+- Remove options that are confusing or don't add any value
+- Put all feature / distance / etc. tabs onto one page
 
 ## Where to find me
 
