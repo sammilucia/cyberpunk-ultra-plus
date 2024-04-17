@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta08',
+    __VERSION     = '4.0-beta09',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -302,10 +302,7 @@ local function DoRegirFix()
     SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
     Wait(1.5, function()
         SetOption("Editor/ReGIR", "UseForDI", true)
-
-        if not GetOption("RayTracing", "EnableNRD") then
-            SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
-        end
+        SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
     end)
 end
 
@@ -425,7 +422,7 @@ registerForEvent('onUpdate', function(delta)
 end)
 
 registerForEvent("onTweak", function()
-    LoadIni("commonfixes.ini") -- load as early as possible to prevent crashes
+    LoadIni("config_common.ini") -- load as early as possible to prevent crashes
 end)
 
 registerForEvent("onInit", function()
@@ -453,7 +450,7 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
-	LoadIni("commonfixes.ini") -- load again to undo engine changing things
+	LoadIni("config_common.ini") -- load again to undo engine changing things
     DoNrdFix(GetOption("RayTracing", "EnableNRD"))
     LoadSettings()
     config.SetMode(var.settings.mode)

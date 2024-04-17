@@ -68,6 +68,7 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("RT Only", var.settings.mode == var.mode.RT_ONLY) then
             var.settings.mode = var.mode.RT_ONLY
             config.SetMode(var.settings.mode)
+            LoadIni("config_rt.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
@@ -77,6 +78,7 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("RT+PT", var.settings.mode == var.mode.RT_PT) then
             var.settings.mode = var.mode.RT_PT
             config.SetMode(var.settings.mode)
+            LoadIni("config_rtpt.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
@@ -86,6 +88,7 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("PT20", var.settings.mode == var.mode.PT20) then
             var.settings.mode = var.mode.PT20
             config.SetMode(var.settings.mode)
+            LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
@@ -95,6 +98,7 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("PT21", var.settings.mode == var.mode.PT21) then
             var.settings.mode = var.mode.PT21
             config.SetMode(var.settings.mode)
+            LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
@@ -104,6 +108,7 @@ local function renderTabEngineDrawer()
         if ImGui.RadioButton("PTNext", var.settings.mode == var.mode.PTNEXT) then
             var.settings.mode = var.mode.PTNEXT
             config.SetMode(var.settings.mode)
+            LoadIni("config_pt.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
@@ -119,29 +124,33 @@ local function renderTabEngineDrawer()
         end
 
         ui.align()
-        if ImGui.RadioButton("Low##QualityLow", var.settings.quality == var.quality.LOW) then
+        if ImGui.RadioButton("Low", var.settings.quality == var.quality.LOW) then
             var.settings.quality = var.quality.LOW
+            LoadIni("config_low.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("Medium##QualityMedium", var.settings.quality == var.quality.MEDIUM) then
+        if ImGui.RadioButton("Medium", var.settings.quality == var.quality.MEDIUM) then
             var.settings.quality = var.quality.MEDIUM
+            LoadIni("config_medium.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("High##QualityHigh", var.settings.quality == var.quality.HIGH) then
+        if ImGui.RadioButton("High", var.settings.quality == var.quality.HIGH) then
             var.settings.quality = var.quality.HIGH
+            LoadIni("config_high.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
 
         ui.align()
-        if ImGui.RadioButton("Insane##QualityInsane", var.settings.quality == var.quality.INSANE) then
+        if ImGui.RadioButton("Insane", var.settings.quality == var.quality.INSANE) then
             var.settings.quality = var.quality.INSANE
+            LoadIni("config_insane.ini")
             config.SetQuality(var.settings.quality)
             SaveSettings()
         end
