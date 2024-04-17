@@ -191,6 +191,13 @@ local function renderTabEngineDrawer()
         end
 
         ui.align()
+        if ImGui.RadioButton("20", var.settings.vram == var.vram.GB20) then
+            var.settings.vram = var.vram.GB20
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
         if ImGui.RadioButton("24", var.settings.vram == var.vram.GB24) then
             var.settings.vram = var.vram.GB24
             config.SetVram(var.settings.vram)

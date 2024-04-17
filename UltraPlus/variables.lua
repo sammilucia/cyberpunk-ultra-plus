@@ -30,6 +30,7 @@ local var = {
         GB10 = "10 GB",
         GB12 = "12 GB",
         GB16 = "16 GB",
+        GB20 = "20 GB",
         GB24 = "24 GB",
     },
     dlss = {
