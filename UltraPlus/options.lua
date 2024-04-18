@@ -68,6 +68,7 @@ local options = {
             name = "Enable Blended Screen Space Reflections",
             category = "Editor/PathTracing",
             tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
+            defaultValue = true,
         },
         {
             item = "VolumetricFog",
