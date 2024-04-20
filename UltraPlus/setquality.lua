@@ -250,10 +250,9 @@ function config.SetQuality(quality)
         SetOption("Editor/Denoising/ReLAX/Direct/Common", "AtrousIterationNum", "6")
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
-        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "32")
+        SetOption("Editor/ReGIR", "ShadingCandidatesCount", "26")
         SetOption("Editor/ReGIR", "BuildCandidatesCount", "12")
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", true)
-        SetOption("RayTracing", "TracingRadius", "1000.0")
         SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "20.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "60.0")
@@ -264,9 +263,10 @@ function config.SetQuality(quality)
         SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
         SetOption("Editor/RTXDI", "SpatialNumSamples", "0")
         SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "5")
-        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "32")
+        SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
 
         if var.settings.mode == var.mode.PTNEXT then
+            SetOption("RayTracing", "TracingRadius", "200.0")
             SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
@@ -289,6 +289,7 @@ function config.SetQuality(quality)
         SetOption("Editor/SHARC", "Bounces", "3")
 
         if var.settings.mode == var.mode.PT20 then
+            SetOption("RayTracing", "TracingRadius", "200.0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "4")
@@ -296,6 +297,7 @@ function config.SetQuality(quality)
         end
 
         if var.settings.mode == var.mode.RT_PT then
+            SetOption("RayTracing", "TracingRadius", "1000.0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "4")
@@ -303,6 +305,7 @@ function config.SetQuality(quality)
         end
 
         if var.settings.mode == var.mode.PT21 then
+            SetOption("RayTracing", "TracingRadius", "200.0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "10")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "2")

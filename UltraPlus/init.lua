@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta09',
+    __VERSION     = '4.0-beta10',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -25,14 +25,14 @@ local logger = require("logger")
 local options = require("options")
 local var = require("variables")
 local ui = require("ui")
-local isLoaded = false
 local config = {
     SetMode = require("setmode").SetMode,
     SetQuality = require("setquality").SetQuality,
     SetVram = require("setvram").SetVram,
     DEBUG = false,
-    regirHackApplied = false,
+    regirActive = false,
     nrdEnabled = false,
+    gameLoaded = false,
 }
 local timer = {
     lazy = 0,
@@ -296,14 +296,17 @@ function ResetEngine()
     GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
 end
 
-local function DoRegirFix()
-    config.regirHackApplied = true
-    SetOption("Editor/ReGIR", "UseForDI", false)
-    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-    Wait(1.5, function()
-        SetOption("Editor/ReGIR", "UseForDI", true)
-        SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
+local function EnableRegir(state)
+    -- if enabling reGIR, wait 1 second first (don't wait to disable things)
+    local seconds = state == true and 1.0 or 0.0
+
+    Wait(seconds, function()
+        SetOption("Editor/ReGIR", "UseForDI", state)
     end)
+    Wait(seconds, function()
+        SetOption("Editor/RTXDI", "EnableSeparateDenoising", state)
+    end)
+    config.regirActive = state
 end
 
 local function DoRainFix()
@@ -342,6 +345,26 @@ local function DoNrdFix(enabled)
     LoadIni("denoiser_rr.ini")
 end
 
+local function DoGameSessionStart()
+    -- stuff to do once game session starts
+    if not config.gameLoaded then
+        logger.info('Game session started')
+        config.gameLoaded = true
+    end
+end
+
+local function DoGameSessionEnd()
+    -- stuff to do once game session ends
+    -- if not Game.GetPlayer() then                -- WAS if == nil .. but what happens if this is not false/nil? this won't run again, so we will miss the end of game session?
+    logger.info('Game session ended')
+    config.gameLoaded = false
+
+    if var.settings.mode == var.mode.PTNEXT then
+        EnableRegir(false)
+    end
+    -- end
+end
+
 local function DoFastUpdate()
     -- runs every timer.FAST seconds
     DoRRFix()
@@ -361,8 +384,8 @@ local function DoFastUpdate()
         var.settings.nrdEnabled = testNrd
     end
 
-    if GetOption("Editor/ReGIR", "Enable") and not config.regirHackApplied then
-        DoRegirFix()
+    if config.gameLoaded and GetOption("Editor/ReGIR", "Enable") and Game.GetPlayer() and not config.regirActive then
+        EnableRegir(true)
     end
 end
 
@@ -398,7 +421,7 @@ registerForEvent('onUpdate', function(delta)
         Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
     end
 
-    if Detector.isGameActive and isLoaded then
+    if Detector.isGameActive and config.gameLoaded then
         if timer.fast > timer.FAST then
             DoFastUpdate()
             timer.fast = 0
@@ -426,22 +449,14 @@ registerForEvent("onTweak", function()
 end)
 
 registerForEvent("onInit", function()
-    isLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame()
+    -- config.gameLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame() ---- already set at mod startup, plus this would always == false?
 
     Observe('QuestTrackerGameController', 'OnInitialize', function()
-        if not isLoaded then
-            Debug('Game session started')
-            isLoaded = true
-        end
+        DoGameSessionStart()
     end)
 
     Observe('QuestTrackerGameController', 'OnUninitialize', function()
-        if Game.GetPlayer() == nil then
-            Debug('Game session ended')
-            isLoaded = false
-            SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-            config.regirHackApplied = false
-        end
+        DoGameSessionEnd()
     end)
 
     local file = io.open("debug", "r")
@@ -450,15 +465,16 @@ registerForEvent("onInit", function()
         Debug("Enabling debug output")
     end
 
-	LoadIni("config_common.ini") -- load again to undo engine changing things
+    LoadIni("config_common.ini")
     DoNrdFix(GetOption("RayTracing", "EnableNRD"))
     LoadSettings()
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)
     config.SetVram(var.settings.vram)
 
-    SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
-    config.regirHackApplied = false
+    if var.settings.mode == var.mode.PTNEXT then
+        EnableRegir(false)
+    end
 end)
 
 registerForEvent("onOverlayOpen", function()

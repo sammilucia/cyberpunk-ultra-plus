@@ -197,7 +197,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.15")
-        SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", false)						-- TEST
         SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
         SetOption("RayTracing", "EnableTransparentReflection", false)				-- TEST
@@ -263,7 +263,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.15")
-        SetOption("RayTracing", "EnableShadowCascades", false)
+        SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", false)						-- TEST
         SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
         SetOption("RayTracing", "EnableTransparentReflection", false)				-- TEST
@@ -326,7 +326,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
-        SetOption("RayTracing", "EnableShadowCascades", true)
+        SetOption("RayTracing", "EnableShadowCascades", true)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", true)
         SetOption("RayTracing", "EnableTransparentReflection", false)
