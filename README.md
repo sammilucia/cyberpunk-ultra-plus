@@ -23,6 +23,8 @@ Please feel free to pitch in! I don't know LUA or ImGui and have limited time, s
 
 ## To Do
 - Enable no-ray/path tracing mode
+- Try and get global light working for outdoors
+- Indirectly disable RIS so CP can't keep turning it on again
 
 ## Done
 - Saving of Ultra+'s mode (RTPT, PT20, samples, etc...)
