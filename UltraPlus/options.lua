@@ -64,13 +64,6 @@ local options = {
             tooltip = "Can distort badly with path tracing (CP Default: On)",
         },
         {
-            item = "UseScreenSpaceData",
-            name = "Enable Blended Screen Space Reflections",
-            category = "Editor/PathTracing",
-            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
-            defaultValue = true,
-        },
-        {
             item = "VolumetricFog",
             name = "Enable Volumetric Fog",
             category = "Developer/FeatureToggles",
@@ -405,6 +398,13 @@ local options = {
             name = "Use SSR Fallback",
             category = "Editor/PathTracing",
             tooltip = "Uses screenspace for rough reflections in PT, as a performance optimisation",
+        },
+        {
+            item = "UseScreenSpaceData",
+            name = "Enable Blended Screen Space Reflections",
+            category = "Editor/PathTracing",
+            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
+            defaultValue = true,
         },
         {
             item = "EnableProbabilisticSampling",

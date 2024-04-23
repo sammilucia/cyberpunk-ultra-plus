@@ -196,7 +196,7 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
-        SetOption("RayTracing", "SunAngularSize", "0.15")
+        SetOption("RayTracing", "SunAngularSize", "0.30")
         SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", false)						-- TEST
         SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
@@ -238,7 +238,7 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
         SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
-        SetOption("Editor/RTXDI", "EnableGlobalLight", false)
+        SetOption("Editor/RTXDI", "EnableGlobalLight", true)
         SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
         SetOption("Editor/SHARC", "Enable", true)
         SetOption("Editor/SHARC", "UseRTXDIAtPrimary", false)
@@ -262,7 +262,7 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
-        SetOption("RayTracing", "SunAngularSize", "0.15")
+        SetOption("RayTracing", "SunAngularSize", "0.30")
         SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", false)						-- TEST
         SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
@@ -302,7 +302,7 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
         SetOption("Editor/RTXDI", "ForcedShadowLightSourceRadius", "0.1")
-        SetOption("Editor/RTXDI", "EnableGlobalLight", false)						-- TRY
+        SetOption("Editor/RTXDI", "EnableGlobalLight", true)						-- TRY
         SetOption("Editor/RTXDI", "EnableSeparateDenoising", true)
         SetOption("Editor/SHARC", "Enable", true)
         SetOption("Editor/SHARC", "UseRTXDIAtPrimary", false)
@@ -325,8 +325,8 @@ function config.SetMode(mode)
         SetOption("Developer/FeatureToggles", "ScreenSpacePlanarReflection", false)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
-        SetOption("RayTracing", "SunAngularSize", "0.20")
-        SetOption("RayTracing", "EnableShadowCascades", true)						-- TEST
+        SetOption("RayTracing", "SunAngularSize", "0.30")
+        SetOption("RayTracing", "EnableShadowCascades", false)
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", true)
         SetOption("RayTracing", "EnableTransparentReflection", false)
