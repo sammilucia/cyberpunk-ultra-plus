@@ -343,7 +343,7 @@ local function renderDebugDrawer()
     ui.line()
     for _, setting in pairs(options.RTINT) do
         setting.value = GetOption(setting.category, setting.item)
-		ui.width(120)
+		ui.width(200)
         setting.value, toggled = ImGui.InputInt(setting.name, setting.value)
         ui.tooltip(setting.tooltip)
 
@@ -357,7 +357,7 @@ local function renderDebugDrawer()
     ui.line()
     for _, setting in pairs(options.RTFLOAT) do
         setting.value = GetOption(setting.category, setting.item)
-		ui.width(100)
+		ui.width(200)
         setting.value, toggled = ImGui.InputFloat(setting.name, tonumber(setting.value))
         ui.tooltip(setting.tooltip)
 
@@ -392,7 +392,7 @@ end
 
 ui.renderControlPanel = function()
     -- SET DEFAULTS
-    ImGui.SetNextWindowPos(200, 200, ImGuiCond.FirstUseEver)
+    ImGui.SetNextWindowPos(100, 300, ImGuiCond.FirstUseEver)
     ImGui.SetNextWindowSize(440, 540, ImGuiCond.Appearing)
 
     -- BEGIN ACTUAL RENDER

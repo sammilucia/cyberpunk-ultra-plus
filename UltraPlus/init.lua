@@ -347,7 +347,7 @@ local function DoNrdFix(enabled)
 end
 
 local function DoGameSessionStart()
-    -- stuff to do once game starts
+    -- do stuff at beginning of game session (before player enters game)
     if not config.gameLoaded then
         logger.info('Game session started')
         config.gameLoaded = true
@@ -355,15 +355,13 @@ local function DoGameSessionStart()
 end
 
 local function DoGameSessionEnd()
-    -- stuff to do once exited game
-    -- if not Game.GetPlayer() then                -- WAS if == nil .. but what happens if this is not false/nil? this won't run again, so we will miss the end of game session?
+    -- do things right after clicking Exiting to Main Menu or exiting to load a saved game
     logger.info('Game session ended')
     config.gameLoaded = false
 
     if var.settings.mode == var.mode.PTNEXT then
         EnableRegir(false)
     end
-    -- end
 end
 
 local function DoFastUpdate()
