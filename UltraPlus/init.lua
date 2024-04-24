@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-beta11',
+    __VERSION     = '4.0-rc1',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -347,7 +347,7 @@ local function DoNrdFix(enabled)
 end
 
 local function DoGameSessionStart()
-    -- do stuff at beginning of game session (before player enters game)
+    -- do at game launch or start of loading a savegame
     if not config.gameLoaded then
         logger.info('Game session started')
         config.gameLoaded = true
@@ -355,7 +355,7 @@ local function DoGameSessionStart()
 end
 
 local function DoGameSessionEnd()
-    -- do things right after clicking Exiting to Main Menu or exiting to load a saved game
+    -- do at game session end or exiting to main menu
     logger.info('Game session ended')
     config.gameLoaded = false
 

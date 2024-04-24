@@ -21,7 +21,6 @@ function config.SetQuality(quality)
         SetOption("RayTracing", "TracingRadiusReflections", "2000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "40.0")
-        SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
         SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
         SetOption("RayTracing/Reference", "RayNumber", "2")
         SetOption("RayTracing/Reference", "BounceNumber", "2")
@@ -54,10 +53,9 @@ function config.SetQuality(quality)
         SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", false)
         SetOption("RayTracing", "TracingRadius", "100.0")
-        SetOption("RayTracing", "TracingRadiusReflections", "1000.0")
+        SetOption("RayTracing", "TracingRadiusReflections", "800.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "12.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "35.0")
-        SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
         SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
         SetOption("RayTracing/Reference", "RayNumber", "1")
         SetOption("RayTracing/Reference", "BounceNumber", "1")
@@ -133,7 +131,6 @@ function config.SetQuality(quality)
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "16")
 
         if var.settings.mode == var.mode.PTNEXT then
-            SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
@@ -147,7 +144,6 @@ function config.SetQuality(quality)
             return
         end
 
-        SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "22")
         SetOption("Editor/RTXDI", "NumInitialSamples", "18")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
@@ -187,7 +183,7 @@ function config.SetQuality(quality)
         SetOption("Editor/ReGIR", "BuildCandidatesCount", "10")
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", true)
         SetOption("RayTracing", "TracingRadius", "200.0")
-        SetOption("RayTracing", "TracingRadiusReflections", "4000.0")
+        SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
         SetOption("RayTracing", "CullingDistanceVehicle", "50.0")
         SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
@@ -200,7 +196,6 @@ function config.SetQuality(quality)
         SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "24")
 
         if var.settings.mode == var.mode.PTNEXT then
-            SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
@@ -214,7 +209,6 @@ function config.SetQuality(quality)
             return
         end
 
-        SetOption("RayTracing", "ForceShadowLODBiasUseMax", true)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "24")
         SetOption("Editor/RTXDI", "NumInitialSamples", "20")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
@@ -267,7 +261,6 @@ function config.SetQuality(quality)
 
         if var.settings.mode == var.mode.PTNEXT then
             SetOption("RayTracing", "TracingRadius", "200.0")
-            SetOption("RayTracing", "ForceShadowLODBiasUseMax", false)
             SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "0")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
@@ -281,7 +274,6 @@ function config.SetQuality(quality)
             return
         end
 
-        SetOption("RayTracing", "ForceShadowLODBiasUseMax", true)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "20")
         SetOption("Editor/RTXDI", "NumInitialSamples", "24")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
