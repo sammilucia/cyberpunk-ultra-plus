@@ -29,6 +29,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", false)
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
         SetOption("RayTracing", "SunAngularSize", "0.20")
+        SetOption("RayTracing", "SkyRadianceScale", "1.0")                          -- fake RT sunlight on buildings
         SetOption("RayTracing", "EnableShadowCascades", false)						-- test with RT
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", true)
@@ -39,7 +40,8 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         -- SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "ForceShadowLODBiasUsage", true)
+        SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -67,6 +69,7 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableNRD", true)
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
         SetOption("RayTracing", "SunAngularSize", "0.20")
+        SetOption("RayTracing", "SkyRadianceScale", "1.0")                          -- fake PT sunlight on buildings
         SetOption("RayTracing", "EnableShadowCascades", false)						-- test with RT
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", true)
@@ -77,7 +80,8 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "ForceShadowLODBiasUsage", true)
+        SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -99,7 +103,6 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
-        SetOption("Editor/RTXDI", "EnableFallbackLight", false)						-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")					-- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
@@ -128,6 +131,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "1")
         SetOption("RayTracing", "SunAngularSize", "0.5")
+        SetOption("RayTracing", "SkyRadianceScale", "1.2")
         SetOption("RayTracing", "EnableShadowCascades", false)
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", true)
@@ -138,7 +142,8 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "ForceShadowLODBiasUsage", true)
+        SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", false)
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
         SetOption("RayTracing/Reflection", "EnableHalfResolutionTracing", "1")
@@ -160,7 +165,6 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "EnableGradients", false)
         SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", false)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)
-        SetOption("Editor/RTXDI", "EnableFallbackLight", true)
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.5")
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "2")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", false)
@@ -189,6 +193,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
+        SetOption("RayTracing", "SkyRadianceScale", "0.7")                          -- fake PT sunlight on buildings
         SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
@@ -199,7 +204,8 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableShadowOptimizations", false)					-- TEST
         SetOption("RayTracing", "EnableGlobalIllumination", false)					-- TEST
         SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "ForceShadowLODBiasUsage", true)
+        SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST 1fps faster
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "70.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "70.0")
         SetOption("RayTracing/Reference", "EnableFixed", true)
@@ -223,7 +229,6 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
-        SetOption("Editor/RTXDI", "EnableFallbackLight", false)						-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")					-- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
@@ -252,6 +257,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", true) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
+        SetOption("RayTracing", "SkyRadianceScale", "0.7")                          -- fake PT sunlight on buildings
         SetOption("RayTracing", "EnableShadowCascades", false)						-- TEST
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", false)							-- TEST
@@ -262,7 +268,8 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableShadowOptimizations", false)					-- TEST
         SetOption("RayTracing", "EnableGlobalIllumination", false)					-- TEST
         SetOption("RayTracing", "EnableImportanceSampling", true)
-        SetOption("RayTracing", "ForceShadowLODBiasUsage", true)
+        SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST 1fps faster
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "50.0")		-- WAS 70.0 improves RTXDI light/shadow selection
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "50.0")		-- WAS 70.0
         SetOption("RayTracing/Reference", "EnableFixed", true)
@@ -284,7 +291,6 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
-        SetOption("Editor/RTXDI", "EnableFallbackLight", false)						-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.35")					-- WAS 0.45
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)
@@ -312,6 +318,7 @@ function config.SetMode(mode)
         SetOption("Rendering", "AllowRTXDIRejitter", false) 
         SetOption("RayTracing", "AmbientOcclusionRayNumber", "0")
         SetOption("RayTracing", "SunAngularSize", "0.20")
+        SetOption("RayTracing", "SkyRadianceScale", "0.7")                          -- fake PT sunlight on buildings
         SetOption("RayTracing", "EnableShadowCascades", false)
         SetOption("RayTracing", "EnableGlobalShadow", true)
         SetOption("RayTracing", "EnableLocalShadow", true)
@@ -322,8 +329,8 @@ function config.SetMode(mode)
         SetOption("RayTracing", "EnableShadowOptimizations", true)
         SetOption("RayTracing", "EnableGlobalIllumination", false)
         SetOption("RayTracing", "EnableImportanceSampling", false)					-- TEST
-        SetOption("RayTracing", "ForceShadowLODBiasUsage", true)
-        -- SetOption("RayTracing/Debug", "HitDistance", true)						-- TEST
+        SetOption("RayTracing", "ForceShadowLODBiasUsage", false)
+        SetOption("RayTracing/Debug", "EnableVisibilityCheck", true)                -- TEST 1fps faster
         SetOption("RayTracing/Collector", "VisibilityFrustumOffset", "200.0")
         SetOption("RayTracing/Collector", "LocalShadowCullingRadius", "100.0")
         SetOption("RayTracing/Reference", "EnableFixed", false)
@@ -347,7 +354,6 @@ function config.SetMode(mode)
         SetOption("Editor/RTXDI", "EnableGradients", true)
         SetOption("Editor/RTXDI", "InitialCandidatesInTemporal", true)
         SetOption("Editor/RTXDI", "EnableLocalLightImportanceSampling", false)		-- disabling so SpatialNumSamples not needed
-        SetOption("Editor/RTXDI", "EnableFallbackLight", false)						-- disabling so SpatialNumSamples not needed
         SetOption("Editor/RTXDI", "BoilingFilterStrength", "0.1")					-- WAS 0.35 TEST
         SetOption("Editor/RTXDI", "BiasCorrectionMode", "3")
         SetOption("Editor/RTXDI", "EnableApproximateTargetPDF", true)				-- TEST

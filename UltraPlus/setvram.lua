@@ -7,6 +7,24 @@ local config = {}
 function config.SetVram(vram)
     logger.info("Setting vram to", vram)
 
+    if vram == var.vram.OFF then
+        SetOption("Rendering", "FakeOverrideGPUVRAM", false)
+        SetOption("Rendering", "FakeGPUVRAM", "9.0")
+        SetOption("World/Streaming/PersistencyCache", "PoolBudgetKB", "4000")
+        SetOption("Rendering", "DistantShadowsMaxBatchSize", "512")
+        SetOption("RayTracing", "AccelerationStructureBuildNumMax", "64")
+        SetOption("RayTracing/DynamicInstance", "UpdateProxyNumMax", "128")
+
+        SetOption("Streaming", "MaxNodesPerFrame", "400")
+        SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
+        SetOption("Streaming", "PrecacheDistance", "0.0")
+        SetOption("Streaming", "MinStreamingDistance", "0.0")
+        SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
+        SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+        return
+    end
+
     if vram == var.vram.GB4 then
         SetOption("Rendering", "FakeOverrideGPUVRAM", true)
         SetOption("Rendering", "FakeGPUVRAM", "1.5")

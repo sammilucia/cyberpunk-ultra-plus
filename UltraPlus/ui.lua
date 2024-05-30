@@ -58,6 +58,8 @@ local ui = {
 
 local function renderTabEngineDrawer()
 
+    ui.text("NOTE: Once happy, reload a save to fully activate the mode")
+
     if ImGui.CollapsingHeader("Rendering Mode", ImGuiTreeNodeFlags.DefaultOpen) then
         --[[
         if ImGui.RadioButton( "Raster (no ray tracing or path tracing)", var.settings.mode == var.mode.RASTER ) then
@@ -116,7 +118,7 @@ local function renderTabEngineDrawer()
     end
 
     ui.space()
-    if ImGui.CollapsingHeader("Indirect Lighting Quality", ImGuiTreeNodeFlags.DefaultOpen) then
+    if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
         if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
             var.settings.quality = var.quality.VANILLA
             config.SetQuality(var.settings.quality)
@@ -158,6 +160,13 @@ local function renderTabEngineDrawer()
 
     ui.space()
     if ImGui.CollapsingHeader("VRAM Configuration (GB)", ImGuiTreeNodeFlags.DefaultOpen) then
+        if ImGui.RadioButton("Off", var.settings.vram == var.vram.OFF) then
+            var.settings.vram = var.vram.OFF
+            config.SetVram(var.settings.vram)
+            SaveSettings()
+        end
+
+        ui.align()
         if ImGui.RadioButton("4", var.settings.vram == var.vram.GB4) then
             var.settings.vram = var.vram.GB4
             config.SetVram(var.settings.vram)
@@ -228,9 +237,6 @@ local function renderTabEngineDrawer()
             end
         end
     end
-	
-	ui.line()
-    ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 end
 
 local function renderRenderingFeaturesDrawer()
@@ -371,7 +377,7 @@ end
 
 local function renderTabs()
     if ImGui.BeginTabBar("Tabs") then
-        if ImGui.BeginTabItem("Engine Config") then
+        if ImGui.BeginTabItem("Ultra+ Config") then
             renderTabEngineDrawer()
             ImGui.EndTabItem()
         end
@@ -391,11 +397,11 @@ local function renderTabs()
 end
 
 ui.renderControlPanel = function()
-    -- SET DEFAULTS
+    -- set defaults
     ImGui.SetNextWindowPos(50, 300, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(440, 500, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(440, 468, ImGuiCond.Appearing)
 
-    -- BEGIN ACTUAL RENDER
+    -- begin actual render
     if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
         ImGui.SetWindowFontScale(0.90)
         renderTabs()

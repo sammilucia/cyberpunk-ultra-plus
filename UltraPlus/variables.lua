@@ -24,6 +24,7 @@ local var = {
         INSANE = "Insane",
     },
     vram = {
+        OFF = "Off",
         GB4 = "4 GB",
         GB6 = "6 GB",
         GB8 = "8 GB",

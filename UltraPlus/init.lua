@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-rc1',
+    __VERSION     = '4.0-rc2',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -303,10 +303,9 @@ local function EnableRegir(state)
 
     Wait(seconds, function()
         SetOption("Editor/ReGIR", "UseForDI", state)
-    end)
-    Wait(seconds, function()
         SetOption("Editor/RTXDI", "EnableSeparateDenoising", state)
     end)
+    -- DoRefreshEngine()
     config.regirActive = state
 end
 
@@ -344,6 +343,16 @@ local function DoNrdFix(enabled)
 
     logger.info("Loading RR denoiser")
     LoadIni("denoiser_rr.ini")
+end
+
+function DoRefreshEngine()
+    -- hack to force the engine to warm reload
+    logger.info("Refreshing Engine...")
+    SetOption("Editor/ReGIR", "UseForDI", false)
+    Wait(0.5, function()
+        SetOption("Editor/ReGIR", "UseForDI", true)
+        logger.info("Done")
+    end)
 end
 
 local function DoGameSessionStart()
@@ -416,7 +425,7 @@ registerForEvent('onUpdate', function(delta)
         timer.fast = timer.fast + delta
         timer.lazy = timer.lazy + delta
 
-        -- prevent skipping temporal updates
+        -- prevent engine from skipping temporal updates when mouse/controller isn't moving
         Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
     end
 
@@ -449,14 +458,31 @@ registerForEvent("onTweak", function()
 end)
 
 registerForEvent("onInit", function()
-    -- config.gameLoaded = Game.GetPlayer() and Game.GetPlayer():IsAttached() and not Game.GetSystemRequestsHandler():IsPreGame() ---- already set at mod startup, plus this would always == false?
-
-    Observe('QuestTrackerGameController', 'OnInitialize', function()
+    Observe('QuestTrackerGameController', 'OnInitialize', function(this)
+        logger.info("Entered game Observe", this)
         DoGameSessionStart()
     end)
 
-    Observe('QuestTrackerGameController', 'OnUninitialize', function()
+    ObserveAfter('QuestTrackerGameController', 'OnInitialize', function(this)
+        logger.info("Entered game ObserveAfter", this)
+        DoGameSessionStart()
+    end)
+
+    Observe('QuestTrackerGameController', 'OnUninitialize', function(this)
+        logger.info("Exited game Observe", this)
         DoGameSessionEnd()
+    end)
+
+    ObserveAfter("QuestTrackerGameController", "OnUninitialize", function(this)
+        logger.info("Exited game ObserveAfter", this)
+    end)
+
+    Observe("CCTVCamera", "TakeControl", function(this, val)
+        logger.info("Camera control:", this, val)
+    end)
+
+    ObserveAfter("CCTVCamera", "TakeControl", function(this, val)
+        logger.info("Camera control end:", this, val)
     end)
 
     local file = io.open("debug", "r")
