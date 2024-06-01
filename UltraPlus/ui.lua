@@ -8,6 +8,7 @@ local config = {
     SetVram = require("setvram").SetVram,
     DEBUG = true,
 }
+local toggled = nil
 local ui = {
 
     line = function()

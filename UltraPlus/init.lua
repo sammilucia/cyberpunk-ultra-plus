@@ -37,9 +37,11 @@ local config = {
 local timer = {
     lazy = 0,
     fast = 0,
+    weather = 0,
     paused = false,
     LAZY = 20.0,
     FAST = 1.0,
+    WEATHER = 910,          -- 15:10 hours
 }
 
 local Detector = { isGameActive = false }
@@ -380,6 +382,7 @@ local function DoFastUpdate()
     local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
     local testIndoors = IsEntityInInteriorArea(GetPlayer())
     local testNrd = GetOption("RayTracing", "EnableNRD")
+    -- local testWeather = Game.GetWeatherSystem():GetCurrentWeatherType() == 0 and true or false
 
     if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
         DoRainFix()
@@ -399,6 +402,10 @@ end
 
 local function DoLazyUpdate()
     -- runs every timer.LAZY seconds
+end
+
+local function DoWeatherUpdate()
+    -- runs every timer.WEATHER seconds
 end
 
 local function forcePTDenoiser()
@@ -424,6 +431,7 @@ registerForEvent('onUpdate', function(delta)
     if not timer.paused then
         timer.fast = timer.fast + delta
         timer.lazy = timer.lazy + delta
+        timer.weather = timer.weather + delta
 
         -- prevent engine from skipping temporal updates when mouse/controller isn't moving
         Game.GetPlayer():GetFPPCameraComponent():SceneDisableBlendingToStaticPosition()
@@ -438,6 +446,11 @@ registerForEvent('onUpdate', function(delta)
         if timer.lazy > timer.LAZY then
             DoLazyUpdate()
             timer.lazy = 0
+        end
+
+        if timer.weather > timer.WEATHER then
+            DoWeatherUpdate()
+            timer.weather = 0
         end
     end
 
