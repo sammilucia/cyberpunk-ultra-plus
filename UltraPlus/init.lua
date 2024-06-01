@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.0-rc2',
+    __VERSION     = '4.1-rc4',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -516,5 +516,5 @@ registerForEvent("onDraw", function()
         return
     end
 
-    ui.renderControlPanel()
+    ui.renderUI()
 end)

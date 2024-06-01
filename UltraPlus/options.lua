@@ -35,10 +35,22 @@ local options = {
             item = "EnableSeparateDenoising",
             name = "Enable RTXDI Separate Denoising",
             category = "Editor/RTXDI",
-            tooltip = "NOTE: With RR disabled, you may need to untick this\nand reload for now for NRD to work correctly (CP Default: On)",
+            tooltip = "NOTE: With RR disabled, you may need to untick this and reload for now for\nNRD to work correctly (CP Default: On)",
+        },
+        {
+            item = "nsgddCompatible",
+            name = "Enable NSGDD Compatibility",
+            category = "internal",
+            tooltip = "Changes the VRAM configuration to work correctly with Not So Good Draw\nDistance mod (streaming and precache)",
         },
     },
     Features = {
+        {
+            item = "Tonemapping",
+            name = "Enable Tonemapping",
+            category = "Developer/FeatureToggles",
+            tooltip = "Enable or disable the CP tonemapper. Especially useful if you use RenoDX\nor Reshade (CP Default: On)",
+        },
         {
             item = "Bloom",
             name = "Enable Bloom",
@@ -110,6 +122,12 @@ local options = {
             name = "Force INI Mip Bias",
             category = "Editor/MipBias",
             tooltip = "Caution: Not recommended for 12GB VRAM or less (CP Default: Off)",
+        },
+        {
+            item = "UseScreenSpaceData",
+            name = "Enable Blended Screen Space Reflections",
+            category = "Editor/PathTracing",
+            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
         },
     },
     RTXDI = {
@@ -440,13 +458,6 @@ local options = {
             name = "Use SSR Fallback",
             category = "Editor/PathTracing",
             tooltip = "Uses screenspace for rough reflections in PT, as a performance optimisation",
-        },
-        {
-            item = "UseScreenSpaceData",
-            name = "Enable Blended Screen Space Reflections",
-            category = "Editor/PathTracing",
-            tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
-            defaultValue = true,
         },
         {
             item = "EnableProbabilisticSampling",

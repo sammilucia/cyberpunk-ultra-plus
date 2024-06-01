@@ -2,7 +2,7 @@
 
 local var = {
     mode = {
-        VANILLA = "Vanilla",
+        VANILLA = "Vanilla##Mode",
         PT20 = "PT20",
         PT21 = "PT21",
         PTNEXT = "PTNext",
@@ -11,13 +11,7 @@ local var = {
         RASTER = "Raster",
     },
     quality = {
-        VANILLA = "Vanilla",
-        LOW = "Low",
-        MEDIUM = "Medium",
-        HIGH = "High",
-        INSANE = "Insane",
-    },
-    streaming = {
+        VANILLA = "Vanilla##Quality",
         LOW = "Low",
         MEDIUM = "Medium",
         HIGH = "High",
@@ -44,6 +38,7 @@ local var = {
         ULTRA_PERFORMANCE = "Ultra Performance",
     },
     settings = {
+        uiScale = 0.9,
         mode = "Unknown",
         quality = "Unknown",
         streaming = "Unknown",

@@ -8,8 +8,6 @@ local config = {
     SetVram = require("setvram").SetVram,
     DEBUG = true,
 }
-local toggled
-
 local ui = {
 
     line = function()
@@ -119,107 +117,25 @@ local function renderTabEngineDrawer()
 
     ui.space()
     if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
-        if ImGui.RadioButton("Vanilla##QualityVanilla", var.settings.quality == var.quality.VANILLA) then
-            var.settings.quality = var.quality.VANILLA
-            config.SetQuality(var.settings.quality)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("Low", var.settings.quality == var.quality.LOW) then
-            var.settings.quality = var.quality.LOW
-            LoadIni("config_low.ini")
-            config.SetQuality(var.settings.quality)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("Medium", var.settings.quality == var.quality.MEDIUM) then
-            var.settings.quality = var.quality.MEDIUM
-            LoadIni("config_medium.ini")
-            config.SetQuality(var.settings.quality)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("High", var.settings.quality == var.quality.HIGH) then
-            var.settings.quality = var.quality.HIGH
-            LoadIni("config_high.ini")
-            config.SetQuality(var.settings.quality)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("Insane", var.settings.quality == var.quality.INSANE) then
-            var.settings.quality = var.quality.INSANE
-            LoadIni("config_insane.ini")
-            config.SetQuality(var.settings.quality)
-            SaveSettings()
+        for _, v in pairs(var.quality) do
+            if ImGui.RadioButton(tostring(v), var.settings.quality == v) then
+                var.settings.quality = v
+                config.SetQuality(var.settings.quality)
+                SaveSettings()
+            end
         end
     end
 
     ui.space()
     if ImGui.CollapsingHeader("VRAM Configuration (GB)", ImGuiTreeNodeFlags.DefaultOpen) then
-        if ImGui.RadioButton("Off", var.settings.vram == var.vram.OFF) then
-            var.settings.vram = var.vram.OFF
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("4", var.settings.vram == var.vram.GB4) then
-            var.settings.vram = var.vram.GB4
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("6", var.settings.vram == var.vram.GB6) then
-            var.settings.vram = var.vram.GB6
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("8", var.settings.vram == var.vram.GB8) then
-            var.settings.vram = var.vram.GB8
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("10", var.settings.vram == var.vram.GB10) then
-            var.settings.vram = var.vram.GB10
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("12", var.settings.vram == var.vram.GB12) then
-            var.settings.vram = var.vram.GB12
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("16", var.settings.vram == var.vram.GB16) then
-            var.settings.vram = var.vram.GB16
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("20", var.settings.vram == var.vram.GB20) then
-            var.settings.vram = var.vram.GB20
-            config.SetVram(var.settings.vram)
-            SaveSettings()
-        end
-
-        ui.align()
-        if ImGui.RadioButton("24", var.settings.vram == var.vram.GB24) then
-            var.settings.vram = var.vram.GB24
-            config.SetVram(var.settings.vram)
-            SaveSettings()
+        for _, v in pairs(var.vram) do
+            local checked = var.settings.vram == v
+            ImGui.RadioButton(tostring(v), checked)
+            if checked then
+                var.settings.vram = v
+                config.SetVram(var.settings.vram)
+                SaveSettings()
+            end
         end
     end
 
@@ -396,14 +312,15 @@ local function renderTabs()
     end
 end
 
-ui.renderControlPanel = function()
+ui.renderUI = function()
     -- set defaults
     ImGui.SetNextWindowPos(50, 300, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(440, 468, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(450, 500, ImGuiCond.Appearing)
 
     -- begin actual render
     if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
-        ImGui.SetWindowFontScale(0.90)
+        ImGui.SetWindowFontScale(var.settings.uiScale)
+        ImGui.GetIo().FontGlobalScale = var.settings.uiScale
         renderTabs()
         ImGui.End()
     end
