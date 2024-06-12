@@ -2,17 +2,12 @@
 
 local options = {
     Tweaks = {
---[[        {
-            item = "turboHack",
-            name = "Enable PT Turbo (slightly reduce quality outdoors)",
-            category = "internal",
-            tooltip = "RTXDI spatial sampling is mostly needed indoors. This tweak reduces it while\noutdoors to try and maintain FPS in complex outdoor areas. It CAN reduce\nvisual quality outdoors in certain situations (white cars\nand highly reflective surfaces in particular).",
-        },
         {
-            item = "rainFix",
-            name = "Enable PT Rain Fix",
+            item = "nsgddCompatible",
+            name = "Enable Not So Good Draw Distance Compatibility",
             category = "internal",
-            tooltip = "Enables full particle integration with path tracing while it's not raining\nor you're indoors." },]]
+            tooltip = "Changes VRAM configuration to work correctly with Not So Good Draw Distance\nmod (streaming and precache)",
+        },
         {
             item = "DLSS_D",
             name = "Enable PT Denoiser: Ray Reconstruction",
@@ -36,12 +31,6 @@ local options = {
             name = "Enable RTXDI Separate Denoising",
             category = "Editor/RTXDI",
             tooltip = "NOTE: With RR disabled, you may need to untick this and reload for now for\nNRD to work correctly (CP Default: On)",
-        },
-        {
-            item = "nsgddCompatible",
-            name = "Enable NSGDD Compatibility",
-            category = "internal",
-            tooltip = "Changes the VRAM configuration to work correctly with Not So Good Draw\nDistance mod (streaming and precache)",
         },
     },
     Features = {
@@ -204,26 +193,8 @@ local options = {
             tooltip = "Broken, breaks DI due to the exponential rise in light sources for sampling",
         },
         {
-            item = "EnableAnalyticalLights",
-            name = "Enable PT Analytical Lights",
-            category = "Editor/RTXDI",
-            tooltip = "Enables most light sources beyond sunlight",
-        },
-        {
-            item = "EnableAllEmissives",
-            name = "Enable All PT Emissives",
-            category = "Editor/RTXDI",
-            tooltip = "",
-        },
-        {
             item = "Debug_UpdateLightHits",
             name = "Debug Update PT Light Hits",
-            category = "Editor/RTXDI",
-            tooltip = "",
-        },
-        {
-            item = "PTEnableDirectEmissives",
-            name = "Enable PT Direct Emissives",
             category = "Editor/RTXDI",
             tooltip = "",
         },
@@ -514,12 +485,6 @@ local options = {
             tooltip = "",
         },
         {
-            item = "EnableReflection",
-            name = "Enable Reflection",
-            category = "RayTracing",
-            tooltip = "",
-        },
-        {
             item = "EnableAmbientOcclusion",
             name = "Enable Ambient Occlusion",
             category = "RayTracing",
@@ -533,13 +498,13 @@ local options = {
         },
         {
             item = "EnableMirrorMaterialReflection",
-            name = "Enable Mirror Material Reflection",
+            name = "Enable Mirror Material Reflections",
             category = "RayTracing",
             tooltip = "",
         },
         {
             item = "EnableTransparentReflection",
-            name = "Enable Transparent Reflection",
+            name = "Enable Transparent Reflections",
             category = "RayTracing",
             tooltip = "",
         },
@@ -1032,6 +997,12 @@ local options = {
         {
             item = "SceneScale",
             name = "SHaRC Scene Scale",
+            category = "Editor/SHARC",
+            tooltip = "",
+        },
+        {
+            item = "UsePrevFrameBiasAllowance",
+            name = "SHaRC Previous Frame Bias Allowance",
             category = "Editor/SHARC",
             tooltip = "",
         },

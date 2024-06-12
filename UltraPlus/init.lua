@@ -1,5 +1,5 @@
 UltraPlus = {
-    __VERSION     = '4.1-rc4',
+    __VERSION     = '4.3',
     __DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
     __URL         = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
     __LICENSE     = [[
@@ -31,8 +31,8 @@ local config = {
     SetVram = require("setvram").SetVram,
     DEBUG = false,
     regirActive = false,
-    nrdEnabled = false,
     gameLoaded = false,
+    nsgddActive = false,
 }
 local timer = {
     lazy = 0,
@@ -82,11 +82,11 @@ end
 function GetOption(category, item)
     -- gets a live game setting
     if category == "internal" then
-        if var.settings[item] == nil then
-            return false
+        if var.settings[item] == true then
+            return true
         end
 
-        return nil
+        return false
     end
 
     if string.sub(category, 1, 1) == "/" then
@@ -255,6 +255,7 @@ function SaveSettings()
     UltraPlus["internal.mode"] = var.settings.mode
     UltraPlus["internal.quality"] = var.settings.quality
     UltraPlus["internal.vram"] = var.settings.vram
+    UltraPlus["internal.nsgddCompatible"] = var.settings.nsgddCompatible
 
     local settingsTable = { UltraPlus = UltraPlus }
 
@@ -335,18 +336,6 @@ local function DoRRFix()
     timer.paused = false
 end
 
-local function DoNrdFix(enabled)
-    -- auto-switch between NRD and RR denoiser settings
-    if enabled then
-        logger.info("Loading NRD denoiser")
-        LoadIni("denoiser_nrd.ini")
-        return
-    end
-
-    logger.info("Loading RR denoiser")
-    LoadIni("denoiser_rr.ini")
-end
-
 function DoRefreshEngine()
     -- hack to force the engine to warm reload
     logger.info("Refreshing Engine...")
@@ -381,18 +370,12 @@ local function DoFastUpdate()
 
     local testRain = Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
     local testIndoors = IsEntityInInteriorArea(GetPlayer())
-    local testNrd = GetOption("RayTracing", "EnableNRD")
     -- local testWeather = Game.GetWeatherSystem():GetCurrentWeatherType() == 0 and true or false
 
     if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
         DoRainFix()
         var.settings.rain = testRain
         var.settings.indoors = testIndoors
-    end
-
-    if testNrd ~= var.settings.nrdEnabled then
-        DoNrdFix(testNrd)
-        var.settings.nrdEnabled = testNrd
     end
 
     if not config.regirActive and config.gameLoaded and GetOption("Editor/ReGIR", "Enable") and Detector.isGameActive then
@@ -505,7 +488,6 @@ registerForEvent("onInit", function()
     end
 
     LoadIni("config_common.ini")
-    DoNrdFix(GetOption("RayTracing", "EnableNRD"))
     LoadSettings()
     config.SetMode(var.settings.mode)
     config.SetQuality(var.settings.quality)

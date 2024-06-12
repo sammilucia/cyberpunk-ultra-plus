@@ -5,7 +5,7 @@ local var = require("variables")
 local config = {}
 
 function config.SetVram(vram)
-    logger.info("Setting vram to", vram)
+    logger.info("Setting vram to", vram, "GB")
 
     if vram == var.vram.OFF then
         SetOption("Rendering", "FakeOverrideGPUVRAM", false)
@@ -17,11 +17,13 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "300")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
-        SetOption("Streaming", "PrecacheDistance", "0.0")
-        SetOption("Streaming", "MinStreamingDistance", "1.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        SetOption("Streaming", "PrecacheDistance", "0.0")
+        SetOption("Streaming", "MinStreamingDistance", "1.0")
+
         return
     end
 
@@ -35,11 +37,13 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "300")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
-        SetOption("Streaming", "PrecacheDistance", "0.0")
-        SetOption("Streaming", "MinStreamingDistance", "1.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        SetOption("Streaming", "PrecacheDistance", "0.0")
+        SetOption("Streaming", "MinStreamingDistance", "1.0")
+
         return
     end
 
@@ -53,11 +57,13 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "300")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
-        SetOption("Streaming", "PrecacheDistance", "0.0")
-        SetOption("Streaming", "MinStreamingDistance", "1.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        SetOption("Streaming", "PrecacheDistance", "0.0")
+        SetOption("Streaming", "MinStreamingDistance", "1.0")
+
         return
     end
 
@@ -71,11 +77,18 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "300")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
-        SetOption("Streaming", "PrecacheDistance", "10.0")
-        SetOption("Streaming", "MinStreamingDistance", "20.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        if var.settings.nsgddCompatible == false then
+            SetOption("Streaming", "PrecacheDistance", "10.0")
+            SetOption("Streaming", "MinStreamingDistance", "20.0")
+        else
+            SetOption("Streaming", "PrecacheDistance", "0.0")
+            SetOption("Streaming", "MinStreamingDistance", "1.0")
+        end
+
         return
     end
 
@@ -89,11 +102,18 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "300")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "300")
-        SetOption("Streaming", "PrecacheDistance", "10.0")
-        SetOption("Streaming", "MinStreamingDistance", "20.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        if var.settings.nsgddCompatible == false then
+            SetOption("Streaming", "PrecacheDistance", "10.0")
+            SetOption("Streaming", "MinStreamingDistance", "20.0")
+        else
+            SetOption("Streaming", "PrecacheDistance", "0.0")
+            SetOption("Streaming", "MinStreamingDistance", "1.0")
+        end
+
         return
     end
 
@@ -107,11 +127,18 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "400")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "400")
-        SetOption("Streaming", "PrecacheDistance", "15.0")
-        SetOption("Streaming", "MinStreamingDistance", "30.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "2")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        if var.settings.nsgddCompatible == false then
+            SetOption("Streaming", "PrecacheDistance", "15.0")
+            SetOption("Streaming", "MinStreamingDistance", "30.0")
+        else
+            SetOption("Streaming", "PrecacheDistance", "0.0")
+            SetOption("Streaming", "MinStreamingDistance", "1.0")
+        end
+
         return
     end
 
@@ -125,11 +152,18 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "500")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "500")
-        SetOption("Streaming", "PrecacheDistance", "25.0")
-        SetOption("Streaming", "MinStreamingDistance", "50.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "3")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "3")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "1")
+
+        if var.settings.nsgddCompatible == false then
+            SetOption("Streaming", "PrecacheDistance", "25.0")
+            SetOption("Streaming", "MinStreamingDistance", "50.0")
+        else
+            SetOption("Streaming", "PrecacheDistance", "0.0")
+            SetOption("Streaming", "MinStreamingDistance", "1.0")
+        end
+
         return
     end
 
@@ -143,11 +177,18 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "600")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "600")
-        SetOption("Streaming", "PrecacheDistance", "30.0")
-        SetOption("Streaming", "MinStreamingDistance", "60.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "4")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "4")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "2")
+
+        if var.settings.nsgddCompatible == false then
+            SetOption("Streaming", "PrecacheDistance", "30.0")
+            SetOption("Streaming", "MinStreamingDistance", "60.0")
+        else
+            SetOption("Streaming", "PrecacheDistance", "0.0")
+            SetOption("Streaming", "MinStreamingDistance", "1.0")
+        end
+
         return
     end
 
@@ -161,11 +202,18 @@ function config.SetVram(vram)
 
         SetOption("Streaming", "MaxNodesPerFrame", "800")
         SetOption("Streaming", "EditorThrottledMaxNodesPerFrame", "800")
-        SetOption("Streaming", "PrecacheDistance", "40.0")
-        SetOption("Streaming", "MinStreamingDistance", "80.0")
         SetOption("ResourceLoaderThrottler", "FloodMinNonLoadingThreads", "4")
         SetOption("ResourceLoaderThrottler", "StreamMaxLoadingThreads", "4")
         SetOption("ResourceLoaderThrottler", "TrickleMaxLoadingThreads", "2")
+
+        if var.settings.nsgddCompatible == false then
+            SetOption("Streaming", "PrecacheDistance", "40.0")
+            SetOption("Streaming", "MinStreamingDistance", "80.0")
+        else
+            SetOption("Streaming", "PrecacheDistance", "0.0")
+            SetOption("Streaming", "MinStreamingDistance", "1.0")
+        end
+
         return
     end
 end

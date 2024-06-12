@@ -8,7 +8,7 @@ local config = {
     SetVram = require("setvram").SetVram,
     DEBUG = true,
 }
-local toggled = nil
+local toggled
 local ui = {
 
     line = function()
@@ -124,19 +124,26 @@ local function renderTabEngineDrawer()
                 config.SetQuality(var.settings.quality)
                 SaveSettings()
             end
+            ui.align()
         end
     end
 
     ui.space()
     if ImGui.CollapsingHeader("VRAM Configuration (GB)", ImGuiTreeNodeFlags.DefaultOpen) then
-        for _, v in pairs(var.vram) do
-            local checked = var.settings.vram == v
-            ImGui.RadioButton(tostring(v), checked)
-            if checked then
+        local vramSorted = {}
+        for key, value in pairs(var.vram) do
+            table.insert(vramSorted, value)
+        end
+
+        table.sort(vramSorted)
+
+        for _, v in ipairs(vramSorted) do
+            if ImGui.RadioButton(tostring(v), var.settings.vram == v) then
                 var.settings.vram = v
                 config.SetVram(var.settings.vram)
                 SaveSettings()
             end
+            ui.align()
         end
     end
 
@@ -149,7 +156,11 @@ local function renderTabEngineDrawer()
 
             if toggled then
                 SetOption(setting.category, setting.item, setting.value)
-                setting.value = setting.value
+
+                if setting.item == "nsgddCompatible" then
+                    config.SetVram(var.settings.vram)
+                end
+
                 SaveSettings()
             end
         end
@@ -165,7 +176,6 @@ local function renderRenderingFeaturesDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -180,7 +190,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -193,7 +202,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -206,7 +214,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -219,7 +226,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -232,7 +238,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -245,7 +250,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -258,7 +262,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -272,7 +275,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value)
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -286,7 +288,6 @@ local function renderDebugDrawer()
 
         if toggled then
             SetOption(setting.category, setting.item, setting.value, "float")
-            setting.value = setting.value
             SaveSettings()
         end
     end
@@ -316,12 +317,11 @@ end
 ui.renderUI = function()
     -- set defaults
     ImGui.SetNextWindowPos(50, 300, ImGuiCond.FirstUseEver)
-    ImGui.SetNextWindowSize(450, 500, ImGuiCond.Appearing)
+    ImGui.SetNextWindowSize(485, 518, ImGuiCond.Appearing)
 
     -- begin actual render
     if ImGui.Begin("Ultra+ v" .. UltraPlus.__VERSION, true) then
         ImGui.SetWindowFontScale(var.settings.uiScale)
-        ImGui.GetIo().FontGlobalScale = var.settings.uiScale
         renderTabs()
         ImGui.End()
     end

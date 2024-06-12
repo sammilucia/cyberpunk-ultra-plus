@@ -84,7 +84,6 @@ function config.SetQuality(quality)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "16")
         SetOption("Editor/RTXDI", "NumInitialSamples", "16")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
-        SetOption("Editor/SHARC", "SceneScale", "30.0")
         SetOption("Editor/SHARC", "Bounces", "2")
 
         if var.settings.mode == var.mode.PT20 then
@@ -97,6 +96,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "30.0")
+            SetOption("Editor/SHARC", "Bounces", "1")
             return
         end
 
@@ -110,6 +111,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "30.0")
+            SetOption("Editor/SHARC", "Bounces", "1")
             return
         end
 
@@ -123,6 +126,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "4")
             SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "30.0")
+            SetOption("Editor/SHARC", "Bounces", "1")
             return
         end
     end
@@ -158,7 +163,7 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
             SetOption("Editor/SHARC", "DownscaleFactor", "7")
-            SetOption("Editor/SHARC", "SceneScale", "40.0")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
             SetOption("Editor/SHARC", "Bounces", "2")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
@@ -168,7 +173,6 @@ function config.SetQuality(quality)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "22")
         SetOption("Editor/RTXDI", "NumInitialSamples", "16")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
-        SetOption("Editor/SHARC", "SceneScale", "50.0")
         SetOption("Editor/SHARC", "Bounces", "2")
         
         if var.settings.mode == var.mode.PT20 then
@@ -180,7 +184,9 @@ function config.SetQuality(quality)
             SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "6")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
 
@@ -193,7 +199,9 @@ function config.SetQuality(quality)
             SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "6")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
 
@@ -207,6 +215,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "MaxHistoryLength", "6")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "8")
             SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
     end
@@ -219,7 +229,7 @@ function config.SetQuality(quality)
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
         SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "10")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")      -- WAS 10 causes lights flickering
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", true)
         SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -241,8 +251,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-            SetOption("Editor/SHARC", "DownscaleFactor", "6")
-            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "SceneScale", "100.0")
             SetOption("Editor/SHARC", "Bounces", "2")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
@@ -252,19 +262,19 @@ function config.SetQuality(quality)
         SetOption("RayTracing/ReferenceScreenshot", "SampleNumber", "24")
         SetOption("Editor/RTXDI", "NumInitialSamples", "16")
         SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
-        SetOption("Editor/SHARC", "SceneScale", "50.0")
-        SetOption("Editor/SHARC", "Bounces", "3")
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("RayTracing", "TracingRadius", "200.0")
             SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
-            SetOption("RayTracing/Reference", "RayNumber", "1")
+            SetOption("RayTracing/Reference", "RayNumber", "2")
             SetOption("RayTracing/Reference", "BounceNumber", "2")
             SetOption("RayTracing/Reference", "RayNumberScreenshot", "2")
             SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "100.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
 
@@ -277,7 +287,9 @@ function config.SetQuality(quality)
             SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "5")
+            SetOption("Editor/SHARC", "DownscaleFactor", "7")
+            SetOption("Editor/SHARC", "SceneScale", "100.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
 
@@ -291,6 +303,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "MaxHistoryLength", "10")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "16")
             SetOption("Editor/SHARC", "DownscaleFactor", "3")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
     end
@@ -303,7 +317,7 @@ function config.SetQuality(quality)
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
         SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "12")
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")      -- WAS 12 causes lights flickering
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", true)
         SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "20.0")
@@ -325,8 +339,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "NumInitialSamples", "0")
             SetOption("Editor/RTXDI", "NumEnvMapSamples", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "0")
-            SetOption("Editor/SHARC", "DownscaleFactor", "5")
-            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "DownscaleFactor", "3")
+            SetOption("Editor/SHARC", "SceneScale", "200.0")
             SetOption("Editor/SHARC", "Bounces", "2")
             SetOption("Editor/ReSTIRGI", "MaxHistoryLength", "6")
             SetOption("Editor/ReSTIRGI", "TargetHistoryLength", "4")
@@ -341,27 +355,31 @@ function config.SetQuality(quality)
 
         if var.settings.mode == var.mode.PT20 then
             SetOption("RayTracing", "TracingRadius", "200.0")
-            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "5")
+            SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+            SetOption("RayTracing/Reference", "RayNumber", "2")
             SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "8")
+            SetOption("RayTracing/Reference", "RayNumberScreenshot", "5")
             SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "4")
+            SetOption("Editor/SHARC", "DownscaleFactor", "3")
+            SetOption("Editor/SHARC", "SceneScale", "200.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
 
         if var.settings.mode == var.mode.RT_PT then
             SetOption("RayTracing", "TracingRadius", "1000.0")
             SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
-            SetOption("RayTracing/Reference", "RayNumber", "5")
+            SetOption("RayTracing/Reference", "RayNumber", "3")
             SetOption("RayTracing/Reference", "BounceNumber", "2")
-            SetOption("RayTracing/Reference", "RayNumberScreenshot", "8")
+            SetOption("RayTracing/Reference", "RayNumberScreenshot", "5")
             SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
             SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
-            SetOption("Editor/SHARC", "DownscaleFactor", "4")
+            SetOption("Editor/SHARC", "DownscaleFactor", "3")
+            SetOption("Editor/SHARC", "SceneScale", "200.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
             return
         end
 
@@ -375,6 +393,8 @@ function config.SetQuality(quality)
             SetOption("Editor/RTXDI", "MaxHistoryLength", "10")
             SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
             SetOption("Editor/SHARC", "DownscaleFactor", "2")
+            SetOption("Editor/SHARC", "SceneScale", "50.0")
+            SetOption("Editor/SHARC", "Bounces", "2")
         end
     end
 end
