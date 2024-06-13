@@ -8,6 +8,8 @@ function config.SetQuality(quality)
     logger.info("Setting", var.settings.mode, "quality to", quality)
 
     if quality == var.quality.VANILLA then
+        LoadIni("config_vanilla.ini")
+
         SetOption("DLSS", "SampleNumber", "16")
         SetOption("FSR2", "SampleNumber", "16")
         SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
@@ -44,6 +46,8 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.LOW then
+        LoadIni("config_low.ini")
+
         SetOption("DLSS", "SampleNumber", "16")
         SetOption("FSR2", "SampleNumber", "16")
         SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")                -- TEST
@@ -133,6 +137,8 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.MEDIUM then
+        LoadIni("config_medium.ini")
+
         SetOption("DLSS", "SampleNumber", "24")
         SetOption("FSR2", "SampleNumber", "24")
         SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
@@ -222,6 +228,8 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.HIGH then
+        LoadIni("config_high.ini")
+
         SetOption("DLSS", "SampleNumber", "32")
         SetOption("FSR2", "SampleNumber", "32")
         SetOption("Editor/Selection/Appearance", "CheckerboardSize","2")
@@ -229,7 +237,7 @@ function config.SetQuality(quality)
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
         SetOption("Editor/ReGIR", "ShadingCandidatesCount", "20")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")      -- WAS 10 causes lights flickering
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")      -- WAS 10 above 8 causes lights flickering
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", true)
         SetOption("RayTracing", "TracingRadiusReflections", "1500.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "15.0")
@@ -310,6 +318,8 @@ function config.SetQuality(quality)
     end
 
     if quality == var.quality.INSANE then
+        LoadIni("config_insane.ini")
+
         SetOption("DLSS", "SampleNumber", "32")
         SetOption("FSR2", "SampleNumber", "32")
         SetOption("Editor/Selection/Appearance", "CheckerboardSize","3")
@@ -317,7 +327,7 @@ function config.SetQuality(quality)
         SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AtrousIterationNum", "6")
         SetOption("Editor/ReGIR", "LightSlotsCount", "512")
         SetOption("Editor/ReGIR", "ShadingCandidatesCount", "24")
-        SetOption("Editor/ReGIR", "BuildCandidatesCount", "16")      -- WAS 12 causes lights flickering
+        SetOption("Editor/ReGIR", "BuildCandidatesCount", "8")      -- WAS 12 above 8 causes lights flickering
         SetOption("Rendering/Shadows", "DistantShadowsForceFoliageGeometry", true)
         SetOption("RayTracing", "TracingRadiusReflections", "8000.0")
         SetOption("RayTracing", "CullingDistanceCharacter", "20.0")

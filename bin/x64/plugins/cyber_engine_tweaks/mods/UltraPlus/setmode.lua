@@ -357,7 +357,7 @@ function config.SetMode(mode)
         SetOption("Editor/ReSTIRGI", "Enable", true)
         SetOption("Editor/ReSTIRGI", "EnableFused", true)
         SetOption("Editor/ReSTIRGI", "EnableFallbackSampling", true)				-- test 2.0
-        SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", false)
+        SetOption("Editor/ReSTIRGI", "EnableBoilingFilter", true)                   -- WAS false
         SetOption("Editor/ReSTIRGI", "BoilingFilterStrength", "0.2")
         SetOption("Editor/ReSTIRGI", "UseSpatialRGS", true)
         SetOption("Editor/ReSTIRGI", "UseTemporalRGS", true)

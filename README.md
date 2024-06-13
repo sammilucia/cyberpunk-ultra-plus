@@ -22,9 +22,26 @@ Please feel free to pitch in! I don't know LUA or ImGui and have limited time, s
 ## Done
 
 ## To Do
-- Enable no-ray/path tracing mode
-- Try and get global light working for outdoors
-- Indirectly disable RIS so CP can't keep turning it on again
+- [x] Stop saving/setting RR/NRD
+- [x] Increase brightness of PTNext - test various methods esp. HitDistanceRoughnessScale and HitDistanceRoughnessExpScale (Hoonter suggests SceneScale  400–1000 Insane, 350 High, 250 Medium, 150 Low)
+- [x] Increase quality of PT20 High/Insane
+- [x] Fix sometimes overlayed shadow appears with PTNext
+- [x] Fix separate denoiser being disabled briefly with CCTV and other conditions that aren't a game exit - can't repro
+- [x] save SSR blending (move to features)
+- [x] Scale BVH distance for Low (1000.0)/Med (2000.0)/High (3000.0)/Insane (5000.)
+- [x] Fix/diff v4 smearing issue **Testing**
+- [x] Fix PTNext flickering try increasing lights batch size to 512 or higher
+- [x] Make separate denoiser enablement logic more robust
+- [x] Fix bright vegetation
+- [x] Slightly reduce PTNext build/shading candidates for High/Insane
+- [x] Make NSGDD into a toggle so vram config can still be used
+- [ ] stop separate denoiser enabling with NRD (finish PTNext enablement code/testing) or just save separate denoiser settings
+- [ ] fix sparkling skin with PTNext NRD
+- [ ] document v4!
+- [ ] move saved RIS into internal settings so it overrides the engine with DoLazy()
+- [ ] fix window scaling for different resolutions
+- [ ] auto-fix stuck weather?
+- [ ] ~~auto-detect NSGDD and Vegetation LOD~~ can't be done without using redscript
 
 ## Done
 - Saving of Ultra+'s mode (RTPT, PT20, samples, etc...)
