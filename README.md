@@ -35,13 +35,13 @@ Please feel free to pitch in! I don't know LUA or ImGui and have limited time, s
 - [x] Fix bright vegetation
 - [x] Slightly reduce PTNext build/shading candidates for High/Insane
 - [x] Make NSGDD into a toggle so vram config can still be used
-- [ ] stop separate denoiser enabling with NRD (finish PTNext enablement code/testing) or just save separate denoiser settings
-- [ ] fix sparkling skin with PTNext NRD
-- [ ] document v4!
-- [ ] move saved RIS into internal settings so it overrides the engine with DoLazy()
-- [ ] fix window scaling for different resolutions
-- [ ] auto-fix stuck weather?
-- [ ] ~~auto-detect NSGDD and Vegetation LOD~~ can't be done without using redscript
+- [ ] Stop separate denoiser enabling with NRD (finish PTNext enablement code/testing) or just save separate denoiser settings
+- [ ] Fix sparkling skin with PTNext NRD
+- [ ] Document v4!
+- [ ] Move saved RIS into internal settings so it overrides the engine with DoLazy()
+- [ ] Fix window scaling for different resolutions
+- [ ] Auto-fix stuck weather?
+- [ ] ~~Auto-detect NSGDD and Vegetation LOD~~ can't be done without using redscript
 
 ## Done
 - Saving of Ultra+'s mode (RTPT, PT20, samples, etc...)
