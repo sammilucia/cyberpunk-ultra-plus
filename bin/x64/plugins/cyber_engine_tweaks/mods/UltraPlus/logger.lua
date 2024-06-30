@@ -1,13 +1,17 @@
 -- logger.lua
 
+local var = require("variables")
+
 local __log = function(level)
     return function(...)
-        print(string.rep("-", 10), "Ultra+:", ...)
+        if var.settings.enableConsole then
+            print("          Ultra+:", ...)
+        end
     end
 end
 
 local logger = {
-    info = __log("info")
+    info = __log("info"),
 }
 
 return logger
