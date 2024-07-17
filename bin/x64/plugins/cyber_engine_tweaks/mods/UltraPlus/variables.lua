@@ -3,6 +3,7 @@
 local var = {
 	mode = {
 		VANILLA = "Vanilla",
+		PT16 = "PT16",
 		PT20 = "PT20",
 		PT21 = "PT21",
 		PTNEXT = "PTNext",

@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.8.4',
+	__VERSION	 = '4.9.0',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -394,14 +394,17 @@ function DoRainFix()
 end
 
 function DoRRFix()
-	-- while RR is enabled, continually disable NRD to work around CP FPS slowdown bug entering vehicles or cutscenes
+	-- while RR is enabled, continually disable NRD to work around CP FPS slowdown bug entering
+	-- vehicles or cutscenes. also controls EnableGradients which doesn't work with NRD
 	timer.paused = true
 	if not GetOption("/graphics/presets", "DLSS_D") then
+		SetOption("Editor/RTXDI", "EnableGradients", false)
 		return
 	end
 
 	Debug("Disabling NRD")
 	SetOption("RayTracing", "EnableNRD", false)
+	SetOption("Editor/RTXDI", "EnableGradients", true)
 	timer.paused = false
 end
 
@@ -613,14 +616,6 @@ end)
 
 registerForEvent("onOverlayClose", function()
 	window.open = false
-end)
-
-registerForEvent("onShutdown", function()
-	UnObserve('QuestTrackerGameController', 'OnUninitialize')
-	UnObserve('QuestTrackerGameController', 'OnInitialize')
-	UnObserve('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest')
-	UnObserve('FastTravelSystem', 'OnPerformFastTravelRequest')
-	UnObserve('FastTravelSystem', 'OnLoadingScreenFinished')
 end)
 
 registerForEvent("onDraw", function()

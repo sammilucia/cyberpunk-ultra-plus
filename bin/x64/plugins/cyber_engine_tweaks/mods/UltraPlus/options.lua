@@ -71,8 +71,20 @@ local options = {
 			tooltip = "Makes buildings and mountains fade into the atmosphere (CP Default: On)",
 		},
 		{
+			item = "GlobalIllumination",
+			name = "Enable Global Illumination",
+			category = "Developer/FeatureToggles",
+			tooltip = "",
+		},
+		{
 			item = "DistantGI",
 			name = "Enable Distant Global Illumination",
+			category = "Developer/FeatureToggles",
+			tooltip = "(CP Default: On)",
+		},
+		{
+			item = "SSAO",
+			name = "Enable Screenspace Ambient Occlusion (SSAO)",
 			category = "Developer/FeatureToggles",
 			tooltip = "(CP Default: On)",
 		},
@@ -140,7 +152,7 @@ local options = {
 		},
 		{
 			item = "CheckerboardGI",
-			name = "Checkerboard Global Illumination",
+			name = "Enable Checkerboard Global Illumination",
 			category = "Rendering",
 			tooltip = "Checkerboard the GI tracing as a performance optimisation. Default is 50% checkerboard and this can be reduced further below",
 		},
@@ -344,13 +356,13 @@ local options = {
 		},
 		{
 			item = "AntiFirefly",
-			name = "DI Anti Firefly",
+			name = "DI Anti-firefly",
 			category = "Editor/Denoising/ReLAX/Direct/Common",
 			tooltip = "Attempt to filter out fireflies in Direct denoising",
 		},
 		{
 			item = "AntiFirefly",
-			name = "GI Anti Firefly",
+			name = "GI Anti-firefly",
 			category = "Editor/Denoising/ReLAX/Indirect/Common",
 			tooltip = "Attempt to filter out fireflies in Indirect denoising",
 		},
@@ -388,6 +400,44 @@ local options = {
 			item = "ReprojectionTestSkippingWithoutMotion",
 			name = "GI Reprojection Test Skipping Without Motion",
 			category = "Editor/Denoising/ReLAX/Indirect/Common",
+			tooltip = "",
+		},
+	},
+	REBLUR = {
+		{
+			item = "ReferenceAccumulation",
+			name = "ReBLUR AO Reference Accumulation",
+			category = "Editor/Denoising/ReBLUR/AmbientOcclusion",
+			tooltip = "",
+		},
+		{
+			item = "ReferenceAccumulation",
+			name = "ReBLUR DI Reference Accumulation",
+			category = "Editor/Denoising/ReBLUR/Direct",
+			tooltip = "",
+		},
+		{
+			item = "ReferenceAccumulation",
+			name = "ReBLUR GI Reference Accumulation",
+			category = "Editor/Denoising/ReBLUR/Indirect",
+			tooltip = "",
+		},
+		{
+			item = "AntiFirefly",
+			name = "ReBLUR AO Anti-firefly",
+			category = "Editor/Denoising/ReBLUR/AmbientOcclusion",
+			tooltip = "",
+		},
+		{
+			item = "AntiFirefly",
+			name = "ReBLUR DI Anti-firefly",
+			category = "Editor/Denoising/ReBLUR/Direct",
+			tooltip = "",
+		},
+		{
+			item = "AntiFirefly",
+			name = "ReBLUR GI Anti-firefly",
+			category = "Editor/Denoising/ReBLUR/Indirect",
 			tooltip = "",
 		},
 	},
@@ -456,7 +506,7 @@ local options = {
 		},
 		{
 			item = "HitDistance",
-			name = "Hit Distance Testing",
+			name = "Debug Hit Distance",
 			category = "RayTracing/Debug",
 			tooltip = "",
 		},
@@ -498,7 +548,7 @@ local options = {
 		},
 		{
 			item = "EnableAmbientOcclusion",
-			name = "Enable Ambient Occlusion",
+			name = "Enable RTAO",
 			category = "RayTracing",
 			tooltip = "",
 		},
@@ -570,7 +620,7 @@ local options = {
 		},
 		{
 			item = "AmbientOcclusion",
-			name = "Debug Ambient Occlusion",
+			name = "Debug AO",
 			category = "RayTracing/Debug",
 			tooltip = "",
 		},
@@ -909,6 +959,12 @@ local options = {
 			tooltip = "",
 		},
 		{
+			item = "AmbientOcclusionRayNumber",
+			name = "RTAO Ray Number",
+			category = "RayTracing",
+			tooltip = "Not sure there is ray traced ambient occlusion...",
+		},
+		{
 			item = "ForceShadowLODBiasValue",
 			name = "RT Shadow LOD Bias Value",
 			category = "RayTracing",
@@ -1076,6 +1132,30 @@ local options = {
 			item = "ScreenEdgeFactor",
 			name = "VRS Screen Edge Factor",
 			category = "Rendering/VariableRateShading",
+			tooltip = "",
+		},
+		{
+			item = "AmbientOcclusionRadiusNear",
+			name = "AO Occlusion Radius Near",
+			category = "RayTracing",
+			tooltip = "",
+		},
+		{
+			item = "AmbientOcclusionRadiusFar",
+			name = "AO Occlusion Radius Far",
+			category = "RayTracing",
+			tooltip = "",
+		},
+		{
+			item = "AmbientOcclusionTransitionNear",
+			name = "AO Occlusion Transition Near",
+			category = "RayTracing",
+			tooltip = "",
+		},
+		{
+			item = "AmbientOcclusionTransitionFar",
+			name = "AO Occlusion Transition Far",
+			category = "RayTracing",
 			tooltip = "",
 		},
 		{

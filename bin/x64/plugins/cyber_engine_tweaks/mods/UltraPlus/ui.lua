@@ -74,6 +74,7 @@ local function renderTabEngineDrawer()
 	local renderingModes = {
 		{ key = "RT", label = "RT", tooltip = "Regular ray tracing, with optimisations and fixes." },
 		{ key = "RT_PT", label = "RT+PT", tooltip = "Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly." },
+		{ key = "PT16", label = "PT16", tooltip = "Path tracing from Cyberpunk 1.6x. Requires NRD (disable Ray Reconstruction)" },
 		{ key = "PT20", label = "PT20", tooltip = "Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
 		{ key = "PT21", label = "PT21", tooltip = "Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
 		{ key = "PTNEXT", label = "PTNext", tooltip = "For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics/DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step." }
@@ -118,7 +119,7 @@ local function renderTabEngineDrawer()
 	local sceneScaleOrder = { "PERFORMANCE", "VANILLA", "BALANCED", "QUALITY" }
 	ui.space()
 
-	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT
+	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT or var.settings.mode == var.mode.PT16
 	if disableRadianceCache then
 		ImGui.BeginDisabled(true)
 	end
@@ -249,6 +250,7 @@ local function renderDebugDrawer()
 		{ options.RTXGI, "Checkbox" },
 		{ options.REGIR, "Checkbox" },
 		{ options.RELAX, "Checkbox" },
+		{ options.REBLUR, "Checkbox" },
 		{ options.NRD, "Checkbox" },
 		{ options.RTOPTIONS, "Checkbox" },
 		{ options.SHARC, "Checkbox" },

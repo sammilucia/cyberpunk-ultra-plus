@@ -82,7 +82,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/RTXDI", "NumInitialSamples", "16")
 		SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
-		if var.settings.mode == var.mode.PT20 then
+		if var.settings.mode == var.mode.PT20 or var.settings.mode == var.mode.PT16 then
 			SetOption("RayTracing", "TracingRadius", "100.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
 			SetOption("RayTracing/Reference", "RayNumber", "1")
@@ -179,7 +179,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/RTXDI", "NumInitialSamples", "16")
 		SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
-		if var.settings.mode == var.mode.PT20 then
+		if var.settings.mode == var.mode.PT20 or var.settings.mode == var.mode.PT16 then
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
 			SetOption("RayTracing/Reference", "RayNumber", "1")
@@ -276,7 +276,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/RTXDI", "NumInitialSamples", "16")
 		SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
-		if var.settings.mode == var.mode.PT20 then
+		if var.settings.mode == var.mode.PT20 or var.settings.mode == var.mode.PT16 then
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
 			SetOption("RayTracing/Reference", "RayNumber", "2")
@@ -373,7 +373,7 @@ function config.SetQuality(quality)
 		SetOption("Editor/RTXDI", "NumInitialSamples", "16")
 		SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
-		if var.settings.mode == var.mode.PT20 then
+		if var.settings.mode == var.mode.PT20 or var.settings.mode == var.mode.PT16 then
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
 			SetOption("RayTracing/Reference", "RayNumber", "2")
