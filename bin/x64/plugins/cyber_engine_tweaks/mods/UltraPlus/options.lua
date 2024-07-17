@@ -1049,6 +1049,18 @@ local options = {
 	},
 	RTFLOAT = {
 		{
+			item = "SampleNumber",
+			name = "DLSS Samples",
+			category = "DLSS",
+			tooltip = "",
+		},
+		{
+			item = "SampleNumber",
+			name = "FSR2 Samples",
+			category = "FSR2",
+			tooltip = "",
+		},
+		{
 			item = "VarianceCutoff",
 			name = "VRS Cutoff",
 			category = "Rendering/VariableRateShading",

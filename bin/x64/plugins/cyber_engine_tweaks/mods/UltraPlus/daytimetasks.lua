@@ -34,12 +34,12 @@ local config = {
 function config.SetDaytime(hour)
 	if hour ~= config.PreviousHour then
 		local timeDescription = (hour == 6) and "dawn" or (hour == 18) and "dusk" or (hour == 12) and "midday" or (hour == 20) and "night time" or string.format("%02d:00", hour)
-        logger.info(string.format("    (Doing daytime tasks for: %s)", timeDescription))
+		logger.info(string.format("    (Doing daytime tasks for: %s)", timeDescription))
 
-        local sunAngularSize = config.SunAngularSizes[hour]
-        if sunAngularSize then
-            SetOption("RayTracing", "SunAngularSize", sunAngularSize)
-        end
+		local sunAngularSize = config.SunAngularSizes[hour]
+		if sunAngularSize then
+			SetOption("RayTracing", "SunAngularSize", sunAngularSize)
+		end
 	end
 
 	config.PreviousHour = hour

@@ -1,4 +1,4 @@
---ui.lua
+﻿--ui.lua
 
 local options = require("options")
 local var = require("variables")
@@ -8,18 +8,21 @@ local config = {
 	SetSceneScale = require("setscenescale").SetSceneScale,
 	SetVram = require("setvram").SetVram,
 	DEBUG = true,
+	fpsText = nil,
+}
+local window = {
+	open = false,
+	initialHeight = 0,
+	initialWidth = 0,
+	debugHeight = 910,
+	gotDimensions = false,
 	isDebugTabActive = false,
-	windowWidth = 485,
-	windowHeight = 454,
-	windowHeightDebug = 910,
-	fpsWidth = 60,
 }
 local stats = {
 	fps = 0,
 }
 local toggled
 local ui = {
-
 	line = function()
 		ImGui.Spacing()
 		ImGui.Separator()
@@ -69,7 +72,7 @@ local function renderTabEngineDrawer()
 	ui.text("NOTE: Once happy, reload a save to fully activate the mode")
 
 	local renderingModes = {
-		{ key = "RT_ONLY", label = "RT Only", tooltip = "Regular ray tracing, with optimisations and fixes." },
+		{ key = "RT", label = "RT", tooltip = "Regular ray tracing, with optimisations and fixes." },
 		{ key = "RT_PT", label = "RT+PT", tooltip = "Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly." },
 		{ key = "PT20", label = "PT20", tooltip = "Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
 		{ key = "PT21", label = "PT21", tooltip = "Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality." },
@@ -112,8 +115,14 @@ local function renderTabEngineDrawer()
 		end
 	end
 
-	local sceneScaleOrder = { "LOW", "VANILLA", "MEDIUM", "HIGH" }
+	local sceneScaleOrder = { "PERFORMANCE", "VANILLA", "BALANCED", "QUALITY" }
 	ui.space()
+
+	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT
+	if disableRadianceCache then
+		ImGui.BeginDisabled(true)
+	end
+
 	if ImGui.CollapsingHeader("Radiance Cache Accuracy", ImGuiTreeNodeFlags.DefaultOpen) then
 		for _, key in ipairs(sceneScaleOrder) do
 			local scaleLabel = var.sceneScale[key] .. "##SS"
@@ -125,6 +134,10 @@ local function renderTabEngineDrawer()
 			end
 			ui.align()
 		end
+	end
+
+	if disableRadianceCache then
+		ImGui.EndDisabled()
 	end
 
 	ui.space()
@@ -172,7 +185,7 @@ local function renderTabEngineDrawer()
 		SaveSettings()
 	end
 
-	ImGui.SameLine(163)
+	ImGui.SameLine(168)
 	var.settings.enableTargetFps, toggled = ImGui.Checkbox("Enable Target FPS", var.settings.enableTargetFps)
 	ui.tooltip("Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS")
 	if toggled then
@@ -205,116 +218,71 @@ local function renderRenderingFeaturesDrawer()
 	end
 end
 
-local function renderDebugDrawer()
-	ui.line()
-	for _, setting in pairs(options.RTXDI) do
-		setting.value = GetOption(setting.category, setting.item)
+local filterText = ""
+local function renderDebugSettings(setting, inputType, width)
+	setting.value = GetOption(setting.category, setting.item)
+	ui.width(width or 0)
+	
+	if inputType == "Checkbox" then
 		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.RTXGI) do
-		setting.value = GetOption(setting.category, setting.item)
-		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.REGIR) do
-		setting.value = GetOption(setting.category, setting.item)
-		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.RELAX) do
-		setting.value = GetOption(setting.category, setting.item)
-		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.NRD) do
-		setting.value = GetOption(setting.category, setting.item)
-		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.RTOPTIONS) do
-		setting.value = GetOption(setting.category, setting.item)
-		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.SHARC) do
-		setting.value = GetOption(setting.category, setting.item)
-		setting.value, toggled = ImGui.Checkbox(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.RTINT) do
-		setting.value = GetOption(setting.category, setting.item)
-		ui.width(140)
+	elseif inputType == "InputInt" then
 		setting.value, toggled = ImGui.InputInt(setting.name, setting.value)
-		ui.tooltip(setting.tooltip)
-
-		if toggled then
-			SetOption(setting.category, setting.item, setting.value)
-			SaveSettings()
-		end
-	end
-
-	ui.line()
-	for _, setting in pairs(options.RTFLOAT) do
-		setting.value = GetOption(setting.category, setting.item)
-		ui.width(180)
+	elseif inputType == "InputFloat" then
 		setting.value, toggled = ImGui.InputFloat(setting.name, tonumber(setting.value))
-		ui.tooltip(setting.tooltip)
+	end
+	
+	ui.tooltip(setting.tooltip)
 
-		if toggled then
+	if toggled then
+		if inputType == "InputFloat" then
 			SetOption(setting.category, setting.item, setting.value, "float")
-			SaveSettings()
+		else
+			SetOption(setting.category, setting.item, setting.value)
+		end
+		SaveSettings()
+	end
+end
+
+local function renderDebugDrawer()
+	local settingGroups = {
+		{ options.RTXDI, "Checkbox" },
+		{ options.RTXGI, "Checkbox" },
+		{ options.REGIR, "Checkbox" },
+		{ options.RELAX, "Checkbox" },
+		{ options.NRD, "Checkbox" },
+		{ options.RTOPTIONS, "Checkbox" },
+		{ options.SHARC, "Checkbox" },
+		{ options.RTINT, "InputInt", 140 },
+		{ options.RTFLOAT, "InputFloat", 180 }
+	}
+
+	-- pin tabs and filter to top
+	ui.space()
+	ui.text("Filter by:")
+	ui.align()
+	ImGui.SetNextItemWidth(150)
+	filterText = ImGui.InputText("##Filter", filterText, 100)
+
+	ImGui.SameLine()  -- Place the clear button next to the filter text input
+	if ImGui.Button("Clear") then
+		filterText = ""
+	end
+
+	-- begin scrollable region
+	ImGui.BeginChild("SettingsRegion", ImGui.GetContentRegionAvail(), true)
+
+	for _, group in ipairs(settingGroups) do
+		local settings, inputType, width = table.unpack(group)
+		ui.line()
+		for _, setting in pairs(settings) do
+			if filterText == "" or string.find(string.lower(setting.name), string.lower(filterText)) then
+				renderDebugSettings(setting, inputType, width)
+			end
 		end
 	end
+	-- end scrollable region
+
+	ImGui.EndChild()
 end
 
 local function renderTabs()
@@ -330,44 +298,52 @@ local function renderTabs()
 		end
 
 		if ImGui.BeginTabItem("Debug") and config.DEBUG then
-			config.isDebugTabActive = true
+			window.isDebugTabActive = true
 			renderDebugDrawer()
 			ImGui.EndTabItem()
 		else
-			config.isDebugTabActive = false
+			window.isDebugTabActive = false
 		end
 
 		ImGui.EndTabBar()
-
-		if stats.fps == 0 then
-			return
-		end
-
-		local padding = config.windowWidth - config.fpsWidth
-		config.fpsWidth = ImGui.CalcTextSize("0000000000000")
-		ImGui.SameLine(padding)
-		ImGui.Text("Real FPS: "..tostring(math.floor(stats.fps)))
 	end
 end
 
-ui.renderUI = function(fps)
+local function renderFps()
+	if stats.fps == 0 then
+		return
+	end
+
+	config.fpsText = string.format("Real FPS: %.0f", stats.fps) -- lazy makeshift round function
+	ImGui.SetCursorPosX(380)
+	ImGui.SetCursorPosY(42)
+	ImGui.Text(config.fpsText)
+end
+
+ui.renderUI = function(fps, open)
 	stats.fps = fps
 
 	ImGui.SetNextWindowPos(10, 300, ImGuiCond.FirstUseEver)
 
-	config.windowWidth = ImGui.GetWindowWidth() * 1.37
-	config.windowHeight = config.windowWidth * 1.09
-
-	if config.isDebugTabActive then
-		ImGui.SetNextWindowSize(config.windowWidth, config.windowHeightDebug)
+	if window.isDebugTabActive then
+		ImGui.SetNextWindowSize(window.initialWidth, window.debugHeight)
 	else
-	   	ImGui.SetNextWindowSize(config.windowWidth, config.windowHeight)
+		ImGui.SetNextWindowSize(window.initialWidth, window.initialHeight)
 	end
 
-	-- begin actual render
+	-- begin render
 	if ImGui.Begin("Ultra+ v"..UltraPlus.__VERSION, true) then
 		ImGui.SetWindowFontScale(var.settings.uiScale)
+
+		if open and not window.gotDimensions and ImGui.GetWindowHeight() > 200 then
+			window.initialHeight = ImGui.GetWindowHeight() + 1
+			window.initialWidth = ImGui.GetWindowWidth()
+			window.gotDimensions = true
+		end
+
 		renderTabs()
+		renderFps()
+
 		ImGui.End()
 	end
 end

@@ -7,8 +7,8 @@ local var = {
 		PT21 = "PT21",
 		PTNEXT = "PTNext",
 		RT_PT = "RTPT",
-		RT_ONLY = "RTOnly",
-		RASTER = "Raster",
+		RT= "RT",
+		RASTER = "No RT",
 	},
 	quality = {
 		VANILLA = "Vanilla",
@@ -28,10 +28,10 @@ local var = {
 		GB24 = 24,
 	},
 	sceneScale = {
-		LOW = "Low/Fastest",
+		PERFORMANCE = "Performance",
 		VANILLA = "Vanilla",
-		MEDIUM = "Medium",
-		HIGH = "High/Slowest",
+		BALANCED = "Balanced",
+		QUALITY = "Quality",
 	},
 	settings = {
 		uiScale = 0.88,
