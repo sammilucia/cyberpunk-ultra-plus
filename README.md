@@ -35,21 +35,22 @@ Please feel free to pitch in! I don't know LUA or ImGui and have limited time, s
 - [x] Fix bright vegetation
 - [x] Slightly reduce PTNext build/shading candidates for High/Insane
 - [x] Make NSGDD into a toggle so vram config can still be used
-- [ ] Stop separate denoiser enabling with NRD (finish PTNext enablement code/testing) or just save separate denoiser settings
+- [x] Stop separate denoiser enabling with NRD (finish PTNext enablement code/testing) or just save separate denoiser settings
 - [ ] Fix sparkling skin with PTNext NRD
-- [ ] Document v4!
-- [ ] Move saved RIS into internal settings so it overrides the engine with DoLazy()
-- [ ] Fix window scaling for different resolutions
-- [ ] Auto-fix stuck weather?
+- [x] Document v4!
+- [x] Move saved RIS into internal settings so it overrides the engine with DoLazy()
+- [x] Fix window scaling for different resolutions
+- [x] Auto-fix stuck weather?
+- [x] Fully enable ReGIRDI + ReGIRGI
+- [x] Auto-scale visual quality based on user-configurable Target FPS
+- [x] Adjust sun shadow sharpness based on time of day (IRL dawn and dusk have more diffuse shadows) 
 - [ ] ~~Auto-detect NSGDD and Vegetation LOD~~ can't be done without using redscript
-
-## Done
-- Saving of Ultra+'s mode (RTPT, PT20, samples, etc...)
-- Enable RTPT option (including changing the engine's ray tracing mode in real-time)
-- Add streaming options (? vanilla, medium, high)
-- Separate settings into separate file(s)
-- Remove options that are confusing or don't add any value
-- Put all feature / distance / etc. tabs onto one page
+- [x] Saving of Ultra+'s mode (RTPT, PT20, samples, etc...)
+- [x] Enable RTPT option (including changing the engine's ray tracing mode in real-time)
+- [x] Add streaming options (? vanilla, medium, high)
+- [x] Separate settings into separate file(s)
+- [x] Remove options that are confusing or don't add any value
+- [x] Put all feature / distance / etc. tabs onto one page
 
 ## Where to find me
 
