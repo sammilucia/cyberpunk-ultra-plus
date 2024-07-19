@@ -13,7 +13,7 @@ local var = {
 	},
 	quality = {
 		VANILLA = "Vanilla",
-		LOW = "Low",
+		FAST = "Fast",
 		MEDIUM = "Medium",
 		HIGH = "High",
 		INSANE = "Insane",

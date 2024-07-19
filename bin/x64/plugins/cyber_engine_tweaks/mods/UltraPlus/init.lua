@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.9.0',
+	__VERSION	 = '4.9.3',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -399,12 +399,14 @@ function DoRRFix()
 	timer.paused = true
 	if not GetOption("/graphics/presets", "DLSS_D") then
 		SetOption("Editor/RTXDI", "EnableGradients", false)
+		SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AntiFirefly", true)
 		return
 	end
 
 	Debug("Disabling NRD")
 	SetOption("RayTracing", "EnableNRD", false)
 	SetOption("Editor/RTXDI", "EnableGradients", true)
+	SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AntiFirefly", false)
 	timer.paused = false
 end
 

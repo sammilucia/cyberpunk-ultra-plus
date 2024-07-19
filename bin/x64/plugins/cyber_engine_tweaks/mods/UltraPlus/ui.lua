@@ -95,7 +95,7 @@ local function renderTabEngineDrawer()
 		end
 	end
 
-	local qualityOrder = { "VANILLA", "LOW", "MEDIUM", "HIGH", "INSANE" }
+	local qualityOrder = { "VANILLA", "FAST", "MEDIUM", "HIGH", "INSANE" }
 	ui.space()
 	if ImGui.CollapsingHeader("Quality Level", ImGuiTreeNodeFlags.DefaultOpen) then
 		for _, key in ipairs(qualityOrder) do

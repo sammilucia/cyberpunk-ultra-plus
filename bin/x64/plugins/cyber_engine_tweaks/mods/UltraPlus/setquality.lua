@@ -42,8 +42,8 @@ function config.SetQuality(quality)
 		return
 	end
 
-	if quality == var.quality.LOW then
-		LoadIni("config_low.ini")
+	if quality == var.quality.FAST then
+		LoadIni("config_fast.ini")
 
 		SetOption("DLSS", "SampleNumber", "24")
 		SetOption("FSR2", "SampleNumber", "24")
@@ -276,9 +276,26 @@ function config.SetQuality(quality)
 		SetOption("Editor/RTXDI", "NumInitialSamples", "16")
 		SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
-		if var.settings.mode == var.mode.PT20 or var.settings.mode == var.mode.PT16 then
+		if var.settings.mode == var.mode.PT20 then
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
+			SetOption("RayTracing/Reference", "RayNumber", "2")
+			SetOption("RayTracing/Reference", "BounceNumber", "2")
+			SetOption("RayTracing/Reference", "RayNumberScreenshot", "2")
+			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "2")
+			SetOption("Editor/RTXDI", "EnableFallbackLight", true)
+			SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
+			SetOption("Editor/RTXDI", "SpatialNumSamples", "2")
+			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
+			SetOption("Editor/SHARC", "DownscaleFactor", "7")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
+			return
+		end
+
+		if var.settings.mode == var.mode.PT16 then
+			SetOption("RayTracing", "TracingRadius", "200.0")
+			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
 			SetOption("RayTracing/Reference", "RayNumber", "2")
 			SetOption("RayTracing/Reference", "BounceNumber", "2")
 			SetOption("RayTracing/Reference", "RayNumberScreenshot", "2")
@@ -373,10 +390,27 @@ function config.SetQuality(quality)
 		SetOption("Editor/RTXDI", "NumInitialSamples", "16")
 		SetOption("Editor/RTXDI", "NumEnvMapSamples", "32")
 
-		if var.settings.mode == var.mode.PT20 or var.settings.mode == var.mode.PT16 then
+		if var.settings.mode == var.mode.PT20 then
 			SetOption("RayTracing", "TracingRadius", "200.0")
 			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", true)
 			SetOption("RayTracing/Reference", "RayNumber", "2")
+			SetOption("RayTracing/Reference", "BounceNumber", "2")
+			SetOption("RayTracing/Reference", "RayNumberScreenshot", "5")
+			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
+			SetOption("Editor/RTXDI", "EnableFallbackLight", true)
+			SetOption("Editor/RTXDI", "MaxHistoryLength", "0")
+			SetOption("Editor/RTXDI", "SpatialNumSamples", "4")
+			SetOption("Editor/RTXDI", "SpatialNumDisocclusionBoostSamples", "32")
+			SetOption("Editor/SHARC", "DownscaleFactor", "3")
+			SetOption("Editor/ReSTIRGI", "SpatialNumSamples", "0")
+			SetOption("Editor/ReSTIRGI", "SpatialNumDisocclusionBoostSamples", "0")
+			return
+		end
+
+		if var.settings.mode == var.mode.PT16 then
+			SetOption("RayTracing", "TracingRadius", "200.0")
+			SetOption("RayTracing/Reference", "EnableProbabilisticSampling", false)
+			SetOption("RayTracing/Reference", "RayNumber", "3")
 			SetOption("RayTracing/Reference", "BounceNumber", "2")
 			SetOption("RayTracing/Reference", "RayNumberScreenshot", "5")
 			SetOption("RayTracing/Reference", "BounceNumberScreenshot", "3")
