@@ -1183,6 +1183,12 @@ local options = {
 	},
 	RTFLOAT = {
 		{
+			item = "ForceCustomMipBias",
+			name = "Custom Mip Bias",
+			category = "Editor/MipBias",
+			tooltip = "Requires 'Enable Custom Mip Bias' to be checked in Features tab",
+		},
+		{
 			item = "SampleNumber",
 			name = "DLSS Samples",
 			category = "DLSS",
