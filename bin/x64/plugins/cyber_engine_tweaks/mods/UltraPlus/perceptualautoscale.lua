@@ -1,7 +1,7 @@
 -- perceptualautoscale.lua
 
-local logger = require("logger")
-local var = require("variables")
+local logger = require("helpers/logger")
+local var = require("helpers/variables")
 local config = {}
 
 function config.AutoScale(quality)
@@ -20,7 +20,6 @@ function config.AutoScale(quality)
 		if var.settings.mode == var.mode.RT_PT
 		or var.settings.mode == var.mode.RTOnly then
 			SetOption("RayTracing", "TracingRadius", "100.0")
-			LoadIni("config_fast.ini")
 		end
 		return
 	end
@@ -37,7 +36,6 @@ function config.AutoScale(quality)
 		if var.settings.mode == var.mode.RT_PT
 		or var.settings.mode == var.mode.RTOnly then
 			SetOption("RayTracing", "TracingRadius", "100.0")
-			LoadIni("config_fast.ini")
 		end
 		return
 	end
@@ -54,7 +52,6 @@ function config.AutoScale(quality)
 		if var.settings.mode == var.mode.RT_PT
 		or var.settings.mode == var.mode.RTOnly then
 			SetOption("RayTracing", "TracingRadius", "200.0")
-			LoadIni("config_medium.ini")
 		end
 		return
 	end
@@ -71,7 +68,6 @@ function config.AutoScale(quality)
 		if var.settings.mode == var.mode.RT_PT
 		or var.settings.mode == var.mode.RTOnly then
 			SetOption("RayTracing", "TracingRadius", "300.0")
-			LoadIni("config_medium.ini")
 		end
 		return
 	end
@@ -88,7 +84,6 @@ function config.AutoScale(quality)
 		if var.settings.mode == var.mode.RT_PT
 		or var.settings.mode == var.mode.RTOnly then
 			SetOption("RayTracing", "TracingRadius", "400.0")
-			LoadIni("config_high.ini")
 		end
 		return
 	end
@@ -105,7 +100,6 @@ function config.AutoScale(quality)
 		if var.settings.mode == var.mode.RT_PT
 		or var.settings.mode == var.mode.RTOnly then
 			SetOption("RayTracing", "TracingRadius", "1000.0")
-			LoadIni("config_insane.ini")
 		end
 		return
 	end

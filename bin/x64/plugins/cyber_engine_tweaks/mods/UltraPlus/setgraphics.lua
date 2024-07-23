@@ -1,20 +1,29 @@
--- setmode.lua
+-- setgraphics.lua
 
-local logger = require("logger")
-local var = require("variables")
+local logger = require("helpers/logger")
+local var = require("helpers/variables")
 local config = {}
 
 function config.SetGraphics(graphics)
-	logger.info("Configuring graphics to", graphics)
+	logger.info("Setting game graphics for", graphics)
 
-	if graphics == var.graphics.FAST then
-		SetOption("/graphics/raytracing", "RayTracing", false)
-		PushChanges()
+	if graphics == var.graphics.HIGH then
+		LoadIni("graphics_high")
+		return
+	end
 
-		SetOption("Developer/FeatureToggles", "RTXDI", false)
-		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.15")
-		SetOption("Editor/SHARC", "Enable", false)
-		SaveSettings()
+	if graphics == var.graphics.MEDIUM then
+		LoadIni("graphics_medium")
+		return
+	end
+
+	if graphics == var.graphics.LOW then
+		LoadIni("graphics_low")
+		return
+	end
+
+	if graphics == var.graphics.POTATO then
+		LoadIni("graphics_potato")
 		return
 	end
 end

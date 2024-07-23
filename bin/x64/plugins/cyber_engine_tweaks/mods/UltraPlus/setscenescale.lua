@@ -1,7 +1,7 @@
 -- setscenescale.lua
 
-local logger = require("logger")
-local var = require("variables")
+local logger = require("helpers/logger")
+local var = require("helpers/variables")
 local config = {}
 
 function config.SetSceneScale(scale)

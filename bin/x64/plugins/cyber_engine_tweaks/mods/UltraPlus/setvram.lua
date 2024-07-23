@@ -1,7 +1,7 @@
 -- setquality.lua
 
-local logger = require("logger")
-local var = require("variables")
+local logger = require("helpers/logger")
+local var = require("helpers/variables")
 local config = {}
 
 function config.SetVram(vram)
@@ -23,8 +23,9 @@ function config.SetVram(vram)
 
 		SetOption("Streaming", "PrecacheDistance", "0.0")
 		SetOption("Streaming", "MinStreamingDistance", "1.0")
-		
+
 		logger.info("    (NSGDD compatibility force-enabled due to low VRAM)")
+		var.settings.nsgddCompatible = true
 
 		return
 	end
@@ -45,8 +46,9 @@ function config.SetVram(vram)
 
 		SetOption("Streaming", "PrecacheDistance", "0.0")
 		SetOption("Streaming", "MinStreamingDistance", "1.0")
-		
+
 		logger.info("    (NSGDD compatibility force-enabled due to low VRAM)")
+		var.settings.nsgddCompatible = true
 
 		return
 	end
@@ -67,7 +69,7 @@ function config.SetVram(vram)
 
 		SetOption("Streaming", "PrecacheDistance", "0.0")
 		SetOption("Streaming", "MinStreamingDistance", "1.0")
-		
+
 		logger.info("    (NSGDD compatibility force-enabled due to low VRAM)")
 
 		return

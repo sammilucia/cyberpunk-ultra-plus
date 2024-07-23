@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '4.9.6',
+	__VERSION	 = '5.0.2',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -21,28 +21,12 @@ UltraPlus = {
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]
 }
-local logger = require("logger")
-local options = require("options")
-local var = require("variables")
-local ui = require("ui")
-local config = {
-	SetMode = require("setmode").SetMode,
-	SetQuality = require("setquality").SetQuality,
-	SetSceneScale = require("setscenescale").SetSceneScale,
-	SetDLSS = require("setdlss").SetDLSS,
-	SetVram = require("setvram").SetVram,
-	AutoScale = require("perceptualautoscale").AutoScale,
-	SetDaytime = require("daytimetasks").SetDaytime,
-	PreviousWeather = nil,
-	DEBUG = false,
-	ptNext = {
-		active = false,
-		prepped = false,
-	},
-}
-local window = {
-		open = false,
-}
+local logger = require("helpers/logger")
+local var = require("helpers/variables")
+local config = require("helpers/config")
+local options = require("helpers/options")
+local render = require("render")
+local bumpweather = require("helpers/bumpweather")
 local gameSession = {
 	active = false,
 	time = nil,
@@ -59,8 +43,21 @@ local timer = {
 	paused = false,
 	FAST = 1.0,
 	LAZY = 5.0,
-	WEATHER = 910,		  -- 15:10 hours
+	WEATHER = 910,		-- 15:10 hours
 }
+
+print("Modules loaded in init.lua. Config:", config, "Render:", render, "Var:", var)
+
+
+function toboolean(value)
+	if value == "true" or value == true then
+		return true
+	elseif value == "false" or value == false then
+		return false
+	else
+		return nil
+	end
+end
 
 function IsGameSessionActive()
 	-- check if the game is active or not
@@ -70,16 +67,11 @@ function IsGameSessionActive()
 		timer.paused = false
 	elseif time == gameSession.lastTime or not gameSession.active or gameSession.fastTravel then
 		config.ptNext.active = false
-		config.ptNext.ready = false
+		config.ptNext.primed = false
 		timer.paused = true
 	end
 
 	gameSession.lastTime = time
-end
-
-function Debug(...)
-	if not config.DEBUG then return end
-	print("DEBUG:", table.concat(arg, " "))
 end
 
 local activeTimers = {}
@@ -88,9 +80,8 @@ function Wait(seconds, callback)
 	table.insert(activeTimers, { countdown = seconds, callback = callback })
 end
 
-function PushChanges()
+function ConfirmChanges()
 	-- confirm menu changes and save UserSettings.json to try to prevent it getting out of sync
-	-- currently crashes CP 2.0+ and idk why
 	GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
 
 	if Game.GetSettingsSystem():NeedsConfirmation() then
@@ -137,13 +128,13 @@ function GetOption(category, item)
 		return tonumber(value)
 	end
 
-	logger.info("ERROR: Getting value for:", category, item..". Result returned:", value)
+	logger.info("ERROR: Error getting value for:", category .. "/" .. item, "=", value)
 end
 
 function SetOption(category, item, value, valueType)
 	-- sets a live game setting, working out which method to use for different setting types
 	if value == nil then
-		logger.info("ERROR: Skipping nil value:", category .. "/" .. item)
+		logger.info("ERROR: Skipping nil value:", category .. "/" .. item, "=", value)
 		return
 	end
 
@@ -152,18 +143,24 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-	if string.sub(category, 1, 1) == "/" then
-		Game.GetSettingsSystem():GetVar(category, item):SetValue(value)
+	if string.sub(category, 1, 1) == "/" and (tostring(value) == "true" or tostring(value) == "false") then
+		if GetOption(category, item) ~= value then
+			Game.GetSettingsSystem():GetVar(category, item):SetValue(toboolean(value))
+			config.changed = true
+		end
 		return
 	end
-	
-	if type(value) == "boolean" then
-		GameOptions.SetBool(category, item, value)
+
+	if string.sub(category, 1, 1) == "/" and tostring(value):match("^%-?%d+$") then
+		Game.GetSettingsSystem():GetVar(category, item):SetIndex(tonumber(value))
+		config.changed = true
 		return
 	end
-	
-	if tostring(value) == "false" or tostring(value) == "true" then
-		GameOptions.SetBool(category, item, tostring(value) == "true")
+
+	if type(value) == "boolean" or tostring(value) == "false" or tostring(value) == "true" then
+		if GetOption(category, item) ~= value then
+			GameOptions.SetBool(category, item, toboolean(value))
+		end
 		return
 	end
 
@@ -177,21 +174,22 @@ function SetOption(category, item, value, valueType)
 		return
 	end
 
-	logger.info("ERROR: Unsupported GameOption:", category .. "/" .. item, "=", value)
+	logger.info("ERROR: Couldn't set value for:", category .. "/" .. item, "=", value)
 end
 
-function LoadIni(path)
+function LoadIni(config)
 	-- pushes an ini file into live game settings
 	local iniData = {}
 	local category
 
+	local path = "config/" .. config .. ".ini"
 	local file = io.open(path, "r")
 	if not file then
 		logger.info("Failed to open file:", path)
 		return
 	end
 
-	logger.info("	(Loading", path..")")
+	logger.info("	(Loading", path .. ")")
 	for line in file:lines() do
 		line = line:match("^%s*(.-)%s*$") -- trim whitespace
 
@@ -226,8 +224,11 @@ function LoadSettings()
 	-- get game's live settings, then replace with config.json settings (if they exist and are valid)
 	local settingsTable = {}
 	local settingsCategories = {
-		options.Tweaks,
-		options.Features,
+		options.tweaks,
+		options.ptFeatures,
+		options.rasterFeatures,
+		options.postProcessFeatures,
+		options.miscFeatures,
 	}
 
 	for _, category in pairs(settingsCategories) do
@@ -274,8 +275,11 @@ function SaveSettings()
 	-- save Ultra+ settings to config.json
 	local UltraPlus = {}
 	local settingsCategories = {
-		options.Tweaks,
-		options.Features,
+		options.tweaks,
+		options.ptFeatures,
+		options.rasterFeatures,
+		options.postProcessFeatures,
+		options.miscFeatures,
 	}
 
 	for _, currentCategory in pairs(settingsCategories) do
@@ -288,7 +292,9 @@ function SaveSettings()
 	UltraPlus["internal.quality"] = var.settings.quality
 	UltraPlus["internal.sceneScale"] = var.settings.sceneScale
 	UltraPlus["internal.vram"] = var.settings.vram
+	UltraPlus["internal.graphics"] = var.settings.graphics
 	UltraPlus["internal.nsgddCompatible"] = var.settings.nsgddCompatible
+	UltraPlus["internal.rayReconstruction"] = var.settings.rayReconstruction
 	UltraPlus["internal.enableTargetFps"] = var.settings.enableTargetFps
 	UltraPlus["internal.targetFps"] = var.settings.targetFps
 	UltraPlus["internal.enableConsole"] = var.settings.enableConsole
@@ -311,34 +317,31 @@ function SaveSettings()
 	file:close()
 end
 
-function ForceDlssd()
-	local testDlssd = GetOption('/graphics/presets', 'DLSS_D')
+function EnableDlssd(state)
+	if state then
+		local testDlssd = GetOption("/graphics/presets", "DLSS_D")
+		while testDlssd == false do
+			SetOption("/graphics/presets", "DLSS_D", true)
 
-	while testDlssd == false do
-		Debug("/graphics/presets/DLSS_D =", testDlssd)
-
-		SetOption("/graphics/presets", "DLSS_D", true)
-
-		Wait(1.0, function()
-			testDlssd = GetOption('/graphics/presets', 'DLSS_D')
-		end)
+			Wait(0.5, function()
+				testDlssd = GetOption("/graphics/presets", "DLSS_D")
+			end)
+		end
+		-- SetOption("RayTracing", "EnableNRD", false)
+		return
 	end
 
-	PushChanges()
-
-	SetOption("RayTracing", "EnableNRD", false)
-	SaveSettings()
-end
-
-function ResetEngine()
-	logger.info("Reloading REDengine")
-	GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
+	if not state then
+		SetOption("/graphics/presets", "DLSS_D", false)
+		-- SetOption("RayTracing", "EnableNRD", true)
+		return
+	end
 end
 
 function PreparePTNext()
 	-- if not in PTNext mode, always disable ReGIR
 	-- otherwise disable PTNext in preparation for loading
-	if config.ptNext.ready or var.settings.mode ~= var.mode.PTNEXT then
+	if config.ptNext.primed or var.settings.mode ~= var.mode.PTNEXT then
 		return
 	end
 
@@ -355,7 +358,8 @@ function PreparePTNext()
 	SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
 
 	logger.info("    PTNext is ready to load")
-	config.ptNext.ready = true
+	config.status = "PTNext is ready to load"
+	config.ptNext.primed = true
 	config.ptNext.active = false
 end
 
@@ -380,6 +384,7 @@ function EnablePTNext()
 
 	config.ptNext.active = true
 	logger.info("    PTNext is active")
+	config.status = "PTNext is active"
 end
 
 function DoRainFix()
@@ -403,7 +408,6 @@ function DoRRFix()
 		return
 	end
 
-	Debug("Disabling NRD")
 	SetOption("RayTracing", "EnableNRD", false)
 	SetOption("Editor/RTXDI", "EnableGradients", true)
 	SetOption("Editor/Denoising/ReLAX/Indirect/Common", "AntiFirefly", false)
@@ -425,7 +429,7 @@ function BumpWeather()
 	logger.info("Changed weather to:", randomWeather)
 end
 
-function DoRefreshEngine()
+function DoRefreshReGir()
 	-- hack to force the engine to warm reload
 	if var.settings.mode ~= var.mode.PTNEXT then
 		return
@@ -443,9 +447,27 @@ function DoFastUpdate()
 	-- runs every timer.FAST seconds
 	IsGameSessionActive()
 
+	if var.settings.rayReconstruction and SetOption("/graphics/presets", "DLSS_D", false) then
+		print(var.settings.rayReconstruction)
+		EnableDlssd(true)
+	end
+
+	if not var.settings.rayReconstruction and SetOption("/graphics/presets", "DLSS_D", true) then
+		print(var.settings.rayReconstruction)
+		EnableDlssd(false)
+	end
+
+	if config.status == "" then
+		config.status = "Ready."
+	end
+
 	if timer.paused then
 		PreparePTNext()
 		return
+	end
+
+	if config.changed then
+		ConfirmChanges()
 	end
 
 	EnablePTNext()
@@ -502,24 +524,6 @@ function DoWeatherUpdate()
 	config.PreviousWeather = currentWeather
 end
 
---[[ this method crashes CP
-function forcePTDenoiser()
-	if GetOption("Developer/FeatureToggles", "DLSSD") then
-		logger.info("Enabling RR, disabling NRD")
-		SetOption("Developer/FeatureToggles", "DLSSD", true)
-		SetOption("RayTracing", "EnableNRD", false)
-		SetOption("/graphics/presets", "DLSS_D", true)
-		--PushChanges()
-	else
-		logger.info("Enabling NRD, disabling RR")
-		SetOption("/graphics/presets", "DLSS_D", false)
-		SetOption("Developer/FeatureToggles", "DLSSD", false)
-		SetOption("RayTracing", "EnableNRD", true)
-		--PushChanges()
-	end
-end
-]]
-
 registerForEvent('onUpdate', function(delta)
 	-- handle non-blocking background tasks
 	timer.fast = timer.fast + delta
@@ -556,9 +560,10 @@ end)
 
 function InitUltraPlus()
 	logger.info("Initializing...")
-	LoadIni("config_common.ini")
+	LoadIni("common")
 	LoadSettings()
 
+	config.SetGraphics(var.settings.graphics)
 	config.SetMode(var.settings.mode)
 	config.SetQuality(var.settings.quality)
 	config.SetSceneScale(var.settings.sceneScale)
@@ -569,15 +574,10 @@ end
 
 registerForEvent("onTweak", function()
 	-- load as early as possible to prevent crashes
-	LoadIni("config_common.ini")
+	LoadIni("common")
 end)
 
 registerForEvent("onInit", function()
-	local file = io.open("debug", "r")
-	if file then
-		config.DEBUG = true
-		logger.info("Enabling debug output")
-	end
 
 	Observe('QuestTrackerGameController', 'OnUninitialize', function()
 		gameSession.active = false
@@ -613,17 +613,17 @@ registerForEvent("onInit", function()
 end)
 
 registerForEvent("onOverlayOpen", function()
-	window.open = true
+	var.window.open = true
 end)
 
 registerForEvent("onOverlayClose", function()
-	window.open = false
+	var.window.open = false
 end)
 
 registerForEvent("onDraw", function()
-	if not window.open then
+	if not var.window.open then
 		return
 	end
 
-	ui.renderUI(stats.fps, window.open)
+	render.renderUI(stats.fps, var.window.open)
 end)

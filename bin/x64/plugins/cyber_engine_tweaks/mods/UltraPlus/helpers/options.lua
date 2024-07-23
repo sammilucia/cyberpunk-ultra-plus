@@ -1,25 +1,31 @@
 -- options.lua
 
 local options = {
-	Tweaks = {
+	tweaks = {
 		{
 			item = "nsgddCompatible",
 			name = "Enable Not So Good Draw Distance Compatibility",
 			category = "internal",
 			tooltip = "Changes VRAM configuration to work correctly with Not So Good Draw Distance\nmod (streaming and precache)",
 		},
---[[		{
+		{
 			item = "DLSS_D",
-			name = "Enable PT Denoiser: Ray Reconstruction",
+			name = "Enable Ray Reconstruction Denoiser",
 			category = "/graphics/presets",
-			tooltip = "Ultra+ allows the engine to override this avoid crashes, so this option will\nappear not to save",
+			tooltip = "Enables Nvidia Ray Reconstruction",
 		},
 		{
 			item = "EnableNRD",
-			name = "Enable PT Denoiser: NRD",
+			name = "Enable NRD Denoiser",
 			category = "RayTracing",
 			tooltip = "NRD is only intended when NOT using ray reconstruction (for example AMD).\nThe engine tries to turn this on under certain circumstances, Ultra+ Control\nwill try and show you if it has become enabled, though there may be a bug in\nCP 2.1x that causes NRD to become partionally enabled (see the above PT21\nFPS Fix).",
-		},]]
+		},
+		{
+			item = "UseCustomDenoiser",
+			name = "Enable NRD Custom Denoiser (Recommended)",
+			category = "Editor/RTXDI",
+			tooltip = "NRD denoiser modification. Should be enabled with NRD. Reduces traversal noise at\nthe with minor loss of edge detail (use sharpening)",
+		},
 		{
 			item = "EnableRIS",
 			name = "Enable resampled importance sampling (RIS)",
@@ -27,19 +33,65 @@ local options = {
 			tooltip = "RIS is resampled importance sampling. Disable this if you use reLIGHT\n(CP Default: On)",
 		},
 	},
-	Features = {
-		{
-			item = "UseCustomDenoiser",
-			name = "Enable NRD Custom Denoiser",
-			category = "Editor/RTXDI",
-			tooltip = "NRD denoiser modification aimed at ReBLUR. Reduces traversal noise at\nthe cost of some edge detail",
-		},
+	ptFeatures = {
 		{
 			item = "EnableLocalLightImportanceSampling",
-			name = "Enable PT Local Light Importance Sampling",
+			name = "Enable Path Tracing Local Light Importance Sampling",
 			category = "Editor/RTXDI",
 			tooltip = "Sample local lights to the environment PDF. In theory more accurate",
 		},
+		{
+			item = "UseScreenSpaceData",
+			name = "Enable Blended Screen Space Reflections in PT and RT",
+			category = "Editor/PathTracing",
+			tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
+		},
+	},
+	rasterFeatures = {
+		{
+			item = "VolumetricFog",
+			name = "Enable Volumetric Fog",
+			category = "Developer/FeatureToggles",
+			tooltip = "",
+		},
+		{
+			item = "DistantVolFog",
+			name = "Enable Distant Volumetric Fog",
+			category = "Developer/FeatureToggles",
+			tooltip = "Can be less obvious depending on which weather env you're using (CP Default: On)",
+		},
+		{
+			item = "DistantFog",
+			name = "Enable Distant Raster Fog",
+			category = "Developer/FeatureToggles",
+			tooltip = "Makes buildings and mountains fade into the atmosphere (CP Default: On)",
+		},
+		{
+			item = "DistantGI",
+			name = "Enable Distant Global Illumination",
+			category = "Developer/FeatureToggles",
+			tooltip = "(CP Default: On)",
+		},
+		{
+			item = "SSAO",
+			name = "Enable Screenspace Ambient Occlusion (SSAO)",
+			category = "Developer/FeatureToggles",
+			tooltip = "(CP Default: On)",
+		},
+		{
+			item = "DistantShadows",
+			name = "Enable Distant Shadows",
+			category = "Developer/FeatureToggles",
+			tooltip = "(CP Default: On)",
+		},
+		{
+			item = "CharacterRimEnhancement",
+			name = "Enable Object/NPC Rim Enhancement",
+			category = "Developer/FeatureToggles",
+			tooltip = "Only works in raster and RT modes (CP Default: On)",
+		},
+	},
+	postProcessFeatures = {
 		{
 			item = "Tonemapping",
 			name = "Enable Tonemapping",
@@ -64,54 +116,8 @@ local options = {
 			category = "Developer/FeatureToggles",
 			tooltip = "Can distort badly with path tracing (CP Default: On)",
 		},
-		{
-			item = "VolumetricFog",
-			name = "Enable Volumetric Fog",
-			category = "Developer/FeatureToggles",
-			tooltip = "",
-		},
-		{
-			item = "DistantVolFog",
-			name = "Enable Distant Volumetric Fog",
-			category = "Developer/FeatureToggles",
-			tooltip = "Can be less obvious depending on which weather env you're using (CP Default: On)",
-		},
-		{
-			item = "DistantFog",
-			name = "Enable Distant Raster Fog",
-			category = "Developer/FeatureToggles",
-			tooltip = "Makes buildings and mountains fade into the atmosphere (CP Default: On)",
-		},
-		{
-			item = "GlobalIllumination",
-			name = "Enable Global Illumination",
-			category = "Developer/FeatureToggles",
-			tooltip = "",
-		},
-		{
-			item = "DistantGI",
-			name = "Enable Distant Global Illumination",
-			category = "Developer/FeatureToggles",
-			tooltip = "(CP Default: On)",
-		},
-		{
-			item = "SSAO",
-			name = "Enable Screenspace Ambient Occlusion (SSAO)",
-			category = "Developer/FeatureToggles",
-			tooltip = "(CP Default: On)",
-		},
-		{
-			item = "DistantShadows",
-			name = "Enable Distant Shadows",
-			category = "Developer/FeatureToggles",
-			tooltip = "(CP Default: On)",
-		},
-		{
-			item = "DistantShadowsForceFoliageGeometry",
-			name = "Force Distant Foliage Shadows",
-			category = "Rendering/Shadows",
-			tooltip = "(CP Default: Off)",
-		},
+	},
+	miscFeatures = {
 		{
 			item = "HideFPPAvatar",
 			name = "Disable Player Reflection (except head)",
@@ -119,31 +125,13 @@ local options = {
 			tooltip = "If unchecked this will show your player character in reflections, except for\ntheir head, unfortunately (CP Default: Off)",
 		},
 		{
-			item = "CharacterRimEnhancement",
-			name = "Enable Object/NPC Rim Enhancement",
-			category = "Developer/FeatureToggles",
-			tooltip = "Only works in raster and RT modes (CP Default: On)",
-		},
-		{
 			item = "EnableCustomMipBias",
 			name = "Force INI Mip Bias",
 			category = "Editor/MipBias",
 			tooltip = "Caution: Not recommended for 12GB VRAM or less (CP Default: Off)",
 		},
-		{
-			item = "UseScreenSpaceData",
-			name = "Enable Blended Screen Space Reflections",
-			category = "Editor/PathTracing",
-			tooltip = "Blends screenspace reflections with RT or PT reflections (less physically-based)\nbut fixes some missing reflections.",
-		},
-		{
-			item = "AllowSkinAmbientMix",
-			name = "Allow Skin Ambient Mix",
-			category = "Editor/Characters/Skin",
-			tooltip = "Skin ambient light blending is broken in ray tracing. Ultra+ disables for this reason",
-		},
 	},
-	RTXDI = {
+	rtxDi = {
 		{
 			item = "EnableSeparateDenoising",
 			name = "Enable Separate Denoising",
@@ -160,6 +148,12 @@ local options = {
 			item = "UpdateUseBatching",
 			name = "Dynamic Instance Update Batching",
 			category = "RayTracing/DynamicInstance",
+			tooltip = "",
+		},
+		{
+			item = "GlobalIllumination",
+			name = "Enable Global Illumination",
+			category = "Developer/FeatureToggles",
 			tooltip = "",
 		},
 		{
@@ -248,9 +242,15 @@ local options = {
 		},
 		{
 			item = "ForceAllShadows",
-			name = "Force All Shadows",
+			name = "Force All Shadows in Path Tracing",
 			category = "Editor/RTXDI",
 			tooltip = "Forces shadows from meshes not in the PT world space to be traced",
+		},
+		{
+			item = "DistantShadowsForceFoliageGeometry",
+			name = "Force Distant Foliage Shadows",
+			category = "Rendering/Shadows",
+			tooltip = "(CP Default: Off)",
 		},
 		{
 			item = "ForceShadowLODBiasUsage",
@@ -289,7 +289,7 @@ local options = {
 			tooltip = "Unknown, no visible/perf impact",
 		},
 	},
-	RTXGI = {
+	rtxGi = {
 		{
 			item = "Enable",
 			name = "Enable ReSTIR GI",
@@ -327,7 +327,7 @@ local options = {
 			tooltip = "Unknown, likely no impact in FUSED",
 		},
 	},
-	REGIR = {
+	reGir = {
 		{
 			item = "Enable",
 			name = "Enable ReGIR GI",
@@ -341,7 +341,7 @@ local options = {
 			tooltip = "Extends use of ReGIR to Direct Lighting, feeding ReSTIR",
 		},
 	},
-	RELAX = {
+	reLax = {
 		{
 			item = "VirtualHistoryClamping",
 			name = "ReLAX DI Virtual History Clamping",
@@ -403,7 +403,7 @@ local options = {
 			tooltip = "",
 		},
 	},
-	REBLUR = {
+	reBlur = {
 		{
 			item = "ReferenceAccumulation",
 			name = "ReBLUR AO Reference Accumulation",
@@ -465,7 +465,7 @@ local options = {
 			tooltip = "",
 		},
 	},
-	NRD = {
+	nrd = {
 		{
 			item = "UseReblurForDirectRadiance",
 			name = "DI Use ReBLUR for path tracing (NRD only)",
@@ -480,7 +480,7 @@ local options = {
 		},
 		{
 			item = "EnableReferenceCaptureParameters",
-			name = "Enable NRD Reference Capture Parameters",
+			name = "Enable PT16 Reference Capture Parameters",
 			category = "Editor/Denoising/NRD",
 			tooltip = "Allow Reference  Denoising for testing/comparison",
 		},
@@ -497,7 +497,13 @@ local options = {
 			tooltip = "Enable Scaling Compensation",
 		},
 	},
-	RTOPTIONS = {
+	rtOptions = {
+		{
+			item = "AllowSkinAmbientMix",
+			name = "Allow Skin Ambient Mix",
+			category = "Editor/Characters/Skin",
+			tooltip = "Skin ambient light blending is broken in ray tracing. Ultra+ disables for this reason",
+		},
 		{
 			item = "ShowOverlay",
 			name = "Enable VRS Debug Overlay",
@@ -739,7 +745,7 @@ local options = {
 			tooltip = "",
 		},
 	},
-	SHARC = {
+	sharc = {
 		{
 			item = "Enable",
 			name = "Enable SHaRC Bounce Cache",
@@ -801,7 +807,7 @@ local options = {
 			tooltip = "",
 		},
 	},
-	RTINT = {
+	rtInt = {
 		{
 			item = "DownscaleFactor",
 			name = "SHaRC Downscale (LOG)",
@@ -1181,7 +1187,7 @@ local options = {
 			tooltip = "",
 		},
 	},
-	RTFLOAT = {
+	rtFloat = {
 		{
 			item = "ForceCustomMipBias",
 			name = "Custom Mip Bias",
