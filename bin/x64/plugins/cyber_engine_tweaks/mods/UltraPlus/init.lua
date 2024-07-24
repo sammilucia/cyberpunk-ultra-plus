@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.1.0-beta01',
+	__VERSION	 = '5.1.0-beta02',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -343,7 +343,6 @@ end
 
 local function doWindowClose()
 	-- run tasks just after CET window is closed. delays may be needed to avoid CTDs
-
 	saveGameGraphics()
 	confirmChanges()
 end
@@ -358,7 +357,7 @@ local function doFastUpdate()
 
 	var.confirmationRequired = Cyberpunk.NeedsConfirmation()
 
-	if not var.window.open and var.confirmationRequired then
+	if var.ultraPlusActive and not var.window.open and var.confirmationRequired then
 		if var.settings.rayReconstruction ~= Cyberpunk.GetOption('/graphics/presets', 'DLSS_D') then
 			toggleRayReconstruction(var.settings.rayReconstruction)
 		end
