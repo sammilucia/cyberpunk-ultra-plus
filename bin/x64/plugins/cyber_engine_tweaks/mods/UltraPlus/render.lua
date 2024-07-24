@@ -1,15 +1,14 @@
 ﻿-- render.lua
 
-local render = {}
-local logger = require("helpers/logger")
-local config = require("helpers/config")
 local var = require("helpers/variables")
+local config = require("helpers/config")
 local options = require("helpers/options")
 local ui = require("helpers/ui")
 local stats = {
 	fps = 0,
 }
 local toggled
+local render = {}
 
 local function renderMainTab()
 	ui.text(config.status)
@@ -59,7 +58,7 @@ local function renderMainTab()
 	local sceneScaleOrder = { "PERFORMANCE", "VANILLA", "BALANCED", "QUALITY" }
 	ui.space()
 
-	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT or var.settings.mode == var.mode.PT16
+	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT -- or var.settings.mode == var.mode.PT16 -- also test RT+PT
 	if disableRadianceCache then
 		ImGui.BeginDisabled(true)
 	end
@@ -268,4 +267,3 @@ render.renderUI = function(fps, open)
 end
 
 return render
- 

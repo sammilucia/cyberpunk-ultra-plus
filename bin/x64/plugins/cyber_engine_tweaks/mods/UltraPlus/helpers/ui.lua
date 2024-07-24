@@ -1,10 +1,8 @@
 -- helpers/ui.lua
 
-local logger = require("helpers/logger")
 local var = require("helpers/variables")
 local theme = require("helpers/theme")
 local ui = {}
-local saveTexture = {}
 
 ui.separator = function()
 	ImGui.Spacing()
@@ -113,36 +111,6 @@ ui.button = function(label)
 
 	ImGui.PopStyleColor(3)
 	return result
-end
-
-ui.icon = function(path, buttonText, callback)
-	if not saveTexture[path] then
-		saveTexture[path] = ImGui.LoadTexture(path)
-	end
-
-	local texture = saveTexture[path]
-	if not texture then
-		logger.info("Failed to load texture: " .. path)
-		return
-	end
-
-	local windowWidth = ImGui.GetWindowWidth()
-	local iconSize = 24 * var.window.scale
-	local padding = 4 * var.window.scale
-
-	if buttonText then
-		local textWidth = ImGui.CalcTextSize(buttonText)
-		ImGui.SetCursorPos(windowWidth - iconSize - padding - textWidth - padding, padding)
-		ui.text(buttonText)
-		ImGui.SameLine()
-	end
-
-	ImGui.SetCursorPos(windowWidth - iconSize - padding, padding)
-	if ImGui.ImageButton("##IconButton" .. path, texture, iconSize, iconSize) then
-		if callback then callback() end
-	end
-
-	return ImGui.IsItemHovered()
 end
 
 ui.filter = function(label, text, textBufferSize)

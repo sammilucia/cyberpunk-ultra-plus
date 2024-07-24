@@ -1,7 +1,6 @@
 -- helpers/daytimetasks.lua
 
 local logger = require("helpers/logger")
-local var = require("helpers/variables")
 local config = {
 	SunAngularSizes = {
 		[0] = "0.35",

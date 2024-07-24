@@ -9,7 +9,6 @@ function config.SetMode(mode)
 
 	if mode == var.mode.RASTER then
 		SetOption("/graphics/raytracing", "RayTracing", false)
-		config.changed = true
 
 		SetOption("Developer/FeatureToggles", "RTXDI", false)
 		SetOption("Editor/Characters/Eyes", "DiffuseBoost", "0.15")

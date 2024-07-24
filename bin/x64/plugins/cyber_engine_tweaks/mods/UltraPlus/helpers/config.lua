@@ -2,7 +2,7 @@
 
 local config = {
 	changed = false,
-	status = "",
+	status = "Ready.",
 	SetMode = require("setmode").SetMode,
 	SetQuality = require("setquality").SetQuality,
 	SetSceneScale = require("setscenescale").SetSceneScale,

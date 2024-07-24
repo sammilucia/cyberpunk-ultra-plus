@@ -358,7 +358,6 @@ function PreparePTNext()
 	SetOption("Editor/RTXDI", "EnableSeparateDenoising", false)
 
 	logger.info("    PTNext is ready to load")
-	config.status = "PTNext is ready to load"
 	config.ptNext.primed = true
 	config.ptNext.active = false
 end
@@ -384,7 +383,6 @@ function EnablePTNext()
 
 	config.ptNext.active = true
 	logger.info("    PTNext is active")
-	config.status = "PTNext is active"
 end
 
 function DoRainFix()
@@ -447,26 +445,18 @@ function DoFastUpdate()
 	-- runs every timer.FAST seconds
 	IsGameSessionActive()
 
-	if var.settings.rayReconstruction and SetOption("/graphics/presets", "DLSS_D", false) then
-		print(var.settings.rayReconstruction)
-		ToggleDlss(true)
-	end
-
-	if not var.settings.rayReconstruction and SetOption("/graphics/presets", "DLSS_D", true) then
-		print(var.settings.rayReconstruction)
-		ToggleDlss(false)
-	end
-
-	if config.status == "" then
-		config.status = "Ready."
-		ConfirmChanges()
+	if config.changed and not var.window.open then
+		if var.settings.rayReconstruction ~= GetOption("/graphics/p") then
+			ToggleDlss(var.settings.rayReconstruction)
+			ConfirmChanges()
+		end
 	end
 
 	if timer.paused then
 		PreparePTNext()
 		return
 	end
-	
+
 	if var.settings.mode == var.mode.PTNEXT and not config.ptNext.active then
 		config.status = "Reload a save to activate PTNext"
 	elseif config.ptNext.primed then
