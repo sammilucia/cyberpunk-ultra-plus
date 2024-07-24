@@ -238,7 +238,7 @@ local function toggleRayReconstruction(state)
 	end
 end
 
-function PreparePTNext()
+local function preparePTNext()
 	-- if not in PTNext mode, always disable ReGIR
 	-- otherwise disable PTNext in preparation for loading
 	if config.ptNext.primed or var.settings.mode ~= var.mode.PTNEXT then
@@ -262,7 +262,7 @@ function PreparePTNext()
 	config.ptNext.active = false
 end
 
-function EnablePTNext()
+local function enablePTNext()
 	if config.ptNext.active or var.settings.mode ~= var.mode.PTNEXT then
 		return
 	end
@@ -285,7 +285,7 @@ function EnablePTNext()
 	logger.info('    PTNext is active')
 end
 
-function DoRainFix()
+local function doRainPathTracingFix()
 	-- enable particle PT integration unless player is outdoors AND it's raining
 	if var.settings.rain and not var.settings.indoors then
 		logger.info('    (It\'s raining: Enabling separate particle colour)')
@@ -296,23 +296,21 @@ function DoRainFix()
 	end
 end
 
-function DoRRFix()
+local function doRayReconstructionFix()
 	-- while RR is enabled, continually disable NRD to work around CP FPS slowdown bug entering
 	-- vehicles or cutscenes. also controls EnableGradients which doesn't work with NRD
-	timer.paused = true
 	if not Cyberpunk.GetOption('/graphics/presets', 'DLSS_D') then
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', false)
+		Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', false) -- needs testing with NRD again
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', true)
 		return
 	end
 
 	Cyberpunk.SetOption('RayTracing', 'EnableNRD', false)
-	Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', true)
+	Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', true) -- needs testing with NRD again
 	Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', false)
-	timer.paused = false
 end
 
-function DoRefreshReGir()
+local function doRefreshReGir()
 	-- hack to force the engine to warm reload
 	if var.settings.mode ~= var.mode.PTNEXT then
 		return
@@ -345,6 +343,7 @@ end
 
 local function doWindowClose()
 	-- run tasks just after CET window is closed. delays may be needed to avoid CTDs
+
 	saveGameGraphics()
 	confirmChanges()
 end
@@ -371,7 +370,7 @@ local function doFastUpdate()
 		end
 
 		if not config.ptNext.primed then
-			PreparePTNext()
+			preparePTNext()
 		end
 
 		return
@@ -385,8 +384,8 @@ local function doFastUpdate()
 		config.status = 'Ready.'
 	end
 
-	EnablePTNext()
-	DoRRFix()
+	enablePTNext()
+	doRayReconstructionFix()
 
 	local testRain = Cyberpunk.IsRaining()
 	local testIndoors = IsEntityInInteriorArea(GetPlayer())
@@ -394,7 +393,7 @@ local function doFastUpdate()
 	if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
 		var.settings.rain = testRain
 		var.settings.indoors = testIndoors
-		DoRainFix()
+		doRainPathTracingFix()
 	end
 end
 
@@ -473,7 +472,7 @@ registerForEvent('onUpdate', function(delta)
 	end
 end)
 
-function InitUltraPlus()
+local function initUltraPlus()
 	logger.info('Initializing...')
 	logger.debug('DEBUG ACTIVE')
 
@@ -486,7 +485,7 @@ function InitUltraPlus()
 	config.SetSceneScale(var.settings.sceneScale)
 	config.SetVram(var.settings.vram)
 
-	PreparePTNext()
+	-- preparePTNext()
 end
 
 registerForEvent('onTweak', function()
@@ -526,7 +525,7 @@ registerForEvent('onInit', function()
 		logger.info(string.format('	(Camera control end: %s %s)', this, val))
 	end)
 
-	InitUltraPlus()
+	initUltraPlus()
 end)
 
 registerForEvent('onOverlayOpen', function()
