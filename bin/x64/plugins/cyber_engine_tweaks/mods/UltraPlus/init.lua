@@ -49,7 +49,7 @@ local timer = {
 print("Modules loaded in init.lua. Config:", config, "Render:", render, "Var:", var)
 
 
-function toboolean(value)
+local function toboolean(value)
 	if value == "true" or value == true then
 		return true
 	elseif value == "false" or value == false then
@@ -324,17 +324,18 @@ function ToggleDlss(state)
 		while not testDlssd do
 			SetOption("/graphics/presets", "DLSS_D", true)
 
-		Wait(0.5, function()
-			testDlssd = GetOption("/graphics/presets", "DLSS_D")
-		end)
-	end
+			Wait(0.5, function()
+				testDlssd = GetOption("/graphics/presets", "DLSS_D")
+			end)
+		end
 
-	if not state then
-		SetOption("/graphics/presets", "DLSS_D", false)
-		-- SetOption("RayTracing", "EnableNRD", true)
-		return
-	end
+		if not state then
+			SetOption("/graphics/presets", "DLSS_D", false)
+			-- SetOption("RayTracing", "EnableNRD", true)
+			return
+		end
 	config.changed = true
+	end
 end
 
 function PreparePTNext()
@@ -448,12 +449,12 @@ function DoFastUpdate()
 
 	if var.settings.rayReconstruction and SetOption("/graphics/presets", "DLSS_D", false) then
 		print(var.settings.rayReconstruction)
-		EnableDlssd(true)
+		ToggleDlss(true)
 	end
 
 	if not var.settings.rayReconstruction and SetOption("/graphics/presets", "DLSS_D", true) then
 		print(var.settings.rayReconstruction)
-		EnableDlssd(false)
+		ToggleDlss(false)
 	end
 
 	if config.status == "" then
@@ -465,6 +466,9 @@ function DoFastUpdate()
 		PreparePTNext()
 		return
 	end
+	
+	if var.settings.mode == var.mode.PTNEXT and not config.ptNext.active then
+		config.status = "Reload a save to activate PTNext"
 	elseif config.ptNext.primed then
 		config.status = "PTNext is ready to load"
 	else
