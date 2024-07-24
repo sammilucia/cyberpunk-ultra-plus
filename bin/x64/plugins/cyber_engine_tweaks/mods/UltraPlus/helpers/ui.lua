@@ -1,7 +1,7 @@
 -- helpers/ui.lua
 
-local var = require("helpers/variables")
-local theme = require("helpers/theme")
+local var = require('helpers/variables')
+local theme = require('helpers/theme')
 local ui = {}
 
 ui.separator = function()
@@ -67,7 +67,13 @@ ui.window = function(title, flags, func)
 
 		local screenWidth = select(1, GetDisplayResolution())
 		if screenWidth > 1000 then
-			var.window.scale = (screenWidth / 1900) * theme.textScale
+			if screenWidth > 3000 then
+				var.window.scale = (screenWidth / 1932) * theme.textScale
+			elseif screenWidth > 2000 then
+				var.window.scale = (screenWidth / 1880) * theme.textScale
+			else
+				var.window.scale = (screenWidth / 1900) * theme.textScale
+			end
 		end
 
 		ImGui.End()
@@ -94,7 +100,7 @@ end
 ui.tabBar = function(func)
 	ImGui.PushStyleColor(ImGuiCol.TabActive, theme.color.dark)
 
-	if ImGui.BeginTabBar("Tabs") then
+	if ImGui.BeginTabBar('Tabs') then
 		func()
 		ImGui.EndTabBar()
 	end
@@ -126,8 +132,8 @@ ui.filter = function(label, text, textBufferSize)
 	local newBuffer = ImGui.InputText(label, text, textBufferSize)
 
 	ImGui.SameLine()
-	if ImGui.Button("Clear") then
-		newBuffer = ""
+	if ImGui.Button('Clear') then
+		newBuffer = ''
 	end
 
 	ImGui.PopStyleColor(8)
@@ -200,7 +206,7 @@ ui.checkbox = function(label, value)
 end
 
 ui.tooltip = function(text)
-	if ImGui.IsItemHovered() and text ~= "" then
+	if ImGui.IsItemHovered() and text ~= '' then
 		ImGui.PushStyleColor(ImGuiCol.Text, theme.color.text)
 		ImGui.BeginTooltip()
 		ImGui.SetTooltip(text)
