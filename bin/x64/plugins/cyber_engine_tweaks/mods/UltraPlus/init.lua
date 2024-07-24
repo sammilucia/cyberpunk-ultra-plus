@@ -82,11 +82,11 @@ end
 
 function ConfirmChanges()
 	-- confirm menu changes and save UserSettings.json to try to prevent it getting out of sync
-	GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings()
-
 	if Game.GetSettingsSystem():NeedsConfirmation() then
 		logger.info("> Confirming settings change to Cyberpunk")
 		Game.GetSettingsSystem():ConfirmChanges()
+		
+		GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():RequestSaveUserSettings() -- should this be before or after ConfirmChanges() ?
 		config.changed = false
 	end
 end
