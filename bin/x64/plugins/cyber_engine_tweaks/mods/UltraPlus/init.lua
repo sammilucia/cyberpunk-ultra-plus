@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.0.2',
+	__VERSION	 = '5.1.0-beta01',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -67,7 +67,8 @@ function Wait(seconds, callback)
 	table.insert(activeTimers, { countdown = seconds, callback = callback })
 end
 
-local function saveGameMenu()
+local function saveUserSettingsJson()
+	-- instructs game to save its settings to UserSettings. delays may be needed to avoid CTDs
 	if var.ultraPlusActive then
 		Wait(0.5, function()
 			Cyberpunk.Save()
@@ -78,7 +79,7 @@ local function saveGameMenu()
 end
 
 local function confirmChanges()
-	-- confirm graphics menu changes to Cyberpunk
+	-- confirm graphics menu changes to Cyberpunk. delays may be needed to avoid CTDs
 	if var.ultraPlusActive and Cyberpunk.NeedsConfirmation() then
 		Wait(0.5, function()
 			if not var.window.open then
@@ -325,12 +326,35 @@ function DoRefreshReGir()
 	end)
 end
 
+local function saveGameGraphics()
+	-- snapshots game's graphics menu
+--[[
+	/graphics/presets/ResolutionScaling	= Off, DLSS, FSR, XeSS
+	/graphics/presets/DLSS = Auto, DLAA, Quality, Balanced, Performance, Ultra Performance, Dynamic
+	/graphics/presets/FSR2 = Auto, Quality, Balanced, Performance, Ultra Performance, Dynamic
+	/graphics/presets/XESS = Auto, Ultra Quality, Quality, Balanced, Performance, Dynamic
+	Film grain
+	Lens flairs
+	Depth of field
+	Anamorphic
+	Motion blur
+
+	-- TODO: enforce saved graphics settings on startup
+]]
+end
+
+local function doWindowClose()
+	-- run tasks just after CET window is closed. delays may be needed to avoid CTDs
+	saveGameGraphics()
+	confirmChanges()
+end
+
 local function doFastUpdate()
 	-- runs every timer.FAST seconds
 	isGameSessionActive()
 
 	if var.gameMenuChanged then
-		saveGameMenu()
+		saveUserSettingsJson()
 	end
 
 	var.confirmationRequired = Cyberpunk.NeedsConfirmation()
@@ -512,7 +536,7 @@ end)
 
 registerForEvent('onOverlayClose', function()
 	var.window.open = false
-	confirmChanges()
+	doWindowClose()
 end)
 
 registerForEvent('onDraw', function()
