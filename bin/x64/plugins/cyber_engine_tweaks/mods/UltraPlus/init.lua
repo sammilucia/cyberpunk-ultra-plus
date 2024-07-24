@@ -26,7 +26,7 @@ local var = require("helpers/variables")
 local config = require("helpers/config")
 local options = require("helpers/options")
 local render = require("render")
-local bumpweather = require("helpers/bumpweather")
+-- local bumpweather = require("helpers/bumpweather") -- needs actual calling
 local gameSession = {
 	active = false,
 	time = nil,
@@ -87,6 +87,7 @@ function ConfirmChanges()
 	if Game.GetSettingsSystem():NeedsConfirmation() then
 		logger.info("> Confirming settings change to Cyberpunk")
 		Game.GetSettingsSystem():ConfirmChanges()
+		config.changed = false
 	end
 end
 
@@ -209,9 +210,9 @@ function LoadIni(config)
 			item = item:match("^%s*(.-)%s*$")
 			value = value:match("^%s*(.-)%s*$")
 			iniData[category][item] = value
-			local success, err = pcall(SetOption, category, item, value)
+			local success, result = pcall(SetOption, category, item, value)
 			if not success then
-				logger.info("SetOption failed:", err)
+				logger.info("SetOption failed:", result)
 			end
 		end
 
@@ -317,18 +318,15 @@ function SaveSettings()
 	file:close()
 end
 
-function EnableDlssd(state)
+function ToggleDlss(state)
 	if state then
 		local testDlssd = GetOption("/graphics/presets", "DLSS_D")
-		while testDlssd == false do
+		while not testDlssd do
 			SetOption("/graphics/presets", "DLSS_D", true)
 
-			Wait(0.5, function()
-				testDlssd = GetOption("/graphics/presets", "DLSS_D")
-			end)
-		end
-		-- SetOption("RayTracing", "EnableNRD", false)
-		return
+		Wait(0.5, function()
+			testDlssd = GetOption("/graphics/presets", "DLSS_D")
+		end)
 	end
 
 	if not state then
@@ -336,6 +334,7 @@ function EnableDlssd(state)
 		-- SetOption("RayTracing", "EnableNRD", true)
 		return
 	end
+	config.changed = true
 end
 
 function PreparePTNext()
@@ -459,15 +458,17 @@ function DoFastUpdate()
 
 	if config.status == "" then
 		config.status = "Ready."
+		ConfirmChanges()
 	end
 
 	if timer.paused then
 		PreparePTNext()
 		return
 	end
-
-	if config.changed then
-		ConfirmChanges()
+	elseif config.ptNext.primed then
+		config.status = "PTNext is ready to load"
+	else
+		config.status = "Ready."
 	end
 
 	EnablePTNext()
@@ -568,6 +569,8 @@ function InitUltraPlus()
 	config.SetQuality(var.settings.quality)
 	config.SetSceneScale(var.settings.sceneScale)
 	config.SetVram(var.settings.vram)
+
+	ToggleDlss(var.settings.rayReconstruction)
 
 	PreparePTNext()
 end
