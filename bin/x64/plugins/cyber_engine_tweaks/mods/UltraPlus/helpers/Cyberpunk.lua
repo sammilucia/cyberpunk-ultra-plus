@@ -117,7 +117,7 @@ Cyberpunk = {
 		end
 
 		if string.sub(category, 1, 1) == '/' and (tostring(value) == 'true' or tostring(value) == 'false') then
-			-- if Cyberpunk.GetOption(category, item) ~= value then
+			-- if Cyberpunk.GetOption(category, item) ~= value then -- probably slower to query than to just set
 				Cyberpunk.SetValue(category, item, value)
 				var.gameMenuChanged = true
 				logger.debug('ConfirmChanges() required')
@@ -126,7 +126,7 @@ Cyberpunk = {
 		end
 
 		if string.sub(category, 1, 1) == '/' and tostring(value):match('^%-?%d+$') then
-			-- if Cyberpunk.GetIndex(category, item) ~= value then
+			-- if Cyberpunk.GetIndex(category, item) ~= value then -- probably slower to query than to just set
 				Cyberpunk.SetIndex(category, item, tonumber(value))
 				var.gameMenuChanged = true
 				logger.debug('ConfirmChanges() required')
