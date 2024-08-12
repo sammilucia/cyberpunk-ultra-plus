@@ -21,12 +21,6 @@ local options = {
 			tooltip = 'NRD is only intended when NOT using ray reconstruction (for example AMD).\nThe engine tries to turn this on under certain circumstances, Ultra+ Control\nwill try and show you if it has become enabled, though there may be a bug in\nCP 2.1x that causes NRD to become partionally enabled (see the above PT21\nFPS Fix).',
 		},
 		{
-			item = 'UseCustomDenoiser',
-			name = 'Enable NRD Custom Denoiser (Recommended)',
-			category = 'Editor/RTXDI',
-			tooltip = 'NRD denoiser modification. Should be enabled with NRD. Reduces traversal noise at\nthe with minor loss of edge detail (use sharpening)',
-		},
-		{
 			item = 'EnableRIS',
 			name = 'Enable resampled importance sampling (RIS)',
 			category = 'RayTracing/Reference',
@@ -34,12 +28,6 @@ local options = {
 		},
 	},
 	ptFeatures = {
-		{
-			item = 'EnableLocalLightImportanceSampling',
-			name = 'Enable Path Tracing Local Light Importance Sampling',
-			category = 'Editor/RTXDI',
-			tooltip = 'Sample local lights to the environment PDF. In theory more accurate',
-		},
 		{
 			item = 'UseScreenSpaceData',
 			name = 'Enable Blended Screen Space Reflections in PT and RT',
@@ -62,13 +50,13 @@ local options = {
 		},
 		{
 			item = 'DistantFog',
-			name = 'Enable Distant Raster Fog',
+			name = 'Enable Distant (Raster) Fog',
 			category = 'Developer/FeatureToggles',
 			tooltip = 'Makes buildings and mountains fade into the atmosphere (CP Default: On)',
 		},
 		{
 			item = 'DistantGI',
-			name = 'Enable Distant Global Illumination',
+			name = 'Enable Distant (Raster) Global Illumination',
 			category = 'Developer/FeatureToggles',
 			tooltip = '(CP Default: On)',
 		},
@@ -80,7 +68,7 @@ local options = {
 		},
 		{
 			item = 'DistantShadows',
-			name = 'Enable Distant Shadows',
+			name = 'Enable Distant (Raster) Shadows',
 			category = 'Developer/FeatureToggles',
 			tooltip = '(CP Default: On)',
 		},
@@ -467,6 +455,12 @@ local options = {
 	},
 	nrd = {
 		{
+			item = 'UseCustomDenoiser',
+			name = 'Enable NRD Custom Denoiser (Recommended)',
+			category = 'Editor/RTXDI',
+			tooltip = 'NRD denoiser modification. Should be enabled with NRD. Reduces traversal noise at\nthe with minor loss of edge detail (use sharpening)',
+		},
+		{
 			item = 'UseReblurForDirectRadiance',
 			name = 'DI Use ReBLUR for path tracing (NRD only)',
 			category = 'RayTracing/NRD',
@@ -545,6 +539,12 @@ local options = {
 			name = 'Debug Environmental Map',
 			category = 'RayTracing/Debug',
 			tooltip = 'Debug the RTXDI environment map',
+		},
+		{
+			item = 'EnableLocalLightImportanceSampling',
+			name = 'Enable PT Local Light Importance Sampling',
+			category = 'Editor/RTXDI',
+			tooltip = 'Sample local lights to the environment PDF. In theory more accurate',
 		},
 		{
 			item = 'RTXDILocalLightPdf',
@@ -1059,6 +1059,12 @@ local options = {
 			name = 'RTAO Ray Number',
 			category = 'RayTracing',
 			tooltip = 'Not sure there is ray traced ambient occlusion...',
+		},
+		{
+			item = 'GlobaIlluminationRange',
+			name = 'Ray Traced Global Illumination Range',
+			category = '/graphics/advanced',
+			tooltip = '1 = \'High\', 0 = \'Default\'',
 		},
 		{
 			item = 'ForceShadowLODBiasValue',

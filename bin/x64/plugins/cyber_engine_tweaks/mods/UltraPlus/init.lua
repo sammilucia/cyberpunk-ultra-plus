@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.1.0-beta02',
+	__VERSION	 = '5.2.9',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -21,21 +21,16 @@ UltraPlus = {
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]
 }
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local config = require('helpers/config')
-local options = require('helpers/options')
-local render = require('render')
-local Cyberpunk = require('helpers/Cyberpunk')
-local gameSession = {
-	active = false,
-	time = nil,
-	lastTime = nil,
-	fastTravel = false,
-}
-local stats = {
+
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = require('helpers/Config')
+Cyberpunk = require('helpers/Cyberpunk')
+Stats = {
 	fps = 0,
 }
+local options = require('helpers/options')
+local render = require('render')
 local timer = {
 	lazy = 0,
 	fast = 0,
@@ -47,18 +42,33 @@ local timer = {
 }
 
 local function isGameSessionActive()
-	-- check if the game is active or not
-	local time = Game.GetPlaythroughTime():ToFloat()
+	-- check if the game is active or not, which turns out to be quite difficult!
+	local time = Cyberpunk.GetPlayTime()
 
-	if time ~= gameSession.lastTime and gameSession.active and not gameSession.fastTravel then
+	local blackboardDefs = Game.GetAllBlackboardDefs()
+	local blackboardUI = Game.GetBlackboardSystem():Get(blackboardDefs.UI_System)
+	local blackboardPM = Game.GetBlackboardSystem():Get(blackboardDefs.PhotoMode)
+
+	Config.gameSession.gameMenuActive = blackboardUI:GetBool(blackboardDefs.UI_System.IsInMenu)
+	Config.gameSession.photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
+	Config.gameSession.tutorialActive = Game.GetTimeSystem():IsTimeDilationActive('UI_TutorialPopup')
+
+	if time ~= Config.gameSession.lastTime
+	and Config.gameSession.gameSessionActive
+	and not Config.gameSession.fastTravelActive
+	and not Config.gameSession.gameMenuActive
+	and not Config.gameSession.photoModeActive
+	and not Config.gameSession.tutorialActive
+	and not Config.gameSession.gameMenuActive
+	and not Cyberpunk.IsPreGame() then
 		timer.paused = false
-	elseif time == gameSession.lastTime or not gameSession.active or gameSession.fastTravel then
-		config.ptNext.active = false
-		config.ptNext.primed = false
+	else
+		Config.ptNext.active = false
+		Config.ptNext.stage1 = false
 		timer.paused = true
 	end
 
-	gameSession.lastTime = time
+	Config.gameSession.lastTime = time
 end
 
 local activeTimers = {}
@@ -68,40 +78,35 @@ function Wait(seconds, callback)
 end
 
 local function saveUserSettingsJson()
-	-- instructs game to save its settings to UserSettings. delays may be needed to avoid CTDs
-	if var.ultraPlusActive then
-		Wait(0.5, function()
-			Cyberpunk.Save()
-			var.confirmationRequired = false
-			logger.info('Settings saved.')
-		end)
+	-- instructs game to save settings to UserSettings.json
+	if timer.paused then
+		return
 	end
+
+	Var.confirmationRequired = false
+	Logger.info('Cyberpunk successfully saved UserSettings.json')
 end
 
 local function confirmChanges()
-	-- confirm graphics menu changes to Cyberpunk. delays may be needed to avoid CTDs
-	if var.ultraPlusActive and Cyberpunk.NeedsConfirmation() then
-		Wait(0.5, function()
-			if not var.window.open then
-				Cyberpunk.Confirm()
-			end
-		end)
+	-- confirm graphics menu changes to Cyberpunk
+	if Var.ultraPlusActive and Cyberpunk.NeedsConfirmation() then
+		Cyberpunk.Confirm()
 	end
 end
 
-function LoadIni(config)
+function LoadIni(Config)
 	-- pushes an ini file into live game settings
 	local iniData = {}
 	local category
 
-	local path = 'config/' .. config .. '.ini'
+	local path = 'Config/' .. Config .. '.ini'
 	local file = io.open(path, 'r')
 	if not file then
-		logger.info('Failed to open file:', path)
+		Logger.info('Failed to open file:', path)
 		return
 	end
 
-	logger.info('	(Loading', path .. ')')
+	Logger.info('	(Loading', path .. ')')
 	for line in file:lines() do
 		line = line:match('^%s*(.-)%s*$') -- trim whitespace
 
@@ -123,7 +128,7 @@ function LoadIni(config)
 			iniData[category][item] = value
 			local success, result = pcall(Cyberpunk.SetOption, category, item, value)
 			if not success then
-				logger.info('SetOption failed:', result)
+				Logger.info('SetOption failed:', result)
 			end
 		end
 
@@ -133,7 +138,7 @@ function LoadIni(config)
 end
 
 function LoadSettings()
-	-- get game's live settings, then replace with config.json settings (if they exist and are valid)
+	-- get game's live settings, then replace with Config.json settings (if they exist and are valid)
 	local settingsTable = {}
 	local settingsCategories = {
 		options.tweaks,
@@ -150,7 +155,7 @@ function LoadSettings()
 		end
 	end
 
-	local file = io.open('config.json', 'r')
+	local file = io.open('Config.json', 'r')
 	if not file then
 		return
 	end
@@ -161,19 +166,19 @@ function LoadSettings()
 	local success, result = pcall(json.decode, rawJson)
 
 	if not success or not result.UltraPlus then
-		logger.info('Could not read config.json:', result)
+		Logger.info('Could not read Config.json:', result)
 		return
 	end
 
-	logger.info('Loading user settings...')
+	Logger.info('Loading user settings...')
 	for item, value in pairs(result.UltraPlus) do
 		if settingsTable[item] and not string.match(item, '^internal') then
 			settingsTable[item].value = value
 		elseif string.match(item, '^internal') then
 			local key = string.match(item, '^internal%.(%w+)$')
 			if key then
-				logger.info('    Found user config', key..':', value)
-				var.settings[key] = value
+				Logger.info('    Found user Config', key..':', value)
+				Var.settings[key] = value
 			end
 		end
 	end
@@ -181,10 +186,33 @@ function LoadSettings()
 	for item, setting in pairs(settingsTable) do
 		Cyberpunk.SetOption(setting.category, item, setting.value)
 	end
+
+	-- Load saved graphics settings
+	local graphicsSettings = {
+		{ category = '/graphics/presets', item = 'ResolutionScaling' },
+		{ category = '/graphics/presets', item = 'DLSS' },
+		{ category = '/graphics/presets', item = 'FSR2' },
+		{ category = '/graphics/presets', item = 'XESS' },
+		{ category = '/graphics/performance', item = 'CrowdDensity' },
+		{ category = '/graphics/basic', item = 'DepthOfField' },
+		{ category = '/graphics/basic', item = 'LensFlares' },
+		{ category = '/graphics/basic', item = 'ChromaticAberration' },
+		{ category = '/graphics/basic', item = 'FilmGrain' },
+		{ category = '/graphics/basic', item = 'MotionBlur' },
+	}
+
+	Logger.info('Restoring Cyberpunk graphics settings from last session...')
+	for _, setting in pairs(graphicsSettings) do
+		local value = result.UltraPlus[setting.item]
+		if value ~= nil then
+			Cyberpunk.SetOption(setting.category, setting.item, value)
+		end
+	end
+	Logger.info('    (Done)')
 end
 
 function SaveSettings()
-	-- save Ultra+ settings to config.json
+	-- save Ultra+ settings to Config.json
 	local UltraPlus = {}
 	local settingsCategories = {
 		options.tweaks,
@@ -200,29 +228,29 @@ function SaveSettings()
 		end
 	end
 
-	UltraPlus['internal.mode'] = var.settings.mode
-	UltraPlus['internal.quality'] = var.settings.quality
-	UltraPlus['internal.sceneScale'] = var.settings.sceneScale
-	UltraPlus['internal.vram'] = var.settings.vram
-	UltraPlus['internal.graphics'] = var.settings.graphics
-	UltraPlus['internal.nsgddCompatible'] = var.settings.nsgddCompatible
-	UltraPlus['internal.rayReconstruction'] = var.settings.rayReconstruction
-	UltraPlus['internal.enableTargetFps'] = var.settings.enableTargetFps
-	UltraPlus['internal.targetFps'] = var.settings.targetFps
-	UltraPlus['internal.enableConsole'] = var.settings.enableConsole
+	UltraPlus['internal.mode'] = Var.settings.mode
+	UltraPlus['internal.quality'] = Var.settings.quality
+	UltraPlus['internal.sceneScale'] = Var.settings.sceneScale
+	UltraPlus['internal.vram'] = Var.settings.vram
+	UltraPlus['internal.graphics'] = Var.settings.graphics
+	UltraPlus['internal.nsgddCompatible'] = Var.settings.nsgddCompatible
+	UltraPlus['internal.rayReconstruction'] = Var.settings.rayReconstruction
+	UltraPlus['internal.enableTargetFps'] = Var.settings.enableTargetFps
+	UltraPlus['internal.targetFps'] = Var.settings.targetFps
+	UltraPlus['internal.enableConsole'] = Var.settings.enableConsole
 
 	local settingsTable = { UltraPlus = UltraPlus }
 
 	local success, result = pcall(json.encode, settingsTable)
 	if not success then
-		logger.info('Error saving config.json:', result)
+		Logger.info('Error saving Config.json:', result)
 		return
 	end
 
 	local rawJson = result
-	local file = io.open('config.json', 'w')
+	local file = io.open('Config.json', 'w')
 	if not file then
-		logger.info('Error opening config.json for writing')
+		Logger.info('Error opening Config.json for writing')
 		return
 	end
 	file:write(rawJson)
@@ -231,7 +259,6 @@ end
 
 local function toggleRayReconstruction(state)
 	while Cyberpunk.GetOption('/graphics/presets', 'DLSS_D') ~= state do
-		config.status = "RR states don't match"
 		Wait(1.0, function()
 			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', state)
 		end)
@@ -239,59 +266,55 @@ local function toggleRayReconstruction(state)
 end
 
 local function preparePTNext()
-	-- if not in PTNext mode, always disable ReGIR
-	-- otherwise disable PTNext in preparation for loading
-	if config.ptNext.primed or var.settings.mode ~= var.mode.PTNEXT then
+	-- if not in PTNext mode, disable ReGIR
+	-- if in PTNext mode, disable PTNext in preparation for loading
+	if Config.ptNext.stage2 then
 		return
 	end
 
-	if var.settings.mode ~= var.mode.PTNEXT then
+	if Var.settings.mode ~= Var.mode.PTNEXT then
 		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
 
-		logger.info('    PTNext is not in use')
-		config.ptNext.active = false
+		Logger.info('    PTNext is not in use')
+		Config.ptNext.active = false
 		return
 	end
 
 	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 	Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', false)
 
-	logger.info('    PTNext is ready to load')
-	config.ptNext.primed = true
-	config.ptNext.active = false
+	Logger.info('    PTNext is ready to load')
+	Config.ptNext.stage2 = true
+	Config.ptNext.active = false
 end
 
 local function enablePTNext()
-	if config.ptNext.active or var.settings.mode ~= var.mode.PTNEXT then
+	if Config.ptNext.active or Var.settings.mode ~= Var.mode.PTNEXT then
 		return
 	end
 
-	Wait(1.5, function()
-		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
+	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
 
-		local usingNRD = Cyberpunk.GetOption('RayTracing', 'EnableNRD')
-		if not usingNRD then
-			logger.info('    (RR is in use)')
-			-- if we can work out why local lights/vegetation need separate denoiser info
-			-- Dogtown we can remove this!! it looks horrible and only needed in Dogtown
-			Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
-		else
-			logger.info('    (NRD is in use)')
-		end
+	Wait(0.8, function()
+		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
 	end)
 
-	config.ptNext.active = true
-	logger.info('    PTNext is active')
+	Wait(1.5, function()
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
+	end)
+
+	Config.ptNext.active = true
+	Logger.info('    PTNext is active')
 end
 
 local function doRainPathTracingFix()
 	-- enable particle PT integration unless player is outdoors AND it's raining
-	if var.settings.rain and not var.settings.indoors then
-		logger.info('    (It\'s raining: Enabling separate particle colour)')
+	if Var.settings.rain and not Var.settings.indoors then
+		Logger.info('    (It\'s raining: Enabling separate particle colour)')
 		Cyberpunk.SetOption('Rendering', 'DLSSDSeparateParticleColor', true)
 	else
-		logger.info('    (It\'s not raining: Disabling separate particle colour)')
+		Logger.info('    (It\'s not raining: Disabling separate particle colour)')
 		Cyberpunk.SetOption('Rendering', 'DLSSDSeparateParticleColor', false)
 	end
 end
@@ -310,77 +333,126 @@ local function doRayReconstructionFix()
 	Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', false)
 end
 
-local function doRefreshReGir()
-	-- hack to force the engine to warm reload
-	if var.settings.mode ~= var.mode.PTNEXT then
+local function saveGraphicsSettings()
+	-- snapshots game's graphics menu
+	local graphicsSettings = {
+		{ category = '/graphics/presets', item = 'ResolutionScaling' },
+		{ category = '/graphics/presets', item = 'DLSS' },
+		{ category = '/graphics/presets', item = 'FSR2' },
+		{ category = '/graphics/presets', item = 'XESS' },
+		{ category = '/graphics/performance', item = 'CrowdDensity' },
+		{ category = '/graphics/basic', item = 'DepthOfField' },
+		{ category = '/graphics/basic', item = 'LensFlares' },
+		{ category = '/graphics/basic', item = 'ChromaticAberration' },
+		{ category = '/graphics/basic', item = 'FilmGrain' },
+		{ category = '/graphics/basic', item = 'MotionBlur' },
+	}
+
+	local graphicsSettingsTable = {}
+	for _, setting in pairs(graphicsSettings) do
+		local currentValue = Cyberpunk.GetOption(setting.category, setting.item)
+		graphicsSettingsTable[setting.item] = { category = setting.category, value = currentValue }
+	end
+
+	local file = io.open('Config.json', 'r')
+	local ConfigTable
+	if file then
+		local rawJson = file:read('*a')
+		file:close()
+		local success, result = pcall(json.decode, rawJson)
+		if success and result.UltraPlus then
+			ConfigTable = result
+		end
+	end
+
+	if not ConfigTable then
+		ConfigTable = { UltraPlus = {} }
+	end
+
+	for item, setting in pairs(graphicsSettingsTable) do
+		ConfigTable.UltraPlus[item] = setting.value
+	end
+
+	local success, result = pcall(json.encode, ConfigTable)
+	if not success then
+		Logger.info('Error saving graphics settings to Config.json:', result)
 		return
 	end
 
-	logger.info('Refreshing Engine...')
-	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
-	Wait(0.5, function()
-		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
-		logger.info('Done')
-	end)
-end
+	local rawJson = result
+	local file = io.open('Config.json', 'w')
+	if not file then
+		Logger.info('Error opening Config.json for writing')
+		return
+	end
+	file:write(rawJson)
+	file:close()
 
-local function saveGameGraphics()
-	-- snapshots game's graphics menu
---[[
-	/graphics/presets/ResolutionScaling	= Off, DLSS, FSR, XeSS
-	/graphics/presets/DLSS = Auto, DLAA, Quality, Balanced, Performance, Ultra Performance, Dynamic
-	/graphics/presets/FSR2 = Auto, Quality, Balanced, Performance, Ultra Performance, Dynamic
-	/graphics/presets/XESS = Auto, Ultra Quality, Quality, Balanced, Performance, Dynamic
-	Film grain
-	Lens flairs
-	Depth of field
-	Anamorphic
-	Motion blur
-
-	-- TODO: enforce saved graphics settings on startup
-]]
+	Logger.info('Successfully stored Cyberpunk graphics settings')
 end
 
 local function doWindowClose()
-	-- run tasks just after CET window is closed. delays may be needed to avoid CTDs
-	saveGameGraphics()
-	confirmChanges()
+	-- run tasks just after CET window is closed. delay needed to avoid CTDs
+	saveGraphicsSettings()
+--[[
+	if not Var.ultraPlusActive or timer.paused or Config.gameSession.gameMenuActive then
+		return
+	end
+
+	if Var.settings.mode == Var.mode.PTNEXT then
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+	end
+
+	Wait(1.0, function()
+		saveUserSettingsJson()
+	end)
+
+	if Var.settings.mode == Var.mode.PTNEXT then
+		Wait(1.0, function()
+			Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
+		end)
+	end
+]]
+end
+
+local function setStatus()
+	if Var.settings.mode == Var.mode.PTNEXT and not Config.ptNext.active then
+		Config.status = 'Reload a save to fully activate PTNext'
+	elseif Cyberpunk.NeedsConfirmation() then
+		Config.status = 'Click \'Apply\' in Cyberpunk graphics menu'
+	elseif Config.ptNext.primed then
+		Config.status = 'PTNext is ready to load'
+	else
+		Config.status = 'Ready.'
+	end
 end
 
 local function doFastUpdate()
 	-- runs every timer.FAST seconds
 	isGameSessionActive()
+	-- confirmChanges()
+	setStatus()
 
-	if var.gameMenuChanged then
-		saveUserSettingsJson()
+	if Var.settings.mode == Var.mode.PTNEXT and not Config.ptNext.active and not Config.ptNext.stage1 then
+		preparePTNext()
 	end
 
-	var.confirmationRequired = Cyberpunk.NeedsConfirmation()
+	if not Cyberpunk.GetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode') then goto continue
+		Config.NRD = Cyberpunk.GetOption('Raytracing', 'EnableNRD')
+		Config.DLSSD = Cyberpunk.GetOption('/graphics/presets', 'DLSS_D')
 
-	if var.ultraPlusActive and not var.window.open and var.confirmationRequired then
-		if var.settings.rayReconstruction ~= Cyberpunk.GetOption('/graphics/presets', 'DLSS_D') then
-			toggleRayReconstruction(var.settings.rayReconstruction)
+		if Cyberpunk.PhotoMode() then
+			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', false)
+			Cyberpunk.SetOption('Raytracing', 'EnableNRD', false)
+		else
+			Cyberpunk.SetOption('Raytracing', 'EnableNRD', Config.NRD)
+			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', Config.DLSSD)
 		end
+		::continue::
 	end
 
 	if timer.paused then
-		if var.confirmationRequired then
-			config.status = 'Close CET to apply changes'
-		end
-
-		if not config.ptNext.primed then
-			preparePTNext()
-		end
-
 		return
-	end
-
-	if var.settings.mode == var.mode.PTNEXT and not config.ptNext.active then
-		config.status = 'Reload a save to activate PTNext'
-	elseif config.ptNext.primed then
-		config.status = 'PTNext is ready to load'
-	else
-		config.status = 'Ready.'
 	end
 
 	enablePTNext()
@@ -389,9 +461,9 @@ local function doFastUpdate()
 	local testRain = Cyberpunk.IsRaining()
 	local testIndoors = IsEntityInInteriorArea(GetPlayer())
 
-	if testRain ~= var.settings.rain or testIndoors ~= var.settings.indoors then
-		var.settings.rain = testRain
-		var.settings.indoors = testIndoors
+	if testRain ~= Var.settings.rain or testIndoors ~= Var.settings.indoors then
+		Var.settings.rain = testRain
+		Var.settings.indoors = testIndoors
 		doRainPathTracingFix()
 	end
 end
@@ -403,23 +475,23 @@ local function doLazyUpdate()
 	end
 
 	-- begin time of day logic:
-	config.SetDaytime(Cyberpunk.GetHour())
+	Config.SetDaytime(Cyberpunk.GetHour())
 
 	-- begin targetFps logic:
-	if not var.settings.enableTargetFps
-	or var.settings.mode == var.mode.RTOnly then
+	if not Var.settings.enableTargetFps
+	or Var.settings.mode == Var.mode.RTOnly then
 		return
 	end
 
-	if stats.fps < var.settings.targetFps then
-		if var.settings.autoScale > 1 then
-			var.settings.autoScale = var.settings.autoScale - 1
-			config.AutoScale(var.settings.autoScale)
+	if Stats.fps < Var.settings.targetFps then
+		if Var.settings.autoScale > 1 then
+			Var.settings.autoScale = Var.settings.autoScale - 1
+			Config.AutoScale(Var.settings.autoScale)
 		end
 	else
-		if var.settings.autoScale < 6 then
-			var.settings.autoScale = var.settings.autoScale + 1
-			config.AutoScale(var.settings.autoScale)
+		if Var.settings.autoScale < 6 then
+			Var.settings.autoScale = Var.settings.autoScale + 1
+			Config.AutoScale(Var.settings.autoScale)
 		end
 	end
 end
@@ -431,10 +503,10 @@ local function doWeatherUpdate()
 
 	-- if the weather is stuck, change it
 	local currentWeather = Cyberpunk.GetWeather()
-	if currentWeather == config.PreviousWeather then
-		config.BumpWeather(currentWeather)
+	if currentWeather == Config.gameSession.previousWeather then
+		Config.BumpWeather(currentWeather)
 	end
-	config.PreviousWeather = currentWeather
+	Config.gameSession.previousWeather = currentWeather
 end
 
 registerForEvent('onUpdate', function(delta)
@@ -443,7 +515,7 @@ registerForEvent('onUpdate', function(delta)
 	timer.lazy = timer.lazy + delta
 	timer.weather = timer.weather + delta
 
-	stats.fps = (stats.fps * 9 + (1 / delta)) / 10
+	Stats.fps = (Stats.fps * 9 + (1 / delta)) / 10
 
 	if timer.fast > timer.FAST then
 		doFastUpdate()
@@ -472,17 +544,17 @@ registerForEvent('onUpdate', function(delta)
 end)
 
 local function initUltraPlus()
-	logger.info('Initializing...')
-	logger.debug('DEBUG ACTIVE')
+	Logger.info('Initializing...')
+	Logger.debug('Debug mode active')
 
 	LoadIni('common')
 	LoadSettings()
 
-	config.SetGraphics(var.settings.graphics)
-	config.SetMode(var.settings.mode)
-	config.SetQuality(var.settings.quality)
-	config.SetSceneScale(var.settings.sceneScale)
-	config.SetVram(var.settings.vram)
+	Config.SetGraphics(Var.settings.graphics)
+	Config.SetMode(Var.settings.mode)
+	Config.SetQuality(Var.settings.quality)
+	Config.SetSceneScale(Var.settings.sceneScale)
+	Config.SetVram(Var.settings.vram)
 
 	-- preparePTNext()
 end
@@ -494,53 +566,53 @@ end)
 
 registerForEvent('onInit', function()
 
-	Observe('QuestTrackerGameController', 'OnUninitialize', function()
-		gameSession.active = false
-	end)
-
 	ObserveAfter('QuestTrackerGameController', 'OnInitialize', function()
-		gameSession.active = true
+		Config.gameSession.gameSessionActive = true
 	end)
 
 	Observe('FastTravelSystem', 'OnUpdateFastTravelPointRecordRequest', function()
-		gameSession.fastTravel = true
+		Config.gameSession.fastTravelAcctive = true
 	end)
 
 	Observe('FastTravelSystem', 'OnPerformFastTravelRequest', function()
-		gameSession.fastTravel = true
+		Config.gameSession.fastTravelAcctive = true
 	end)
 
 	Observe('FastTravelSystem', 'OnLoadingScreenFinished', function(_, finished)
 		if finished then
-			gameSession.fastTravel = false
+			Config.gameSession.fastTravelActive = false
 		end
 	end)
 
+	Observe('gameuiPopupsManager', 'OnMenuUpdate', function(_, isInMenu)
+		Config.gameSession.gameMenuActive = isInMenu
+	end)
+
 	Observe('CCTVCamera', 'TakeControl', function(this, val)
-		logger.info(string.format('	(Camera control: %s %s)', this, val))
+		Logger.info(string.format('	(Camera control: %s %s)', this, val))
 	end)
 
 	ObserveAfter('CCTVCamera', 'TakeControl', function(this, val)
-		logger.info(string.format('	(Camera control end: %s %s)', this, val))
+		Logger.info(string.format('	(Camera control end: %s %s)', this, val))
 	end)
 
 	initUltraPlus()
 end)
 
 registerForEvent('onOverlayOpen', function()
-	var.window.open = true
-	var.ultraPlusActive = true
+	Var.window.open = true
+	Var.ultraPlusActive = true
 end)
 
 registerForEvent('onOverlayClose', function()
-	var.window.open = false
+	Var.window.open = false
 	doWindowClose()
 end)
 
 registerForEvent('onDraw', function()
-	if not var.window.open then
+	if not Var.window.open then
 		return
 	end
 
-	render.renderUI(stats.fps, var.window.open)
+	render.renderUI(Stats.fps, Var.window.open)
 end)

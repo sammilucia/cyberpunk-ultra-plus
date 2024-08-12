@@ -1,9 +1,8 @@
--- helpers/variables.lua
+-- helpers/Variables.lua
 
-local var = {
+local Var = {
 	ultraPlusActive = false,
 	confirmationRequired = false,
-	gameMenuChanged = false,
 	window = {
 		open = false,
 		scale = 1.0,
@@ -91,11 +90,38 @@ local var = {
 		[10] = 'Cloudy Morning',
 	},
 	sceneScale = {
-		PERFORMANCE = 'Performance',
+		FAST = 'Fast',
 		VANILLA = 'Vanilla',
-		BALANCED = 'Balanced',
-		QUALITY = 'Quality',
+		MEDIUM = 'Medium',
+		HIGH = 'High',
+		EXTREME = 'Extreme',
+	},
+	SunAngularSizes = {
+		[0] = '0.35',
+		[1] = '0.35',
+		[2] = '0.35',
+		[3] = '0.35',
+		[4] = '0.35',
+		[5] = '0.35',
+		[6] = '0.35',
+		[7] = '0.325',
+		[8] = '0.3',
+		[9] = '0.275',
+		[10] = '0.25',
+		[11] = '0.225',
+		[12] = '0.225',
+		[13] = '0.225',
+		[14] = '0.225',
+		[15] = '0.25',
+		[16] = '0.275',
+		[18] = '0.3',
+		[19] = '0.325',
+		[20] = '0.35',
+		[21] = '0.35',
+		[22] = '0.35',
+		[23] = '0.35',
+		PreviousHour = -1,
 	},
 }
 
-return var
+return Var

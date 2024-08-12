@@ -1,14 +1,15 @@
 -- setquality.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local Cyberpunk = require('helpers/Cyberpunk')
-local config = {}
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+Cyberpunk = require('helpers/Cyberpunk')
 
-function config.SetQuality(quality)
-	logger.info('Configuring', var.settings.mode, 'quality for', quality)
+function Config.SetQuality(quality)
 
-	if quality == var.quality.VANILLA then
+	if quality == Var.quality.VANILLA then
+		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
+
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '16')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '16')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
@@ -34,6 +35,7 @@ function config.SetQuality(quality)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
+		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
 		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '4')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '2')
@@ -41,7 +43,9 @@ function config.SetQuality(quality)
 		return
 	end
 
-	if quality == var.quality.FAST then
+	if quality == Var.quality.FAST then
+		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
+
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '24')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '24')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','3')				-- TEST
@@ -55,9 +59,8 @@ function config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceCharacter', '12.0')
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceVehicle', '35.0')
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '16')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 
-		if var.settings.mode == var.mode.PTNEXT then
+		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -70,13 +73,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '1')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '8')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT16 then
+		if Var.settings.mode == Var.mode.PT16 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -89,13 +94,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT20 then
+		if Var.settings.mode == Var.mode.PT20 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -108,18 +115,20 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RT_PT then
+		if Var.settings.mode == Var.mode.RT_PT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -132,13 +141,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT21 then
+		if Var.settings.mode == Var.mode.PT21 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -148,17 +159,21 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', false)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '6')
-			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '3')
+			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '4')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 	end
 
-	if quality == var.quality.MEDIUM then
+	if quality == Var.quality.MEDIUM then
+		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
+
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '32')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '32')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
@@ -172,9 +187,8 @@ function config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceCharacter', '15.0')
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceVehicle', '40.0')
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '16')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 
-		if var.settings.mode == var.mode.PTNEXT then
+		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -187,13 +201,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')	
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '2')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '8')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT16 then
+		if Var.settings.mode == Var.mode.PT16 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -206,13 +222,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT20 then
+		if Var.settings.mode == Var.mode.PT20 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -225,18 +243,20 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RT_PT then
+		if Var.settings.mode == Var.mode.RT_PT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -249,13 +269,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT21 then
+		if Var.settings.mode == Var.mode.PT21 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -265,17 +287,21 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', false)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '6')
-			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '3')
+			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '3')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 	end
 
-	if quality == var.quality.HIGH then
+	if quality == Var.quality.HIGH then
+		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '1')
+
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '48')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '48')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
@@ -289,9 +315,8 @@ function config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceCharacter', '15.0')
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceVehicle', '50.0')
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '20')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 
-		if var.settings.mode == var.mode.PTNEXT then
+		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -304,13 +329,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '3')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '12')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT16 then
+		if Var.settings.mode == Var.mode.PT16 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
@@ -320,16 +347,18 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '12')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '4')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT20 then
+		if Var.settings.mode == Var.mode.PT20 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
@@ -339,21 +368,23 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '4')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RT_PT then
+		if Var.settings.mode == Var.mode.RT_PT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
@@ -363,16 +394,18 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT21 then
+		if Var.settings.mode == Var.mode.PT21 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -382,17 +415,21 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '10')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '3')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '3')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '4')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 	end
 
-	if quality == var.quality.INSANE then
+	if quality == Var.quality.INSANE then
+		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '1')
+
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '48')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '48')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','3')
@@ -406,9 +443,8 @@ function config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceCharacter', '20.0')
 		Cyberpunk.SetOption('RayTracing', 'CullingDistanceVehicle', '60.0')
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '24')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
 
-		if var.settings.mode == var.mode.PTNEXT then
+		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -421,13 +457,15 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '3')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
-			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '3')
+			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '16')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT16 then
+		if Var.settings.mode == Var.mode.PT16 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '3')
@@ -437,40 +475,44 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '12')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '4')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '3')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '12')
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '3')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT20 then
+		if Var.settings.mode == Var.mode.PT20 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
-			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
+			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '3')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
-			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '5')
+			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '4')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '3')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '4')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '4')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '3')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '1000.0')
 			return
 		end
 
-		if var.settings.mode == var.mode.RT_PT then
+		if Var.settings.mode == Var.mode.RT_PT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '1000.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '3')
@@ -480,16 +522,18 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '0')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '4')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '3')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
 		end
 
-		if var.settings.mode == var.mode.PT21 then
+		if Var.settings.mode == Var.mode.PT21 then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
@@ -499,14 +543,16 @@ function config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumInitialSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'NumEnvMapSamples', '32')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableFallbackLight', true)
-			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '10')
+			Cyberpunk.SetOption('Editor/RTXDI', 'MaxHistoryLength', '3')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '4')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '32')
+			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '2')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '5')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '24')
 		end
 	end
 end
 
-return config
+return Config

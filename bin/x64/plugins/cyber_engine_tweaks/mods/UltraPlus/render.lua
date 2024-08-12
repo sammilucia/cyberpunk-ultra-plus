@@ -1,18 +1,19 @@
 ﻿-- render.lua
 
-local var = require('helpers/variables')
-local config = require('helpers/config')
-local Cyberpunk = require('helpers/Cyberpunk')
-local options = require('helpers/options')
-local ui = require('helpers/ui')
-local stats = {
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = require('helpers/Config')
+Cyberpunk = require('helpers/Cyberpunk')
+Stats = {
 	fps = 0,
 }
+local options = require('helpers/options')
+local ui = require('helpers/ui')
 local toggled
 local render = {}
 
 local function renderMainTab()
-	ui.text(config.status)
+	ui.text(Config.status)
 
 	ui.sameLine()
 	local renderingModes = {
@@ -27,14 +28,14 @@ local function renderMainTab()
 	ui.space()
 	if ui.header('Rendering Mode                 | PT >') then
 		for _, mode in ipairs(renderingModes) do
-			local value = var.mode[mode.key]
-			if ui.radio(mode.label, var.settings.mode == value) then
-				var.settings.mode = value
+			local value = Var.mode[mode.key]
+			if ui.radio(mode.label, Var.settings.mode == value) then
+				Var.settings.mode = value
 
-				config.SetMode(var.settings.mode)
-				config.SetQuality(var.settings.quality)
-				config.SetGraphics(var.settings.graphics)
-				config.SetSceneScale(var.settings.sceneScale)
+				Config.SetMode(Var.settings.mode)
+				Config.SetQuality(Var.settings.quality)
+				Config.SetGraphics(Var.settings.graphics)
+				Config.SetSceneScale(Var.settings.sceneScale)
 				SaveSettings()
 			end
 			ui.tooltip(mode.tooltip)
@@ -46,31 +47,31 @@ local function renderMainTab()
 	ui.space()
 	if ui.header('Quality Level') then
 		for _, key in ipairs(qualityOrder) do
-			local value = var.quality[key]
-			if ui.radio(value .. '##Quality', var.settings.quality == value) then
-				var.settings.quality = value
-				config.SetQuality(var.settings.quality)
+			local value = Var.quality[key]
+			if ui.radio(value .. '##Quality', Var.settings.quality == value) then
+				Var.settings.quality = value
+				Config.SetQuality(Var.settings.quality)
 				SaveSettings()
 			end
 			ui.sameLine()
 		end
 	end
 
-	local sceneScaleOrder = { 'PERFORMANCE', 'VANILLA', 'BALANCED', 'QUALITY' }
+	local sceneScaleOrder = { 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'EXTREME' }
 	ui.space()
 
-	local disableRadianceCache = var.settings.mode == var.mode.RASTER or var.settings.mode == var.mode.RT or var.settings.mode == var.mode.RT_PT -- or var.settings.mode == var.mode.PT16 -- also test RT+PT
+	local disableRadianceCache = Var.settings.mode == Var.mode.RASTER or Var.settings.mode == Var.mode.RT or Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.PT16 -- also test RT+PT
 	if disableRadianceCache then
 		ImGui.BeginDisabled(true)
 	end
 
 	if ui.header('Bounce Lighting Accuracy') then
 		for _, key in ipairs(sceneScaleOrder) do
-			local value = var.sceneScale[key]
-			if ui.radio(value .. '##Scenescale', var.settings.sceneScale == value) then
-				var.settings.sceneScale = value
+			local value = Var.sceneScale[key]
+			if ui.radio(value .. '##Scenescale', Var.settings.sceneScale == value) then
+				Var.settings.sceneScale = value
 
-				config.SetSceneScale(var.settings.sceneScale)
+				Config.SetSceneScale(Var.settings.sceneScale)
 				SaveSettings()
 			end
 			ui.sameLine()
@@ -85,11 +86,11 @@ local function renderMainTab()
 	ui.space()
 	if ui.header('Game Graphics Settings (plus raster tweaks)') then
 		for _, key in ipairs(graphicsOrder) do
-			local value = var.graphics[key]
-			if ui.radio(value .. '##Graphics', var.settings.graphics == value) then
-				var.settings.graphics = value
+			local value = Var.graphics[key]
+			if ui.radio(value .. '##Graphics', Var.settings.graphics == value) then
+				Var.settings.graphics = value
 
-				config.SetGraphics(var.settings.graphics)
+				Config.SetGraphics(Var.settings.graphics)
 				SaveSettings()
 			end
 			ui.sameLine()
@@ -99,16 +100,16 @@ local function renderMainTab()
 	ui.space()
 	if ui.header('VRAM Configuration (GB)') then
 		local vramSorted = {}
-		for _, value in pairs(var.vram) do
+		for _, value in pairs(Var.vram) do
 			table.insert(vramSorted, value)
 		end
 		table.sort(vramSorted)
 
 		for _, key in ipairs(vramSorted) do
-			if ui.radio(tostring(key) .. '##GB', var.settings.vram == key) then
-				var.settings.vram = key
+			if ui.radio(tostring(key) .. '##GB', Var.settings.vram == key) then
+				Var.settings.vram = key
 
-				config.SetVram(var.settings.vram)
+				Config.SetVram(Var.settings.vram)
 				SaveSettings()
 			end
 			ui.sameLine()
@@ -126,7 +127,7 @@ local function renderMainTab()
 				Cyberpunk.SetOption(setting.category, setting.item, setting.value)
 
 				if setting.item == 'nsgddCompatible' then
-					config.SetVram(var.settings.vram)
+					Config.SetVram(Var.settings.vram)
 				end
 
 				SaveSettings()
@@ -135,23 +136,23 @@ local function renderMainTab()
 	end
 
 	ui.space()
-	var.settings.enableConsole, toggled = ui.checkbox('Console', var.settings.enableConsole)
+	Var.settings.enableConsole, toggled = ui.checkbox('Console', Var.settings.enableConsole)
 	ui.tooltip('Ultra+ will log what it\'s doing to the CET console')
 	if toggled then
 		SaveSettings()
 	end
 
-	ui.sameLine(136)
-	var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', var.settings.enableTargetFps)
+	ui.sameLine(176)
+	Var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', Var.settings.enableTargetFps)
 	ui.tooltip('Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS')
 	if toggled then
 		SaveSettings()
 	end
 
-	if var.settings.enableTargetFps then
+	if Var.settings.enableTargetFps then
 		ui.sameLine()
-		ui.width(var.window.intSize)
-		var.settings.targetFps, toggled = ui.inputInt('', var.settings.targetFps, 1)
+		ui.width(Var.window.intSize)
+		Var.settings.targetFps, toggled = ui.inputInt('', Var.settings.targetFps, 1)
 
 		if toggled then
 			SaveSettings()
@@ -195,9 +196,7 @@ local function renderFeaturesTab()
 		local settings, heading, inputType = table.unpack(group)
 		ui.header(heading)
 		for _, setting in pairs(settings) do
-			if var.window.filterText == '' or string.find(string.lower(setting.name), string.lower(var.window.filterText)) then
 				renderSetting(setting, inputType)
-			end
 		end
 	end
 end
@@ -212,22 +211,22 @@ local function renderDebugTab()
 		{ options.nrd, 'Checkbox' },
 		{ options.rtOptions, 'Checkbox' },
 		{ options.sharc, 'Checkbox' },
-		{ options.rtInt, 'InputInt', var.window.intSize },
-		{ options.rtFloat, 'InputFloat', var.window.floatSize },
+		{ options.rtInt, 'InputInt', Var.window.intSize },
+		{ options.rtFloat, 'InputFloat', Var.window.floatSize },
 	}
 
 	ui.space()
 	ui.text('Filter by:')
 	ui.sameLine()
 	ui.width(120)
-	var.window.filterText = ui.filter('##Filter', var.window.filterText, 100)
+	Var.window.filterText = ui.filter('##Filter', Var.window.filterText, 100)
 
 	ui.separator()
 	for _, group in ipairs(settingGroups) do
 		local settings, inputType, width = table.unpack(group)
 		local hasVisibleItems = false
 		for _, setting in pairs(settings) do
-			if var.window.filterText == '' or string.find(string.lower(setting.name), string.lower(var.window.filterText)) then
+			if Var.window.filterText == '' or string.find(string.lower(setting.name), string.lower(Var.window.filterText)) then
 				if not hasVisibleItems then
 					hasVisibleItems = true
 				end
@@ -249,17 +248,17 @@ local function renderTabs()
 end
 
 local function renderFps()
-	if stats.fps == 0 then
+	if Stats.fps == 0 then
 		return
 	end
 
-	local fpsText = string.format('Real FPS: %.0f', stats.fps) -- lazy makeshift round function
-	ui.sameLine(296)
+	local fpsText = string.format('Real FPS: %.0f', Stats.fps) -- lazy makeshift round function
+	ui.sameLine(340)
 	ui.text(fpsText)
 end
 
 render.renderUI = function(fps, open)
-	stats.fps = fps
+	Stats.fps = fps
 
 	ui.window('Ultra+ v'..UltraPlus.__VERSION, ImGuiWindowFlags.NoResize, function()
 		renderTabs()

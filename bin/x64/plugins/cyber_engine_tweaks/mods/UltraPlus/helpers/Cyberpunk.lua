@@ -1,8 +1,7 @@
 -- helpers/Cyberpunk.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local config = require('helpers/config')
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
 
 local function toboolean(value)
 	if value == 'true' or value == true then
@@ -14,7 +13,7 @@ local function toboolean(value)
 	end
 end
 
-Cyberpunk = {
+local Cyberpunk = {
 	SplitOption = function(string)
 		-- splits an ini/CVar command into its constituents
 		local category, item = string.match(string, '(.-)/([^/]+)$')
@@ -40,7 +39,7 @@ Cyberpunk = {
 			return tonumber(value)
 		end
 
-		logger.info('ERROR: Error getting value for:', category .. '/' .. item, '=', value)
+		Logger.info('ERROR: Error getting value for:', category .. '/' .. item, '=', value)
 	end,
 
 	GetValue = function(category, item)
@@ -60,6 +59,7 @@ Cyberpunk = {
 	end,
 
 	Save = function()
+		-- can only be run with CET overlay closed or CTD
 		GetSingleton('inkMenuScenario'):GetSystemRequestsHandler():RequestSaveUserSettings()
 	end,
 
@@ -90,7 +90,7 @@ Cyberpunk = {
 	GetOption = function(category, item)
 		-- gets a live game setting, working out which method to use for different settings
 		if category == 'internal' then
-			if var.settings[item] == true then
+			if Var.settings[item] == true then
 				return true
 			end
 
@@ -98,7 +98,13 @@ Cyberpunk = {
 		end
 
 		if string.sub(category, 1, 1) == '/' then -- graphics options
-			return Cyberpunk.GetValue(category, item) -- will not work for indices
+			local value = Cyberpunk.GetValue(category, item)
+
+			if tostring(value) == 'true' or tostring(value) == 'false' then
+				return value
+			else
+				return Cyberpunk.GetIndex(category, item)
+			end
 		end
 
 		return Cyberpunk.Get(category, item)
@@ -107,34 +113,30 @@ Cyberpunk = {
 	SetOption = function(category, item, value, valueType)
 		-- sets a live game setting, working out which method to use for different settings
 		if value == nil then
-			logger.info('ERROR: Skipping nil value:', category .. '/' .. item, '=', value)
+			Logger.info('ERROR: Skipping nil value:', category .. '/' .. item, '=', value)
 			return
 		end
 
 		if category == 'internal' then
-			var.settings[item] = value
+			Var.settings[item] = value
 			return
 		end
 
-		if string.sub(category, 1, 1) == '/' and (tostring(value) == 'true' or tostring(value) == 'false') then
-			-- if Cyberpunk.GetOption(category, item) ~= value then -- probably slower to query than to just set
-				Cyberpunk.SetValue(category, item, value)
-				var.gameMenuChanged = true
-				logger.debug('ConfirmChanges() required')
-			-- end
-			return
+		if string.sub(category, 1, 1) == '/' then -- graphics options
+			if tostring(value) == 'true' or tostring(value) == 'false' then
+				if Cyberpunk.GetOption(category, item) ~= value then
+					Cyberpunk.SetValue(category, item, value)
+				end
+				return
+			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
+				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
+					Cyberpunk.SetIndex(category, item, tonumber(value))
+				end
+				return
+			end
 		end
 
-		if string.sub(category, 1, 1) == '/' and tostring(value):match('^%-?%d+$') then
-			-- if Cyberpunk.GetIndex(category, item) ~= value then -- probably slower to query than to just set
-				Cyberpunk.SetIndex(category, item, tonumber(value))
-				var.gameMenuChanged = true
-				logger.debug('ConfirmChanges() required')
-			-- end
-			return
-		end
-
-		if type(value) == 'boolean' or tostring(value) == 'false' or tostring(value) == 'true' then -- test without type test
+		if tostring(value) == 'false' or tostring(value) == 'true' then -- test without type test
 			if Cyberpunk.GetOption(category, item) ~= value then
 				Cyberpunk.SetBool(category, item, value)
 			end
@@ -151,7 +153,7 @@ Cyberpunk = {
 			return
 		end
 
-		logger.info('ERROR: Couldn\'t set value for:', category .. '/' .. item, '=', value)
+		Logger.info('ERROR: Couldn\'t set value for:', category .. '/' .. item, '=', value)
 	end,
 
 	GetPlayer = function()
@@ -176,6 +178,10 @@ Cyberpunk = {
 
 	IsRaining = function()
 		return Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
+	end,
+
+	GetPlayTime = function()
+		return Game.GetPlaythroughTime():ToFloat()
 	end,
 }
 

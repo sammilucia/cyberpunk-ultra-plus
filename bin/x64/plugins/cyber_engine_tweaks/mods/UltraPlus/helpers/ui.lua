@@ -1,6 +1,7 @@
 -- helpers/ui.lua
 
-local var = require('helpers/variables')
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
 local theme = require('helpers/theme')
 local ui = {}
 
@@ -17,10 +18,10 @@ end
 ui.cursor = function(x, y)
 	-- account for window borders
 	if x then
-		ImGui.SetCursorPosX((x + 8) * var.window.scale)
+		ImGui.SetCursorPosX((x + 8) * Var.window.scale)
 	end
 	if y then
-		ImGui.SetCursorPosY((y * var.window.scale) + var.window.startY)
+		ImGui.SetCursorPosY((y * Var.window.scale) + Var.window.startY)
 	end
 end
 
@@ -28,12 +29,12 @@ ui.width = function(px)
 	if not px then
 		return
 	end
-	ImGui.SetNextItemWidth(px * var.window.scale)
+	ImGui.SetNextItemWidth(px * Var.window.scale)
 end
 
 ui.sameLine = function(px)
 	if px then
-		ImGui.SameLine(px * var.window.scale)
+		ImGui.SameLine(px * Var.window.scale)
 	else
 		ImGui.SameLine()
 	end
@@ -58,7 +59,7 @@ ui.window = function(title, flags, func)
 	ImGui.PushStyleColor(ImGuiCol.ScrollbarGrabActive, theme.color.mediumer)
 
 	ImGui.SetNextWindowPos(10, 500, ImGuiCond.FirstUseEver)
-	ImGui.SetNextWindowSize(432 * var.window.scale, 575 * var.window.scale)
+	ImGui.SetNextWindowSize(432 * Var.window.scale, 547 * Var.window.scale)
 
 	if ImGui.Begin(title, true, flags) then
 		ImGui.SetWindowFontScale(theme.textScale)
@@ -67,12 +68,14 @@ ui.window = function(title, flags, func)
 
 		local screenWidth = select(1, GetDisplayResolution())
 		if screenWidth > 1000 then
-			if screenWidth > 3000 then
-				var.window.scale = (screenWidth / 1932) * theme.textScale
+			if screenWidth > 3800 then
+				Var.window.scale = (screenWidth / 1880) * theme.textScale
+			elseif screenWidth > 3000 then
+				Var.window.scale = (screenWidth / 1932) * theme.textScale
 			elseif screenWidth > 2000 then
-				var.window.scale = (screenWidth / 1880) * theme.textScale
+				Var.window.scale = (screenWidth / 1880) * theme.textScale
 			else
-				var.window.scale = (screenWidth / 1900) * theme.textScale
+				Var.window.scale = (screenWidth / 1900) * theme.textScale
 			end
 		end
 

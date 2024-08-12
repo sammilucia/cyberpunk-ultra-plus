@@ -1,14 +1,14 @@
 -- setquality.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local Cyberpunk = require('helpers/Cyberpunk')
-local config = {}
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+Cyberpunk = require('helpers/Cyberpunk')
 
-function config.SetVram(vram)
-	logger.info('Configuring vram for', vram, 'GB')
+function Config.SetVram(vram)
+	Logger.info('Configuring vram for', vram, 'GB')
 
-	if vram == var.vram.OFF then
+	if vram == Var.vram.OFF then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', false)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '9.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '4000')
@@ -25,13 +25,13 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 		Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 
-		logger.info('    (NSGDD compatibility force-enabled due to low VRAM)')
-		var.settings.nsgddCompatible = true
+		Logger.info('    (NSGDD compatibility force-enabled due to low VRAM)')
+		Var.settings.nsgddCompatible = true
 
 		return
 	end
 
-	if vram == var.vram.GB4 then
+	if vram == Var.vram.GB4 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '1.5')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '600')
@@ -48,13 +48,13 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 		Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 
-		logger.info('    (NSGDD compatibility force-enabled due to low VRAM)')
-		var.settings.nsgddCompatible = true
+		Logger.info('    (NSGDD compatibility force-enabled due to low VRAM)')
+		Var.settings.nsgddCompatible = true
 
 		return
 	end
 
-	if vram == var.vram.GB6 then
+	if vram == Var.vram.GB6 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '3.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '1500')
@@ -71,12 +71,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 		Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 
-		logger.info('    (NSGDD compatibility force-enabled due to low VRAM)')
+		Logger.info('    (NSGDD compatibility force-enabled due to low VRAM)')
 
 		return
 	end
 
-	if vram == var.vram.GB8 then
+	if vram == Var.vram.GB8 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '4.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '2000')
@@ -90,12 +90,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '1')
 
-		if var.settings.nsgddCompatible == false then
-			logger.info('    (NSGDD compatibility disabled)')
+		if Var.settings.nsgddCompatible == false then
+			Logger.info('    (NSGDD compatibility disabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '10.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '20.0')
 		else
-			logger.info('    (NSGDD compatibility enabled)')
+			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 		end
@@ -103,7 +103,7 @@ function config.SetVram(vram)
 		return
 	end
 
-	if vram == var.vram.GB10 then
+	if vram == Var.vram.GB10 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '5.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '2500')
@@ -117,12 +117,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '1')
 
-		if var.settings.nsgddCompatible == false then
-			logger.info('    (NSGDD compatibility disabled)')
+		if Var.settings.nsgddCompatible == false then
+			Logger.info('    (NSGDD compatibility disabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '10.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '20.0')
 		else
-			logger.info('    (NSGDD compatibility enabled)')
+			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 		end
@@ -130,7 +130,7 @@ function config.SetVram(vram)
 		return
 	end
 
-	if vram == var.vram.GB12 then
+	if vram == Var.vram.GB12 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '6.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '3000')
@@ -144,12 +144,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '1')
 
-		if var.settings.nsgddCompatible == false then
-			logger.info('    (NSGDD compatibility disabled)')
+		if Var.settings.nsgddCompatible == false then
+			Logger.info('    (NSGDD compatibility disabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '15.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '30.0')
 		else
-			logger.info('    (NSGDD compatibility enabled)')
+			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 		end
@@ -157,7 +157,7 @@ function config.SetVram(vram)
 		return
 	end
 
-	if vram == var.vram.GB16 then
+	if vram == Var.vram.GB16 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '8.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '4000')
@@ -171,12 +171,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '1')
 
-		if var.settings.nsgddCompatible == false then
-			logger.info('    (NSGDD compatibility disabled)')
+		if Var.settings.nsgddCompatible == false then
+			Logger.info('    (NSGDD compatibility disabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '25.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '50.0')
 		else
-			logger.info('    (NSGDD compatibility enabled)')
+			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 		end
@@ -184,7 +184,7 @@ function config.SetVram(vram)
 		return
 	end
 
-	if vram == var.vram.GB20 then
+	if vram == Var.vram.GB20 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '10.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '5000')
@@ -198,12 +198,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '3')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '2')
 
-		if var.settings.nsgddCompatible == false then
-			logger.info('    (NSGDD compatibility disabled)')
+		if Var.settings.nsgddCompatible == false then
+			Logger.info('    (NSGDD compatibility disabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '30.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '60.0')
 		else
-			logger.info('    (NSGDD compatibility enabled)')
+			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 		end
@@ -211,7 +211,7 @@ function config.SetVram(vram)
 		return
 	end
 
-	if vram == var.vram.GB24 then
+	if vram == Var.vram.GB24 then
 		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
 		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '12.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '6000')
@@ -225,12 +225,12 @@ function config.SetVram(vram)
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '3')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '2')
 
-		if var.settings.nsgddCompatible == false then
-			logger.info('    (NSGDD compatibility disabled)')
+		if Var.settings.nsgddCompatible == false then
+			Logger.info('    (NSGDD compatibility disabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '40.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '80.0')
 		else
-			logger.info('    (NSGDD compatibility enabled)')
+			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
 		end
@@ -239,4 +239,4 @@ function config.SetVram(vram)
 	end
 end
 
-return config
+return Config

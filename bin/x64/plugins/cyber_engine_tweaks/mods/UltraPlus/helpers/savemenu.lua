@@ -1,10 +1,12 @@
 -- savemenu.lua
 
-local logger = require('helpers/logger')
-local config = {}
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+Cyberpunk = require('helpers/Cyberpunk')
 
-function config.SaveMenu()
-	logger.info('Snapshotting game graphics menu settings...')
+function Config.SaveMenu()
+	Logger.info('Snapshotting game graphics menu settings...')
 --[[
 	Cyberpunk.GetOption('/graphics/presets', 'ResolutionScaling')
 	Cyberpunk.GetOption('/graphics/presets', 'DLSS')
@@ -17,7 +19,7 @@ function config.SaveMenu()
 	Lens Flare true false
 	Motion Blur 0 1 2
 ]]
-	logger.info('Done. Graphics menu will be restored when you next load Cyberpunk')
+	Logger.info('Done. Graphics menu will be restored when you next load Cyberpunk')
 end
 
-return config
+return Config

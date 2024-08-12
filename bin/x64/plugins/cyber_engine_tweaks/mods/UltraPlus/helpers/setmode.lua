@@ -1,14 +1,14 @@
 -- setmode.lua
 
-local logger = require('helpers/logger')
-local var = require('helpers/variables')
-local Cyberpunk = require('helpers/Cyberpunk')
-local config = {}
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+Cyberpunk = require('helpers/Cyberpunk')
 
-function config.SetMode(mode)
-	logger.info('Configuring mode for', mode)
+function Config.SetMode(mode)
+	Logger.info('Configuring mode for', mode)
 
-	if mode == var.mode.RASTER then
+	if mode == Var.mode.RASTER then
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', false)
@@ -18,7 +18,7 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.RASTER then
+	if mode == Var.mode.RASTER then
 		LoadIni('rt')
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
@@ -58,13 +58,14 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.RT then
+	if mode == Var.mode.RT then
 		LoadIni('rt')
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', false)
 		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '1')
@@ -98,13 +99,17 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.RT_PT then
+	if mode == Var.mode.RT_PT then
 		LoadIni('rtpt')
+
+		-- leave SHaRC enabled but set to fastest; performance hack
+		Var.settings.sceneScale = Var.sceneScale.FAST
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
@@ -152,7 +157,6 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)	-- disabling so SpatialNumSamples not needed
 		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')				-- WAS 0.45
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
@@ -169,13 +173,14 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.VANILLA then
+	if mode == Var.mode.VANILLA then
 		LoadIni('vanilla')
 
 		-- Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		-- Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', true)
@@ -222,7 +227,6 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '32.0')
 		Cyberpunk.SetOption('Editor/RTXDI', 'PermutationSamplingMode', '2')
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.5')
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '2')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', false)
@@ -238,16 +242,17 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.PT16 then
+	if mode == Var.mode.PT16 then
 		LoadIni('pt')
 
 		-- leave SHaRC enabled but set to fastest; performance hack
-		var.settings.sceneScale = var.sceneScale.PERFORMANCE
+		Var.settings.sceneScale = Var.sceneScale.FAST
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
@@ -284,7 +289,7 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'Enable', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFused', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFallbackSampling', true)
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableBoilingFilter', false)
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableBoilingFilter', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseSpatialRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
@@ -295,7 +300,6 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'PermutationSamplingMode', '2')
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', true)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)	-- disabling so SpatialNumSamples not needed
 		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')				-- WAS 0.45
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
@@ -311,13 +315,14 @@ function config.SetMode(mode)
 		SaveSettings()
 	end
 
-	if mode == var.mode.PT20 then
+	if mode == Var.mode.PT20 then
 		LoadIni('pt')
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
@@ -354,7 +359,7 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'Enable', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFused', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFallbackSampling', true)
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableBoilingFilter', false)
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableBoilingFilter', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseSpatialRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
@@ -365,7 +370,6 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'PermutationSamplingMode', '2')
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)	-- disabling so SpatialNumSamples not needed
 		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')				-- WAS 0.45
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
@@ -381,13 +385,14 @@ function config.SetMode(mode)
 		SaveSettings()
 	end
 
-	if mode == var.mode.PT21 then
+	if mode == Var.mode.PT21 then
 		LoadIni('pt')
-		
+
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
@@ -437,7 +442,6 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'PermutationSamplingMode', '2')
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)	-- disabling so SpatialNumSamples not needed
 		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')				-- WAS 0.45
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
@@ -454,13 +458,14 @@ function config.SetMode(mode)
 		return
 	end
 
-	if mode == var.mode.PTNEXT then
+	if mode == Var.mode.PTNEXT then
 		LoadIni('pt')
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', true)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
@@ -498,7 +503,7 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFused', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFallbackSampling', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableBoilingFilter', true)	   			-- WAS false
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BoilingFilterStrength', '0.2')
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'BoilingFilterStrength', '0.0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseSpatialRGS', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', true)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '8')
@@ -510,7 +515,6 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '0.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'PermutationSamplingMode', '0')
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)	-- disabling so SpatialNumSamples not needed
 		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.0')				-- WAS 0.35 TEST
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '0')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', false)
@@ -522,10 +526,10 @@ function config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'UsePrevFrameBiasAllowance', '0.7')			-- 4.8.0
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '4')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.1')
-		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', false)
+		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
 		SaveSettings()
 		return
 	end
 end
 
-return config
+return Config

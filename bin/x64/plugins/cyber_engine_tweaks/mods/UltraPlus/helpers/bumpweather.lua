@@ -1,21 +1,23 @@
 -- helpers/bumpweather.lua
 
-local logger = require("helpers/logger")
-local var = require("helpers/var")
+Logger = require('helpers/Logger')
+Var = require('helpers/Variables')
+Config = {}
+local Cyberpunk = require('helpers/Cyberpunk')
 
-function BumpWeather(currentWeather)
+function Config.BumpWeather(currentWeather)
     local index
     local random
 
     repeat
-        index = math.random(#var.weatherStates)
-        random = var.weatherStates[index]
+        index = math.random(#Var.weatherLabels)
+        random = Var.weatherLabels[index]
     until random ~= currentWeather
 
-    local name = var.weatherNames[index]
+    local name = Var.weatherNames[index]
 
-    Game.GetWeatherSystem():RequestNewWeather(random)
-    logger.info(string.format("Changed weather to: %s (%s)", name, random))
+    Cyberpunk.SetWeather(random)
+    Logger.info(string.format('Changed weather to: %s (%s)', name, random))
 end
 
-return BumpWeather
+return Config

@@ -1,6 +1,6 @@
--- helpers/logger.lua
+-- helpers/Logger.lua
 
-local var = require('helpers/variables')
+Var = require('helpers/Variables')
 local DEBUG = false
 
 local function init()
@@ -20,7 +20,7 @@ local __log = function(level)
 			end
 		end
 
-		if var.settings.enableConsole then
+		if level == 'info' and Var.settings.enableConsole then
 			print('        Ultra+:', table.concat(args, ' '))
 		end
 
@@ -30,11 +30,11 @@ local __log = function(level)
 	end
 end
 
-local logger = {
+local Logger = {
 	info = __log('info'),
 	debug = __log('debug'),
 }
 
 init()
 
-return logger
+return Logger
