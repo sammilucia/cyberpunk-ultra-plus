@@ -6,6 +6,11 @@ Config = {}
 Cyberpunk = require('helpers/Cyberpunk')
 
 function Config.SetGraphics(graphics)
+	if graphics == Var.graphics.OFF then
+		Logger.info('Graphics settings are not enabled, skipping')
+		return
+	end
+
 	Logger.info('Setting game graphics for', graphics)
 
 	if graphics == Var.graphics.HIGH then

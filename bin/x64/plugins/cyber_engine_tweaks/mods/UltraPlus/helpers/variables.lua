@@ -64,6 +64,7 @@ local Var = {
 		FAST = 'Fast',
 		MEDIUM = 'Medium',
 		HIGH = 'High',
+		OFF = 'Off',
 	},
 	weatherLabels = {
 		[1] = '24h_weather_sunny',
