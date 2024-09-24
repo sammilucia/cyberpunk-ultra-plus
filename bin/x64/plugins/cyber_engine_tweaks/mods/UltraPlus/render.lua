@@ -26,7 +26,7 @@ local function renderMainTab()
 		{ key = 'PTNEXT', label = 'Next', tooltip = 'For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics/DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.' }
 	}
 	ui.space()
-	if ui.header('Rendering Mode                 | PT >') then
+	if ui.header('Rendering Mode                | PT >') then
 		for _, mode in ipairs(renderingModes) do
 			local value = Var.mode[mode.key]
 			if ui.radio(mode.label, Var.settings.mode == value) then
@@ -65,7 +65,7 @@ local function renderMainTab()
 		ImGui.BeginDisabled(true)
 	end
 
-	if ui.header('Bounce Lighting Accuracy') then
+	if ui.header('Bounce Lighting Cache Accuracy') then
 		for _, key in ipairs(sceneScaleOrder) do
 			local value = Var.sceneScale[key]
 			if ui.radio(value .. '##Scenescale', Var.settings.sceneScale == value) then
@@ -82,9 +82,9 @@ local function renderMainTab()
 		ImGui.EndDisabled()
 	end
 
-	local graphicsOrder = { 'POTATO', 'FAST', 'MEDIUM', 'HIGH' }
+	local graphicsOrder = { 'POTATO', 'FAST', 'MEDIUM', 'HIGH', 'OFF' }
 	ui.space()
-	if ui.header('Game Graphics Settings (plus raster tweaks)') then
+	if ui.header('Override Game Graphics Menu Settings') then
 		for _, key in ipairs(graphicsOrder) do
 			local value = Var.graphics[key]
 			if ui.radio(value .. '##Graphics', Var.settings.graphics == value) then
