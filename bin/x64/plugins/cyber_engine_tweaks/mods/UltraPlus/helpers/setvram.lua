@@ -17,7 +17,7 @@ function Config.SetVram(vram)
 		Cyberpunk.SetOption('RayTracing/DynamicInstance', 'UpdateProxyNumMax', '192')
 
 		Cyberpunk.SetOption('Streaming', 'MaxNodesPerFrame', '300')
-		Cyberpunk.SetOption('Streaming', 'EditorThrottledMaxNodesPerFrame', '300')
+		Cyberpunk.SetOption('Streaming', 'EditorThrottledMaxNodesPerFrame', '500')		--vanilla value is 500
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'FloodMinNonLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '1')
