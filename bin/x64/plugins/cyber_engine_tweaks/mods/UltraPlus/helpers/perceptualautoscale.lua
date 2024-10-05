@@ -6,8 +6,9 @@ Config = {}
 Cyberpunk = require('helpers/Cyberpunk')
 
 function Config.AutoScale(quality)
+
 	local percentage = math.floor((quality / 6) * 100)
-	Logger.info('    (Auto-scaling perceptual quality to', percentage..'% to try and hit FPS target)')
+	Logger.info('    (Target FPS: Auto-scaling perceptual quality to', percentage..'%)')
 
 	if quality == 1 then
 		if Var.settings.mode == Var.mode.PT16 then
@@ -20,8 +21,17 @@ function Config.AutoScale(quality)
 			Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '800.0')
 		end
 
-		if Var.settings.mode == Var.mode.RT_PT
-		or Var.settings.mode == Var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.PT16 or Var.settings.mode == Var.mode.PT20 or Var.settings.mode == Var.mode.RT_PT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', 1)
+
+			if Var.settings.quality == Var.quality.INSANE then
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 2)
+			else
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 1)
+			end
+		end
+
+		if Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 		end
 		return
@@ -38,8 +48,17 @@ function Config.AutoScale(quality)
 			Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '1500.0')
 		end
 
-		if Var.settings.mode == Var.mode.RT_PT
-		or Var.settings.mode == Var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.PT16 or Var.settings.mode == Var.mode.PT20 or Var.settings.mode == Var.mode.RT_PT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', 1)
+
+			if Var.settings.quality == Var.quality.INSANE and Var.settings.mode ~= Var.mode.RT_PT then
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 2)
+			else
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 1)
+			end
+		end
+
+		if Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 		end
 		return
@@ -56,8 +75,17 @@ function Config.AutoScale(quality)
 			Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '1500.0')
 		end
 
-		if Var.settings.mode == Var.mode.RT_PT
-		or Var.settings.mode == Var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.PT16 or Var.settings.mode == Var.mode.PT20 or Var.settings.mode == Var.mode.RT_PT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', 2)
+
+			if Var.settings.quality == Var.quality.INSANE and Var.settings.mode ~= Var.mode.RT_PT then
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 2)
+			else
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 1)
+			end
+		end
+
+		if Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		end
 		return
@@ -74,8 +102,17 @@ function Config.AutoScale(quality)
 			Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '5000.0')
 		end
 
-		if Var.settings.mode == Var.mode.RT_PT
-		or Var.settings.mode == Var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.PT16 or Var.settings.mode == Var.mode.PT20 or Var.settings.mode == Var.mode.RT_PT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', 2)
+
+			if Var.settings.quality == Var.quality.INSANE and Var.settings.mode ~= Var.mode.RT_PT then
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 2)
+			else
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 1)
+			end
+		end
+
+		if Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '300.0')
 		end
 		return
@@ -92,8 +129,16 @@ function Config.AutoScale(quality)
 			Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '8000.0')
 		end
 
-		if Var.settings.mode == Var.mode.RT_PT
-		or Var.settings.mode == Var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.PT16 or Var.settings.mode == Var.mode.PT20 or Var.settings.mode == Var.mode.RT_PT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', 2)
+			if Var.settings.quality == Var.quality.INSANE then
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 3)
+			else
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 2)
+			end
+		end
+
+		if Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '400.0')
 		end
 		return
@@ -110,8 +155,16 @@ function Config.AutoScale(quality)
 			Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '8000.0')
 		end
 
-		if Var.settings.mode == Var.mode.RT_PT
-		or Var.settings.mode == Var.mode.RTOnly then
+		if Var.settings.mode == Var.mode.PT16 or Var.settings.mode == Var.mode.PT20 or Var.settings.mode == Var.mode.RT_PT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', 2)
+			if Var.settings.quality == Var.quality.INSANE then
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 3)
+			else
+				Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', 2)
+			end
+		end
+
+		if Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.RTOnly then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '1000.0')
 		end
 		return

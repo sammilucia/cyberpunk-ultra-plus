@@ -14,9 +14,12 @@
         "registerForEvent",
         "ImGuiCond",
         "ImGuiTreeNodeFlags",
+        "ImGuiWindowFlags",
         "IsEntityInInteriorArea",
         "GetPlayer",
         "Observe",
-        "ObserveAfter"
+        "ObserveAfter",
+        "GetDisplayResolution",
+        "TweakDB"
     ]
 }

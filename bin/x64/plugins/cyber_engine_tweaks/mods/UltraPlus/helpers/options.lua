@@ -1195,6 +1195,18 @@ local options = {
 	},
 	rtFloat = {
 		{
+			item = 'TransparentReflectionEnvironmentBlendFactor',
+			name = 'Glass Transparency',
+			category = 'RayTracing',
+			tooltip = 'Fixes white glass',
+		},
+		{
+			item = 'MotionBlurScale',
+			name = 'Motion Blur Factor',
+			category = 'Visuals',
+			tooltip = 'Increase or decrease to increase/decrease motion blur amount',
+		},
+		{
 			item = 'ForceCustomMipBias',
 			name = 'Custom Mip Bias',
 			category = 'Editor/MipBias',
