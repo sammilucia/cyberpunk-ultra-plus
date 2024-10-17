@@ -46,6 +46,7 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.FAST then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
 
+		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '24')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '24')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','3')				-- TEST
@@ -61,7 +62,6 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '16')
 
 		if Var.settings.mode == Var.mode.PTNEXT then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '0')
@@ -82,7 +82,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT16 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '1')
@@ -103,7 +102,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT20 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '1')
@@ -123,13 +121,7 @@ function Config.SetQuality(quality)
 			return
 		end
 
-		if Var.settings.mode == Var.mode.RTOnly then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
-			return
-		end
-
 		if Var.settings.mode == Var.mode.RT_PT then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '1')
@@ -150,7 +142,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT21 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '0')
@@ -174,6 +165,7 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.MEDIUM then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
 
+		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '32')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '32')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
@@ -189,7 +181,6 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '16')
 
 		if Var.settings.mode == Var.mode.PTNEXT then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '0')
@@ -210,7 +201,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT16 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
@@ -231,7 +221,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT20 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
@@ -251,13 +240,7 @@ function Config.SetQuality(quality)
 			return
 		end
 
-		if Var.settings.mode == Var.mode.RTOnly then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
-			return
-		end
-
 		if Var.settings.mode == Var.mode.RT_PT then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
@@ -278,7 +261,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT21 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '0')
@@ -302,6 +284,7 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.HIGH then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '1')
 
+		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '48')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '48')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
@@ -317,7 +300,6 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '20')
 
 		if Var.settings.mode == Var.mode.PTNEXT then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '0')
@@ -338,7 +320,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT16 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
@@ -355,11 +336,13 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)
 			return
 		end
 
 		if Var.settings.mode == Var.mode.PT20 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
@@ -379,13 +362,7 @@ function Config.SetQuality(quality)
 			return
 		end
 
-		if Var.settings.mode == Var.mode.RTOnly then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
-			return
-		end
-
 		if Var.settings.mode == Var.mode.RT_PT then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
@@ -406,7 +383,6 @@ function Config.SetQuality(quality)
 		end
 
 		if Var.settings.mode == Var.mode.PT21 then
-			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '0')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '0')
@@ -483,6 +459,9 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)
 			return
 		end
 
