@@ -574,6 +574,7 @@ local function initUltraPlus()
 	Logger.debug('Debug mode enabled')
 
 	LoadIni('common')
+	LoadIni('traffic')
 	LoadSettings()
 
 	Config.SetGraphics(Var.settings.graphics)
@@ -627,6 +628,7 @@ end)
 registerForEvent('onTweak', function()
 	-- called early during engine init
 	LoadIni('common')
+	LoadIni('traffic')
 end)
 
 registerForEvent('onOverlayOpen', function()
