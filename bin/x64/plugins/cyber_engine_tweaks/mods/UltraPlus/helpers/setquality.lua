@@ -46,6 +46,7 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.FAST then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
 
+		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '24')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '24')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','3')				-- TEST
@@ -165,6 +166,7 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.MEDIUM then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '0')
 
+		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '32')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '32')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
@@ -284,6 +286,7 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.HIGH then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '1')
 
+		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		Cyberpunk.SetOption('DLSS', 'SampleNumber', '48')
 		Cyberpunk.SetOption('FSR2', 'SampleNumber', '48')
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
