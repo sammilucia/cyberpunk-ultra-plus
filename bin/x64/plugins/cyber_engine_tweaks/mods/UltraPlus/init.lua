@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.3.3',
+	__VERSION	 = '5.3.4',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
