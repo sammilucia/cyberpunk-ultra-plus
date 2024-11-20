@@ -284,8 +284,8 @@ function Config.SetQuality(quality)
 	if quality == Var.quality.HIGH then
 		Cyberpunk.SetOption('/graphics/advanced', 'GlobaIlluminationRange', '1')
 
-		Cyberpunk.SetOption('DLSS', 'SampleNumber', '48')
-		Cyberpunk.SetOption('FSR2', 'SampleNumber', '48')
+		Cyberpunk.SetOption('DLSS', 'SampleNumber', '40')					--was 48
+		Cyberpunk.SetOption('FSR2', 'SampleNumber', '40')					--was 48
 		Cyberpunk.SetOption('Editor/Selection/Appearance', 'CheckerboardSize','2')
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Direct/Common', 'AtrousIterationNum', '6')
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AtrousIterationNum', '6')
