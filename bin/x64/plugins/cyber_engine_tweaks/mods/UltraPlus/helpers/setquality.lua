@@ -337,8 +337,6 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
-			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)
-			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)
 			return
 		end
 
