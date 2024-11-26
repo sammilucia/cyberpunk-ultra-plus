@@ -158,6 +158,13 @@ local function renderMainTab()
 			SaveSettings()
 		end
 	end
+
+	ui.space()
+	Var.settings.weatherFix, toggled = ui.checkbox('Enable Weather Stuck Fix', Var.settings.weatherFix)
+	ui.tooltip('Enable a timer that changes the weather if it was stuck for too long')
+	if toggled then
+		SaveSettings()
+	end
 end
 
 local function renderSetting(setting, inputType, width)

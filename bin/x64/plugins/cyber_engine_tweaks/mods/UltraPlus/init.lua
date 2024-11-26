@@ -62,8 +62,16 @@ local function isGameSessionActive()
 	local blackboardUI = Game.GetBlackboardSystem():Get(blackboardDefs.UI_System)
 	local blackboardPM = Game.GetBlackboardSystem():Get(blackboardDefs.PhotoMode)
 
-	Config.gameSession.gameMenuActive = blackboardUI:GetBool(blackboardDefs.UI_System.IsInMenu)
-	Config.gameSession.photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
+	if blackboardUI == nil then
+		Config.gameSession.gameMenuActive = false
+	else
+		Config.gameSession.gameMenuActive = blackboardUI:GetBool(blackboardDefs.UI_System.IsInMenu)
+	end
+	if blackboardPM == nil then
+		Config.gameSession.photoModeActive = false
+	else
+		Config.gameSession.photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
+	end
 	Config.gameSession.tutorialActive = Game.GetTimeSystem():IsTimeDilationActive('UI_TutorialPopup')
 
 	if Var.window.cetOpenAtInit then
@@ -254,6 +262,7 @@ function SaveSettings()
 	UltraPlus['internal.enableTargetFps'] = Var.settings.enableTargetFps
 	UltraPlus['internal.targetFps'] = Var.settings.targetFps
 	UltraPlus['internal.enableConsole'] = Var.settings.enableConsole
+	UltraPlus['internal.weatherFix'] = Var.settings.weatherFix
 
 	local settingsTable = { UltraPlus = UltraPlus }
 
@@ -533,7 +542,6 @@ registerForEvent('onUpdate', function(delta)
 	-- handle non-blocking background tasks
 	timer.fast = timer.fast + delta
 	timer.lazy = timer.lazy + delta
-	timer.weather = timer.weather + delta
 
 	Stats.fps = (Stats.fps * 9 + (1 / delta)) / 10
 
@@ -546,10 +554,13 @@ registerForEvent('onUpdate', function(delta)
 		doLazyUpdate()
 		timer.lazy = 0
 	end
-
-	if timer.weather > timer.WEATHER then
-		doWeatherUpdate()
-		timer.weather = 0
+	
+	if Var.weatherFix then
+	timer.weather = timer.weather + delta
+		if timer.weather > timer.WEATHER then
+			doWeatherUpdate()
+			timer.weather = 0
+		end
 	end
 
 	for i = #activeTimers, 1, -1 do
@@ -569,6 +580,7 @@ local function initUltraPlus()
 		Logger.info('Reinitializing...')
 	else
 		Logger.info('Initializing...')
+		setUltraPlusInitialized(true)
 	end
 
 	Logger.debug('Debug mode enabled')

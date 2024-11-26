@@ -31,6 +31,7 @@ local Var = {
 		enableTargetFps = false,
 		targetFps = 30,
 		enableConsole = false,
+		weatherFix = false,
 	},
 	mode = {
 		VANILLA = 'Vanilla',
@@ -78,7 +79,7 @@ local Var = {
 		[9] = 'sa_courier_clouds',
 		[10] = 'q306_epilogue_cloudy_morning',
 	},
-	watherNames = {
+	weatherNames = {
 		[1] = 'Sunny',
 		[2] = 'Fog',
 		[3] = 'Pollution',
