@@ -282,6 +282,8 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForDirectRadiance', true)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForIndirectRadiance', true)
 		Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'ReferenceAccumulation', true)
+		Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)		--added for 5.3.4
+		Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)		--added for 5.3.4
 		Cyberpunk.SetOption('Rendering/VariableRateShading', 'Enable', true)
 		Cyberpunk.SetOption('Rendering/VariableRateShading', 'VarianceCutoff', '0.05')
 		Cyberpunk.SetOption('Rendering/VariableRateShading', 'MotionFactor', '0.7')
