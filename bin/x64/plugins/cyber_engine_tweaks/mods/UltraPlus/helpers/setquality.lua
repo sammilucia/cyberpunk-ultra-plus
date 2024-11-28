@@ -361,7 +361,7 @@ function Config.SetQuality(quality)
 
 		if Var.settings.mode == Var.mode.RT_PT then
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
-			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
+			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')			--should be 2 like other modes 5.3.4
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '2')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '2')
