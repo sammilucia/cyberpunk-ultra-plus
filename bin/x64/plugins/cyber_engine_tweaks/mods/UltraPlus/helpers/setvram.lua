@@ -158,8 +158,8 @@ function Config.SetVram(vram)
 	end
 
 	if vram == Var.vram.GB16 then
-		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
-		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '8.0')
+		--Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
+		--Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '8.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '4000')
 		Cyberpunk.SetOption('Rendering', 'DistantShadowsMaxBatchSize', '1024')
 		Cyberpunk.SetOption('RayTracing', 'AccelerationStructureBuildNumMax', '112')
