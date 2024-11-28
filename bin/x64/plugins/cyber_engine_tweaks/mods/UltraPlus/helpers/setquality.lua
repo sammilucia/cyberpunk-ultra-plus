@@ -336,7 +336,6 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
-			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
 			return
 		end
 
