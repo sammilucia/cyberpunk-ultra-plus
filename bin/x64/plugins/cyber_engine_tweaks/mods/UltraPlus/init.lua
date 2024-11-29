@@ -63,12 +63,12 @@ local function isGameSessionActive()
 	local blackboardPM = Game.GetBlackboardSystem():Get(blackboardDefs.PhotoMode)
 
 	if blackboardUI == nil then
-		Config.gameSession.gameMenuActive = false
+		Config.gameSession.gameMenuActive = true
 	else
 		Config.gameSession.gameMenuActive = blackboardUI:GetBool(blackboardDefs.UI_System.IsInMenu)
 	end
 	if blackboardPM == nil then
-		Config.gameSession.photoModeActive = false
+		Config.gameSession.photoModeActive = true
 	else
 		Config.gameSession.photoModeActive = blackboardPM:GetBool(blackboardDefs.PhotoMode.IsActive)
 	end
