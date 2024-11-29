@@ -332,11 +332,10 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')				--was 7 5.3.4
 			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
-			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
 			return
 		end
 
@@ -362,7 +361,7 @@ function Config.SetQuality(quality)
 
 		if Var.settings.mode == Var.mode.RT_PT then
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', true)
-			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '1')
+			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')			--should be 2 like other modes 5.3.4
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
 			Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '2')
 			Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '2')

@@ -158,15 +158,15 @@ function Config.SetVram(vram)
 	end
 
 	if vram == Var.vram.GB16 then
-		Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
-		Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '8.0')
+		--Cyberpunk.SetOption('Rendering', 'FakeOverrideGPUVRAM', true)
+		--Cyberpunk.SetOption('Rendering', 'FakeGPUVRAM', '8.0')
 		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '4000')
 		Cyberpunk.SetOption('Rendering', 'DistantShadowsMaxBatchSize', '1024')
 		Cyberpunk.SetOption('RayTracing', 'AccelerationStructureBuildNumMax', '112')
 		Cyberpunk.SetOption('RayTracing/DynamicInstance', 'UpdateProxyNumMax', '256')
 
-		Cyberpunk.SetOption('Streaming', 'MaxNodesPerFrame', '400')
-		Cyberpunk.SetOption('Streaming', 'EditorThrottledMaxNodesPerFrame', '400')
+		Cyberpunk.SetOption('Streaming', 'MaxNodesPerFrame', '500')				--was 400
+		Cyberpunk.SetOption('Streaming', 'EditorThrottledMaxNodesPerFrame', '500')		--was 400
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'FloodMinNonLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'StreamMaxLoadingThreads', '2')
 		Cyberpunk.SetOption('ResourceLoaderThrottler', 'TrickleMaxLoadingThreads', '1')
