@@ -59,8 +59,9 @@ local function isGameSessionActive()
 	local time = Cyberpunk.GetPlayTime()
 
 	local blackboardDefs = Game.GetAllBlackboardDefs()
-	local blackboardUI = Game.GetBlackboardSystem():Get(blackboardDefs.UI_System)
-	local blackboardPM = Game.GetBlackboardSystem():Get(blackboardDefs.PhotoMode)
+	local blackboardSystem = Game.GetBlackboardSystem()
+	local blackboardUI = blackboardSystem:Get(blackboardDefs.UI_System)
+	local blackboardPM = blackboardSystem:Get(blackboardDefs.PhotoMode)
 
 	if blackboardUI == nil then
 		Config.gameSession.gameMenuActive = true
