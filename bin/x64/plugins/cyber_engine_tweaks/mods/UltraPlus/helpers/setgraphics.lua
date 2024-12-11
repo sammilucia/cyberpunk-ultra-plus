@@ -23,8 +23,8 @@ function Config.SetGraphics(graphics)
 		return
 	end
 
-	if graphics == Var.graphics.LOW then
-		LoadIni('graphics_low')
+	if graphics == Var.graphics.FAST then
+		LoadIni('graphics_fast')
 		return
 	end
 

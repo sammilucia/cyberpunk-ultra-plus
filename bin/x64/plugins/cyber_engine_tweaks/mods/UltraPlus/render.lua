@@ -4,6 +4,7 @@ Logger = require('helpers/Logger')
 Var = require('helpers/Variables')
 Config = require('helpers/Config')
 Cyberpunk = require('helpers/Cyberpunk')
+
 Stats = {
 	fps = 0,
 }
@@ -128,6 +129,14 @@ local function renderMainTab()
 
 				if setting.item == 'nsgddCompatible' then
 					Config.SetVram(Var.settings.vram)
+				end
+
+				if setting.item == 'enableTraffic' then
+					Config.SetCars(Var.settings.enableTraffic)
+				end
+
+				if setting.item == 'enableCrowds' then
+					Config.SetPop(Var.settings.enableCrowds)
 				end
 
 				SaveSettings()

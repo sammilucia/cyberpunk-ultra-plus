@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.3.4',
+	__VERSION	 = '5.3.5',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -254,6 +254,8 @@ function SaveSettings()
 	UltraPlus['internal.enableTargetFps'] = Var.settings.enableTargetFps
 	UltraPlus['internal.targetFps'] = Var.settings.targetFps
 	UltraPlus['internal.enableConsole'] = Var.settings.enableConsole
+	UltraPlus['internal.enableTraffic'] = Var.settings.enableTraffic
+	UltraPlus['internal.enableCrowds'] = Var.settings.enableCrowds
 
 	local settingsTable = { UltraPlus = UltraPlus }
 
@@ -582,6 +584,8 @@ local function initUltraPlus()
 	Config.SetQuality(Var.settings.quality)
 	Config.SetSceneScale(Var.settings.sceneScale)
 	Config.SetVram(Var.settings.vram)
+	Config.SetPop(Var.settings.enableTraffic)
+	Config.SetCars(Var.settings.enableTraffic)
 
 	timer.fast = 0
 	timer.lazy = 0

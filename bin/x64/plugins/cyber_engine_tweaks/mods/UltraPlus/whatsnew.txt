@@ -1,0 +1,18 @@
+5.3.5
+---------------------
+Fixed a bug in setgraphics preventing Fast graphics settings from applying (ty to junggg327)
+Fixed missing increase of MaxNodesPerFrame and EditorThrottledMaxNodesPerFrame to 700 for nsgddCompatible
+Reverted SHARC bounces to 0 for PT16, SHARC is not used
+Minor code tidy-ups
+
+5.3.4
+---------------------
+vram.lua - Made changes to MaxNodesPerFrame and EditorThrottledMaxNodesPerFrame for nsgddCompatible, increased to 700
+New Crowds.ini (this is a WIP and still unfinished but works without any issues, just traffic behavior hasnt been fine tuned)
+New Traffic.ini added (this is a WIP and still unfinished but works without any issues, just crowd behavior hasnt been fine tuned)
+options.lua - additioinal tooltips added
+vram.lua - 16G - left over code in setvram.lua removed
+quality.lua - PT16 - added 1 SHARC bounce added, need feedback as to how/if this changes performance
+setmode.lua - all changes to PT20 rolled back
+quality.lua - RT-PT Var.sceneScale changed from FAST to MEDIUM
+setmode.lua - fixed broken photomode for pathtracing
