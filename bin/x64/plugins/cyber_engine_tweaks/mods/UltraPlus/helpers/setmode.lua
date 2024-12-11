@@ -10,7 +10,6 @@ function Config.SetMode(mode)
 
 	if mode == Var.mode.RASTER then
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', false)
-
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', false)
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.15')
 		Cyberpunk.SetOption('Editor/SHARC', 'Enable', false)
@@ -61,8 +60,8 @@ function Config.SetMode(mode)
 	if mode == Var.mode.RT then
 		LoadIni('rt')
 
-		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
+		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
@@ -102,19 +101,18 @@ function Config.SetMode(mode)
 	if mode == Var.mode.RT_PT then
 		LoadIni('rtpt')
 
-		-- leave SHaRC enabled but set to fastest; performance hack
-		Var.settings.sceneScale = Var.sceneScale.FAST
+		Var.settings.sceneScale = Var.sceneScale.MEDIUM										-- 5.3.4 medium looks much better and performance impact is minimal
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', false)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
-		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', false)
-		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false) 
+		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'EnableNRD', true)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '1')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.25')
@@ -155,13 +153,13 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
-		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
+		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')			-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')				-- WAS 0.45
+		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')			-- WAS 0.45
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'ForcedShadowLightSourceRadius', '0.1')
-		Cyberpunk.SetOption('Editor/SHARC', 'Enable', true)
+		Cyberpunk.SetOption('Editor/SHARC', 'Enable', true)								-- WAS false 5.3.4
 		Cyberpunk.SetOption('Editor/SHARC', 'UseRTXDIAtPrimary', true)
 		Cyberpunk.SetOption('Editor/SHARC', 'UseRTXDIWithAlbedo', false)
 		Cyberpunk.SetOption('Editor/SHARC', 'UsePrevFrame', true)
@@ -184,7 +182,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', true)
-		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false) 
+		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '1')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.5')
 		Cyberpunk.SetOption('RayTracing', 'SkyRadianceScale', '1.2')
@@ -256,8 +254,10 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
+		
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
-		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false) 
+		
+		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '0')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.25')
 		Cyberpunk.SetOption('RayTracing', 'SkyRadianceScale', '0.7')			  			-- fake PT sunlight on buildings
@@ -270,10 +270,10 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing', 'EnableShadowOptimizations', true)
 		Cyberpunk.SetOption('RayTracing', 'EnableGlobalIllumination', false)
 		Cyberpunk.SetOption('RayTracing', 'EnableImportanceSampling', true)
-		Cyberpunk.SetOption('RayTracing', 'ForceShadowLODBiasUsage', false)
-		Cyberpunk.SetOption('RayTracing/Debug', 'EnableVisibilityCheck', false)			-- 1fps faster
-		Cyberpunk.SetOption('RayTracing/Collector', 'VisibilityFrustumOffset', '70.0')	-- WAS 70.0 improves RTXDI light/shadow selection
-		Cyberpunk.SetOption('RayTracing/Collector', 'LocalShadowCullingRadius', '70.0')	-- WAS 70.0
+		Cyberpunk.SetOption('RayTracing', 'ForceShadowLODBiasUsage', false)				
+		Cyberpunk.SetOption('RayTracing/Debug', 'EnableVisibilityCheck', false)				-- 1fps faster
+		Cyberpunk.SetOption('RayTracing/Collector', 'VisibilityFrustumOffset', '70.0')		-- WAS 70.0 improves RTXDI light/shadow selection
+		Cyberpunk.SetOption('RayTracing/Collector', 'LocalShadowCullingRadius', '70.0')		-- WAS 70.0
 		Cyberpunk.SetOption('RayTracing/Reference', 'EnableFixed', true)
 		Cyberpunk.SetOption('RayTracing/Reflection', 'EnableHalfResolutionTracing', '1')
 		Cyberpunk.SetOption('RayTracing/Reflection', 'AdaptiveSampling', false)
@@ -294,7 +294,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '0')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
@@ -304,7 +304,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'ForcedShadowLightSourceRadius', '0.1')
-		Cyberpunk.SetOption('Editor/SHARC', 'Enable', false)
+		Cyberpunk.SetOption('Editor/SHARC', 'Enable', true)							-- 5.3.4
 		Cyberpunk.SetOption('Editor/SHARC', 'UseRTXDIAtPrimary', true)
 		Cyberpunk.SetOption('Editor/SHARC', 'UseRTXDIWithAlbedo', false)
 		Cyberpunk.SetOption('Editor/SHARC', 'UsePrevFrame', true)
@@ -312,6 +312,9 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '0')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
+		--Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)	-- 5.3.4
+		--Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)			-- 5.3.4
+		--Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)			-- 5.3.4
 		SaveSettings()
 	end
 
@@ -320,14 +323,19 @@ function Config.SetMode(mode)
 
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracing', true)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
-		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
-		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false) 
+		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
+		Cyberpunk.SetOption('Rendering/VariableRateShading', 'Enable', true)
+		Cyberpunk.SetOption('Rendering/VariableRateShading', 'VarianceCutoff', '0.05')
+		Cyberpunk.SetOption('Rendering/VariableRateShading', 'MotionFactor', '0.7')
+		Cyberpunk.SetOption('Rendering/VariableRateShading', 'ScreenEdgeFactor', '2.0')
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '0')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.25')
 		Cyberpunk.SetOption('RayTracing', 'SkyRadianceScale', '0.7')			  			-- fake PT sunlight on buildings
@@ -341,9 +349,9 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing', 'EnableGlobalIllumination', false)
 		Cyberpunk.SetOption('RayTracing', 'EnableImportanceSampling', true)
 		Cyberpunk.SetOption('RayTracing', 'ForceShadowLODBiasUsage', false)
-		Cyberpunk.SetOption('RayTracing/Debug', 'EnableVisibilityCheck', false)			-- 1fps faster
-		Cyberpunk.SetOption('RayTracing/Collector', 'VisibilityFrustumOffset', '70.0')	-- WAS 70.0 improves RTXDI light/shadow selection
-		Cyberpunk.SetOption('RayTracing/Collector', 'LocalShadowCullingRadius', '70.0')	-- WAS 70.0
+		Cyberpunk.SetOption('RayTracing/Debug', 'EnableVisibilityCheck', false)				-- 1fps faster
+		Cyberpunk.SetOption('RayTracing/Collector', 'VisibilityFrustumOffset', '70.0')		-- WAS 70.0 improves RTXDI light/shadow selection
+		Cyberpunk.SetOption('RayTracing/Collector', 'LocalShadowCullingRadius', '70.0')		-- WAS 70.0
 		Cyberpunk.SetOption('RayTracing/Reference', 'EnableFixed', true)
 		Cyberpunk.SetOption('RayTracing/Reflection', 'EnableHalfResolutionTracing', '1')
 		Cyberpunk.SetOption('RayTracing/Reflection', 'AdaptiveSampling', false)
@@ -352,10 +360,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForDirectRadiance', false)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForIndirectRadiance', false)
 		Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'ReferenceAccumulation', false)
-		Cyberpunk.SetOption('Rendering/VariableRateShading', 'Enable', true)
-		Cyberpunk.SetOption('Rendering/VariableRateShading', 'VarianceCutoff', '0.05')
-		Cyberpunk.SetOption('Rendering/VariableRateShading', 'MotionFactor', '0.7')
-		Cyberpunk.SetOption('Rendering/VariableRateShading', 'ScreenEdgeFactor', '2.0')
+		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'Enable', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFused', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'EnableFallbackSampling', true)
@@ -364,7 +369,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'UseTemporalRGS', false)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'MaxHistoryLength', '0')
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'TargetHistoryLength', '0')
-		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
+		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')				-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
@@ -392,12 +397,12 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
-		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
-		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false) 
+		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '0')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.25')
 		Cyberpunk.SetOption('RayTracing', 'SkyRadianceScale', '0.7')			  			-- fake PT sunlight on buildings
@@ -411,7 +416,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing', 'EnableGlobalIllumination', false)
 		Cyberpunk.SetOption('RayTracing', 'EnableImportanceSampling', true)
 		Cyberpunk.SetOption('RayTracing', 'ForceShadowLODBiasUsage', false)
-		Cyberpunk.SetOption('RayTracing/Debug', 'EnableVisibilityCheck', false)			-- 1fps faster
+		Cyberpunk.SetOption('RayTracing/Debug', 'EnableVisibilityCheck', false)				-- 1fps faster
 		Cyberpunk.SetOption('RayTracing/Collector', 'VisibilityFrustumOffset', '70.0')
 		Cyberpunk.SetOption('RayTracing/Collector', 'LocalShadowCullingRadius', '70.0')
 		Cyberpunk.SetOption('RayTracing/Reference', 'EnableFixed', true)
@@ -439,10 +444,10 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialSamplingRadius', '48.0')			-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'UseCustomDenoiser', false)
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableRTXDIDenoising', true)
-		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')				-- WAS 64.0
+		Cyberpunk.SetOption('Editor/RTXDI', 'SpatialSamplingRadius', '20.0')			-- WAS 64.0
 		Cyberpunk.SetOption('Editor/RTXDI', 'PermutationSamplingMode', '2')
 		Cyberpunk.SetOption('Editor/RTXDI', 'InitialCandidatesInTemporal', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')				-- WAS 0.45
+		Cyberpunk.SetOption('Editor/RTXDI', 'BoilingFilterStrength', '0.45')			-- WAS 0.45
 		Cyberpunk.SetOption('Editor/RTXDI', 'BiasCorrectionMode', '3')
 		Cyberpunk.SetOption('Editor/RTXDI', 'EnableApproximateTargetPDF', true)
 		Cyberpunk.SetOption('Editor/RTXDI', 'ForcedShadowLightSourceRadius', '0.1')
@@ -465,15 +470,15 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', true)
 
+		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
-		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
-		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false) 
+		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '0')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.25')
-		Cyberpunk.SetOption('RayTracing', 'SkyRadianceScale', '0.7')			  			-- fake PT sunlight on buildings
+		Cyberpunk.SetOption('RayTracing', 'SkyRadianceScale', '0.7')			  		-- fake PT sunlight on buildings
 		Cyberpunk.SetOption('RayTracing', 'EnableGlobalShadow', true)
 		Cyberpunk.SetOption('RayTracing', 'EnableLocalShadow', true)
 		Cyberpunk.SetOption('RayTracing', 'EnableTransparentReflection', true)
@@ -495,7 +500,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForDirectRadiance', false)
 		Cyberpunk.SetOption('RayTracing/NRD', 'UseReblurForIndirectRadiance', false)
 		Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'ReferenceAccumulation', false)
-		Cyberpunk.SetOption('Rendering/VariableRateShading', 'Enable', false)				-- 4.8.0
+		Cyberpunk.SetOption('Rendering/VariableRateShading', 'Enable', false)			-- 4.8.0
 		Cyberpunk.SetOption('Rendering/VariableRateShading', 'VarianceCutoff', '0.05')
 		Cyberpunk.SetOption('Rendering/VariableRateShading', 'MotionFactor', '0.7')
 		Cyberpunk.SetOption('Rendering/VariableRateShading', 'ScreenEdgeFactor', '2.0')

@@ -6,7 +6,7 @@ local options = {
 			item = 'nsgddCompatible',
 			name = 'Enable Not So Good Draw Distance Compatibility',
 			category = 'internal',
-			tooltip = 'Changes VRAM configuration to work correctly with Not So Good Draw Distance\nmod (streaming and precache)',
+			tooltip = 'Changes VRAM configuration to work correctly with Not So Good Draw Distance\nmod (MaxNodesPerFrame, EditorThrottledMaxNodesPerFrame, streaming and precache)',
 		},
 		{
 			item = 'DLSS_D',
@@ -25,6 +25,18 @@ local options = {
 			name = 'Enable resampled importance sampling (RIS)',
 			category = 'RayTracing/Reference',
 			tooltip = 'RIS is resampled importance sampling. Disable this if you use reLIGHT\n(CP Default: On)',
+		},
+		{
+			item = 'enableTraffic',
+			name = 'Enable Ultra+ Traffic',
+			category = 'internal',
+			tooltip = 'Changes traffic behavior in game to be more dynamic.',
+		},
+		{
+			item = 'enableCrowds',
+			name = 'Enable Ultra+ Crowds',
+			category = 'internal',
+			tooltip = 'Changes crowd behavior in game to be more dynamic.',
 		},
 	},
 	ptFeatures = {
@@ -214,7 +226,7 @@ local options = {
 			item = 'EnableGlobalLight',
 			name = 'Enable PT Global Light',
 			category = 'Editor/RTXDI',
-			tooltip = 'Appears to be a higher radiance/quality sunlight path, notably boosts daylight visuals with unknown compatibility',
+			tooltip = 'Appears to be a higher radiance/quality sunlight path, notably boosts daylight visuals with unknown \ncompatibility, enabled may cause double shadows with badly built meshes',
 		},
 		{
 			item = 'EnableGlobalShadow',
@@ -262,13 +274,13 @@ local options = {
 			item = 'AllowRTXDIRejitter',
 			name = 'Enable RTX DI Rejitter',
 			category = 'Rendering',
-			tooltip = 'Pass pre-denoise jtter information to the temporal upscaler. This workaround preserves detail when a PT denoiser removes jitter',
+			tooltip = 'Pass pre-denoise jtter information to the temporal upscaler. \nThis workaround preserves detail when a PT denoiser removes jitter',
 		},
 		{
 			item = 'AllowRayTracedReferenceRejitter',
 			name = 'Allow NRD Rejitter',
 			category = 'Rendering',
-			tooltip = 'Pass pre-denoise jtter information to the temporal upscaler. This workaround preserves detail when a PT denoiser removes jitter',
+			tooltip = 'Pass pre-denoise jtter information to the temporal upscaler. \nThis workaround preserves detail when a PT denoiser removes jitter',
 		},
 		{
 			item = 'InitialCandidatesInTemporal',
@@ -288,7 +300,7 @@ local options = {
 			item = 'EnableFused',
 			name = 'Enable ReSTIR GI Fused Spatiotemporal GI (recommended)',
 			category = 'Editor/ReSTIRGI',
-			tooltip = 'Appears to be the only properly functioning GI pathway implemented, performs a spatiotemporal pass on the last frame, causes more ghosting/smearing',
+			tooltip = 'Appears to be the only properly functioning GI pathway implemented, performs a spatiotemporal \npass on the last frame, causes more ghosting/smearing',
 		},
 		{
 			item = 'EnableBoilingFilter',
@@ -488,7 +500,7 @@ local options = {
 			item = 'EnableScalingCompensation',
 			name = 'Enable NRD Scaling Compensation',
 			category = 'Editor/Denoising/NRD',
-			tooltip = 'Enable Scaling Compensation',
+			tooltip = 'Enable Scaling Compensation, disabled is noisier',
 		},
 	},
 	rtOptions = {
@@ -574,7 +586,7 @@ local options = {
 			item = 'EnableGlobalIllumination',
 			name = 'Enable Global Illumination',
 			category = 'RayTracing',
-			tooltip = '',
+			tooltip = 'not used for PT',
 		},
 		{
 			item = 'EnableAmbientOcclusion',
@@ -812,13 +824,13 @@ local options = {
 			item = 'DownscaleFactor',
 			name = 'SHaRC Downscale (LOG)',
 			category = 'Editor/SHARC',
-			tooltip = '',
+			tooltip = 'Logarithm base? downscaling. affects performance',
 		},
 		{
 			item = 'Bounces',
 			name = 'SHARC Bounces',
 			category = 'Editor/SHARC',
-			tooltip = '',
+			tooltip = 'Higher than 2 makes little difference in most scenes, affects performance',
 		},
 		{
 			item = 'HistoryReset',
@@ -1166,7 +1178,7 @@ local options = {
 			item = 'LightSlotsCount',
 			name = 'ReGIR Light Slots',
 			category = 'Editor/ReGIR',
-			tooltip = 'How many local light slots. Some scenes go right up to 512, which is the maximum. Below this will cause missing lights or light switching in some scenes',
+			tooltip = 'How many local light slots. Some scenes go right up to 512, which is the maximum. \nBelow this will cause missing lights or light switching in some scenes',
 		},
 		{
 			item = 'SpatialVarianceEstimationHistoryThreshold',
@@ -1612,7 +1624,7 @@ local options = {
 			item = 'SceneScale',
 			name = 'SHaRC Scene Scale',
 			category = 'Editor/SHARC',
-			tooltip = '',
+			tooltip = 'Changes voxel size, default (50.0)',
 		},
 		{
 			item = 'UsePrevFrameBiasAllowance',
