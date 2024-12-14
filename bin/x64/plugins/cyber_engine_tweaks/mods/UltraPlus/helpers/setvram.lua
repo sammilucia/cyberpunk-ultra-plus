@@ -117,7 +117,7 @@ function Config.SetVram(vram)
 			Logger.info('    (NSGDD compatibility enabled)')
 			Cyberpunk.SetOption('Streaming', 'PrecacheDistance', '0.0')
 			Cyberpunk.SetOption('Streaming', 'MinStreamingDistance', '1.0')
-			Cyberpunk.SetOption('Streaming', 'MaxNodesPerFrame', '700')
+			Cyberpunk.SetOption('Streaming', 'MaxNodesPerFrame', '700')			--500/600 is probably enough for RT or PT but 700 is needed for raster
 			Cyberpunk.SetOption('Streaming', 'EditorThrottledMaxNodesPerFrame', '700')
 		end
 
