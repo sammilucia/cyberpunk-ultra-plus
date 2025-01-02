@@ -1,3 +1,9 @@
+5.3.6
+---------------------
+changes to RainMapBatchMaxSize and DistantShadowsMaxBatchSize (ty sosuine)
+increased PoolBudgetKB size on most vram settings PoolBudgetKB is in KB not MB
+updated crowds.ini again
+
 5.3.5
 ---------------------
 Fixed a bug in setgraphics preventing Fast graphics settings from applying (ty to junggg327)
