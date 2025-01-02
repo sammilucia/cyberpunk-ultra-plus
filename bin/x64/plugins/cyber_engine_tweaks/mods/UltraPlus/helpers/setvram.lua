@@ -9,8 +9,12 @@ function Config.SetVram(vram)
 	Logger.info('Configuring vram for', vram, 'GB')
 
 	if vram == Var.vram.OFF then
-		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '4096')			-- vanilla value is 4096
-		Cyberpunk.SetOption('Rendering', 'DistantShadowsMaxBatchSize', '500')				-- vanilla value is 500
+		Cyberpunk.SetOption('World/Streaming/PersistencyCache', 'PoolBudgetKB', '4096')		-- vanilla value is 4096
+		Cyberpunk.SetOption('Rendering', 'DistantShadowsMaxBatchSize', '500')			-- was 768 / vanilla 500
+		Cyberpunk.SetOption('Rendering', 'DistantShadowsMaxTrianglesPerBatch', '400000')	-- vanilla 400000
+		Cyberpunk.SetOption('Rendering', 'RainMapBatchMaxSize', '300')  			-- was 768 vanilla 300
+		Cyberpunk.SetOption('Rendering', 'RainMapBatchMaxTrianglesPerBatch', '200000')  	-- vanilla 200000
+
 		Cyberpunk.SetOption('RayTracing', 'AccelerationStructureBuildNumMax', '64')
 		Cyberpunk.SetOption('RayTracing/DynamicInstance', 'UpdateProxyNumMax', '192')
 
