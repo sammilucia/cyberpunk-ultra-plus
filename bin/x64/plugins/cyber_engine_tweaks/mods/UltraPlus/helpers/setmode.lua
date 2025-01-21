@@ -313,7 +313,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
 		SaveSettings()
-
+		return
 	end
 
 	if mode == Var.mode.PT20 then
@@ -385,6 +385,7 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
 		SaveSettings()
+		return
 	end
 
 	if mode == Var.mode.PT21 then
