@@ -254,7 +254,9 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpacePlanarReflection', false)
+		
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
+		
 		Cyberpunk.SetOption('Rendering', 'AllowRTXDIRejitter', false)
 		Cyberpunk.SetOption('RayTracing', 'AmbientOcclusionRayNumber', '0')
 		Cyberpunk.SetOption('RayTracing', 'SunAngularSize', '0.25')
@@ -310,6 +312,8 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('Editor/SHARC', 'HistoryReset', '0')
 		Cyberpunk.SetOption('Editor/Characters/Eyes', 'DiffuseBoost', '0.4')
 		Cyberpunk.SetOption('Editor/PathTracing', 'UseScreenSpaceData', true)
+		SaveSettings()
+
 	end
 
 	if mode == Var.mode.PT20 then
