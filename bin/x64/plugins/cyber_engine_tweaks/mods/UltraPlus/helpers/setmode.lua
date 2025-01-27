@@ -331,7 +331,6 @@ function Config.SetMode(mode)
 		Cyberpunk.SetOption('/graphics/raytracing', 'RayTracedPathTracing', true)
 
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode', true)
-
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'DistantGI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'RTXDI', true)
 		Cyberpunk.SetOption('Developer/FeatureToggles', 'ScreenSpaceReflection', false)
