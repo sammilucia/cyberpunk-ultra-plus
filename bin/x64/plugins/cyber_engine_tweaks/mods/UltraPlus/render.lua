@@ -13,6 +13,16 @@ local ui = require('helpers/ui')
 local toggled
 local render = {}
 
+local function toboolean(value)
+	if value == 'true' or value == true then
+		return true
+	elseif value == 'false' or value == false then
+		return false
+	else
+		return nil
+	end
+end
+
 local function renderMainTab()
 	ui.text(Config.status)
 
@@ -37,7 +47,7 @@ local function renderMainTab()
 				Config.SetQuality(Var.settings.quality)
 				Config.SetGraphics(Var.settings.graphics)
 				Config.SetSceneScale(Var.settings.sceneScale)
-				SaveSettings()
+				SaveConfig()
 			end
 			ui.tooltip(mode.tooltip)
 			ui.sameLine()
@@ -52,13 +62,13 @@ local function renderMainTab()
 			if ui.radio(value .. '##Quality', Var.settings.quality == value) then
 				Var.settings.quality = value
 				Config.SetQuality(Var.settings.quality)
-				SaveSettings()
+				SaveConfig()
 			end
 			ui.sameLine()
 		end
 	end
 
-	local sceneScaleOrder = { 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'EXTREME' }
+	local sceneScaleOrder = { 'OFF', 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'CRAZY' }
 	ui.space()
 
 	local disableRadianceCache = Var.settings.mode == Var.mode.RASTER or Var.settings.mode == Var.mode.RT or Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.PT16 -- also test RT+PT
@@ -73,7 +83,7 @@ local function renderMainTab()
 				Var.settings.sceneScale = value
 
 				Config.SetSceneScale(Var.settings.sceneScale)
-				SaveSettings()
+				SaveConfig()
 			end
 			ui.sameLine()
 		end
@@ -92,30 +102,26 @@ local function renderMainTab()
 				Var.settings.graphics = value
 
 				Config.SetGraphics(Var.settings.graphics)
-				SaveSettings()
+				SaveConfig()
 			end
 			ui.sameLine()
 		end
 	end
 
+	local vramOrder = { '4', '6', '8', '10', '12', '16', '20', '24' }
 	ui.space()
-	if ui.header('VRAM Configuration (GB)') then
-		local vramSorted = {}
-		for _, value in pairs(Var.vram) do
-			table.insert(vramSorted, value)
-		end
-		table.sort(vramSorted)
+    if ui.header('VRAM Configuration (GB)') then
+        for _, key in ipairs(vramOrder) do
+            local value = key
+            if ui.radio(key .. '##GB', Var.settings.vram == value) then
+                Var.settings.vram = value
 
-		for _, key in ipairs(vramSorted) do
-			if ui.radio(tostring(key) .. '##GB', Var.settings.vram == key) then
-				Var.settings.vram = key
-
-				Config.SetVram(Var.settings.vram)
-				SaveSettings()
-			end
-			ui.sameLine()
-		end
-	end
+                Config.SetVram(Var.settings.vram)
+                SaveConfig()
+            end
+            ui.sameLine()
+        end
+    end
 
 	ui.space()
 	if ui.header('Tweaks') then
@@ -127,10 +133,6 @@ local function renderMainTab()
 			if toggled then
 				Cyberpunk.SetOption(setting.category, setting.item, setting.value)
 
-				if setting.item == 'nsgddCompatible' then
-					Config.SetVram(Var.settings.vram)
-				end
-
 				if setting.item == 'enableTraffic' then
 					Config.SetCars(Var.settings.enableTraffic)
 				end
@@ -139,32 +141,32 @@ local function renderMainTab()
 					Config.SetPop(Var.settings.enableCrowds)
 				end
 
-				SaveSettings()
+				SaveConfig()
 			end
 		end
 	end
 
 	ui.space()
-	Var.settings.enableConsole, toggled = ui.checkbox('Console', Var.settings.enableConsole)
+	Var.settings.enableConsole, toggled = ui.checkbox('Console Output', toboolean(Var.settings.enableConsole))
 	ui.tooltip('Ultra+ will log what it\'s doing to the CET console')
 	if toggled then
-		SaveSettings()
+		SaveConfig()
 	end
 
-	ui.sameLine(176)
-	Var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', Var.settings.enableTargetFps)
+	ui.sameLine(170)
+	Var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', toboolean(Var.settings.enableTargetFps))
 	ui.tooltip('Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS')
 	if toggled then
-		SaveSettings()
+		SaveConfig()
 	end
 
 	if Var.settings.enableTargetFps then
 		ui.sameLine()
 		ui.width(Var.window.intSize)
-		Var.settings.targetFps, toggled = ui.inputInt('', Var.settings.targetFps, 1)
+		Var.settings.targetFps, toggled = ui.inputInt('', tonumber(Var.settings.targetFps), 1)
 
 		if toggled then
-			SaveSettings()
+			SaveConfig()
 		end
 	end
 end
@@ -189,7 +191,7 @@ local function renderSetting(setting, inputType, width)
 		else
 			Cyberpunk.SetOption(setting.category, setting.item, setting.value)
 		end
-		SaveSettings()
+		SaveConfig()
 	end
 end
 
@@ -204,8 +206,12 @@ local function renderFeaturesTab()
 	for i, group in ipairs(settingGroups) do
 		local settings, heading, inputType = table.unpack(group)
 		ui.header(heading)
-		for _, setting in pairs(settings) do
+		if type(settings) == "table" then
+			for _, setting in pairs(settings) do
 				renderSetting(setting, inputType)
+			end
+		else
+			Logger.info("ERROR: 'settings' is not a table for group " .. heading)
 		end
 	end
 end
@@ -233,17 +239,21 @@ local function renderDebugTab()
 	ui.separator()
 	for _, group in ipairs(settingGroups) do
 		local settings, inputType, width = table.unpack(group)
-		local hasVisibleItems = false
-		for _, setting in pairs(settings) do
-			if Var.window.filterText == '' or string.find(string.lower(setting.name), string.lower(Var.window.filterText)) then
-				if not hasVisibleItems then
-					hasVisibleItems = true
+		if type(settings) == "table" then
+			local hasVisibleItems = false
+			for _, setting in pairs(settings) do
+				if Var.window.filterText == '' or string.find(string.lower(setting.name), string.lower(Var.window.filterText)) then
+					if not hasVisibleItems then
+						hasVisibleItems = true
+					end
+					renderSetting(setting, inputType, width)
 				end
-				renderSetting(setting, inputType, width)
 			end
-		end
-		if hasVisibleItems then
-			ui.separator()
+			if hasVisibleItems then
+				ui.separator()
+			end
+		else
+			Logger.info("ERROR: 'settings' is not a table for input type: " .. tostring(inputType))
 		end
 	end
 end

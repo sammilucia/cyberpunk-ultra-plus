@@ -1,3 +1,46 @@
+5.4.3
+---------------------
+Now flashes to "Reload a save" when required to fully activate a mode, to make it clearer to the user
+
+5.4.2
+---------------------
+"Click 'Apply' in graphics menu" now flashes to make it more obvious
+Enabling PT16 now force-disables Ray Reconstruction (because it only works with NRD)
+Fixed UltraPlusConfig.ini not restoring settings correctly
+Fixed UI window was too big
+Removed redundant code for autoloading/saving
+Added Rendering/DLSSDSeparateParticleColor to Debug
+Fixed error spam about Blackboard in the logs
+
+5.4.1
+---------------------
+Changed settings format from JSON to INI for upcoming compatibility with Ultra+ Mod Manager
+Enabled the option to disable SHaRC bounce lighting cache for all full PT modes
+Reduced Motion Blur so that 'Low' (in the game's graphics menu) should no longer be visible (i.e. it only smooths between frames, rather than being a special effect)
+Switched to using psiberx excellent GameSession library for detecting when player is in game
+On first install, Ultra+ now defaults to 'Vanilla' settings wherever possible rather than 'Unknown'
+Increased distant shadow update speed by 40x
+Fixed possible issue with PTNext not enabling after fast travel
+Disabled "Target FPS is not enabled" message constantly in console when console output is enabled
+Changed 'Console' to 'Console Output' in the UI for clarity
+Prevented Ultra+ re-applying the same settings when it doesn't need to
+Updated reflection probe settings from reGLASS for better compatibility
+
+5.4.0
+---------------------
+Test merge of 5.1.1 and 5.3.6, not for general release
+
+5.3.7
+---------------------
+variables.lua - fixed typo
+options.lua - added more descriptions
+setquality.lua & setmode.lua - tidy up code
+
+5.3.6
+---------------------
+setmode.lua - remove redundant code from pt16
+updated vram.lua again - improved compatiblity with NSGDD
+
 5.3.5
 ---------------------
 Fixed a bug in setgraphics preventing Fast graphics settings from applying (ty to junggg327)

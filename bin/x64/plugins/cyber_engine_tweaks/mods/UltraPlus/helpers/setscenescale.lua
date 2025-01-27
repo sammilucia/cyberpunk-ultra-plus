@@ -8,6 +8,11 @@ Cyberpunk = require('helpers/Cyberpunk')
 function Config.SetSceneScale(scale)
 	Logger.info('Settings SceneScale to', scale)
 
+	if scale == Var.sceneScale.OFF then
+		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
+		return
+	end
+
 	if scale == Var.sceneScale.FAST then
 		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '30.0')
 		return
@@ -28,7 +33,7 @@ function Config.SetSceneScale(scale)
 		return
 	end
 
-	if scale == Var.sceneScale.EXTREME then
+	if scale == Var.sceneScale.CRAZY then
 		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '400.0')
 		return
 	end

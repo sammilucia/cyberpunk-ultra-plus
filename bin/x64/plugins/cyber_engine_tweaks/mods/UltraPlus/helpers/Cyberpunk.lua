@@ -125,11 +125,15 @@ local Cyberpunk = {
 		if string.sub(category, 1, 1) == '/' then -- graphics options
 			if tostring(value) == 'true' or tostring(value) == 'false' then
 				if Cyberpunk.GetOption(category, item) ~= value then
+					Logger.info(string.format('    (Was: %s)', type(Cyberpunk.GetOption(category, item))))
+					Logger.info('Set value for:', category .. '/' .. item, '=', value)
 					Cyberpunk.SetValue(category, item, value)
 				end
 				return
 			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
 				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
+					Logger.info(string.format('    (Was: %s)', type(Cyberpunk.GetOption(category, item))))
+					Logger.info('Set index for:', category .. '/' .. item, '=', value)
 					Cyberpunk.SetIndex(category, item, tonumber(value))
 				end
 				return
@@ -137,19 +141,29 @@ local Cyberpunk = {
 		end
 
 		if tostring(value) == 'false' or tostring(value) == 'true' then -- test without type test
-			if Cyberpunk.GetOption(category, item) ~= value then
+			if Cyberpunk.GetOption(category, item) ~= toboolean(value) then
+				Logger.info(string.format('    (Was: %s %s)', type(Cyberpunk.GetOption(category, item)), Cyberpunk.GetOption(category, item)))
+				Logger.info('Set bool for:', category .. '/' .. item, '=', value)
 				Cyberpunk.SetBool(category, item, value)
 			end
 			return
 		end
 
 		if tostring(value):match('^%-?%d+%.%d+$') or valueType == 'float' then -- floats
-			Cyberpunk.SetFloat(category, item, value)
+			if Cyberpunk.GetOption(category, item) ~= tonumber(value) then
+				Logger.info(string.format('    (Was: %s %s)', type(Cyberpunk.GetOption(category, item)), Cyberpunk.GetOption(category, item)))
+				Logger.info('Set float for:', category .. '/' .. item, '=', value)
+				Cyberpunk.SetFloat(category, item, value)
+			end
 			return
 		end
 
 		if tostring(value):match('^%-?%d+$') then -- integers
-			Cyberpunk.SetInt(category, item, value)
+			if Cyberpunk.GetOption(category, item) ~= tonumber(value) then
+				Logger.info(string.format('    (Was: %s %s)', type(Cyberpunk.GetOption(category, item)), Cyberpunk.GetOption(category, item)))
+				Logger.info('Set int for:', category .. '/' .. item, '=', value)
+				Cyberpunk.SetInt(category, item, tonumber(value))
+			end
 			return
 		end
 

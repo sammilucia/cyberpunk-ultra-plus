@@ -95,7 +95,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
@@ -208,7 +209,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '1')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '8')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', false)
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
@@ -321,7 +323,8 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '2')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '16')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
 			return
@@ -427,10 +430,13 @@ function Config.SetQuality(quality)
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumSamples', '3')
 			Cyberpunk.SetOption('Editor/RTXDI', 'SpatialNumDisocclusionBoostSamples', '12')
 			Cyberpunk.SetOption('Editor/RTXDI', 'EnableLocalLightImportanceSampling', true)
-			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
-			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
+			Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '10')
+			Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0') -- performance hack, leave cache enabled with no bounces
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumSamples', '0')
 			Cyberpunk.SetOption('Editor/ReSTIRGI', 'SpatialNumDisocclusionBoostSamples', '0')
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/AmbientOcclusion', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Direct', 'AntiFirefly', true)
+			Cyberpunk.SetOption('Editor/Denoising/ReBLUR/Indirect', 'AntiFirefly', true)
 			return
 		end
 

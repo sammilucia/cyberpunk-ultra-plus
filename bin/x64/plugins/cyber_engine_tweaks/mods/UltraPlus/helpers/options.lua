@@ -3,12 +3,6 @@
 local options = {
 	tweaks = {
 		{
-			item = 'nsgddCompatible',
-			name = 'Enable Not So Good Draw Distance Compatibility',
-			category = 'internal',
-			tooltip = 'Changes VRAM configuration to work correctly with Not So Good Draw Distance\nmod (MaxNodesPerFrame, EditorThrottledMaxNodesPerFrame, streaming and precache)',
-		},
-		{
 			item = 'DLSS_D',
 			name = 'Enable Ray Reconstruction Denoiser',
 			category = '/graphics/presets',
@@ -715,6 +709,12 @@ local options = {
 			tooltip = '',
 		},
 		{
+			item = 'DLSSDSeparateParticleColor',
+			name = 'Enable DLSSD Separate Particle Color',
+			category = 'Rendering',
+			tooltip = '',
+		},
+		{
 			item = 'Enabled',
 			name = 'PT Interop Cache',
 			category = 'Interop/Cache',
@@ -731,12 +731,6 @@ local options = {
 			name = 'UseSkinningLOD',
 			category = 'Rendering',
 			tooltip = 'This may mean - Use LODs specified in the materials',
-		},
-		{
-			item = 'CharacterSubsurfaceStochastic',
-			name = 'Character Subsurface Stochastic',
-			category = 'Developer/FeatureToggles',
-			tooltip = '',
 		},
 		{
 			item = 'CharacterSubsurfaceScattering',
