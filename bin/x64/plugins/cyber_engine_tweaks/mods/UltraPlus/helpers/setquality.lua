@@ -288,7 +288,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumber', '2')
 		Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumber', '2')
-		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '2')
+		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '3')
 		Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '2')
 
 		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
