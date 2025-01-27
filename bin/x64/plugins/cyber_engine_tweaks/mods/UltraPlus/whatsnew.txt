@@ -1,3 +1,9 @@
+5.4.4
+---------------------
+Pull forward fix for stuck weather due to typo from mick-lue (thank you)
+Fix photo mode having half dark screen in some circumstances from dimkatet (thank you)
+Fix direct lights not working when changing PT modes from dimkatet (thank you)
+
 5.4.3
 ---------------------
 Now flashes to "Reload a save" when required to fully activate a mode, to make it clearer to the user
