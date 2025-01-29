@@ -110,7 +110,7 @@ local Cyberpunk = {
 		return Cyberpunk.Get(category, item)
 	end,
 
-	SetOption = function(category, item, value, valueType)
+	SetOption = function(category, item, value, valueType, force)
 		-- sets a live game setting, working out which method to use for different settings
 		if value == nil then
 			Logger.info('ERROR: Skipping nil value:', category .. '/' .. item, '=', value)
@@ -122,18 +122,24 @@ local Cyberpunk = {
 			return
 		end
 
+		local option = Cyberpunk.GetOption(category, item)
+
 		if string.sub(category, 1, 1) == '/' then -- graphics options
 			if tostring(value) == 'true' or tostring(value) == 'false' then
-				if Cyberpunk.GetOption(category, item) ~= value then
-					Logger.info(string.format('    (Was: %s)', type(Cyberpunk.GetOption(category, item))))
-					Logger.info('Set value for:', category .. '/' .. item, '=', value)
+				if option ~= value or force then
+					if not force then
+						Logger.info(string.format('    (Was: %s %s)', type(option), option))
+						Logger.info('Set value for:', category .. '/' .. item, '=', value)
+					end
 					Cyberpunk.SetValue(category, item, value)
 				end
 				return
 			elseif tostring(value):match('^%-?%d+$') then -- integer (index) values
-				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) then
-					Logger.info(string.format('    (Was: %s)', type(Cyberpunk.GetOption(category, item))))
-					Logger.info('Set index for:', category .. '/' .. item, '=', value)
+				if Cyberpunk.GetIndex(category, item) ~= tonumber(value) or force then
+					if not force then
+						Logger.info(string.format('    (Was: %s %s)', type(option), option))
+						Logger.info('Set value for:', category .. '/' .. item, '=', value)
+					end
 					Cyberpunk.SetIndex(category, item, tonumber(value))
 				end
 				return
@@ -141,27 +147,33 @@ local Cyberpunk = {
 		end
 
 		if tostring(value) == 'false' or tostring(value) == 'true' then -- test without type test
-			if Cyberpunk.GetOption(category, item) ~= toboolean(value) then
-				Logger.info(string.format('    (Was: %s %s)', type(Cyberpunk.GetOption(category, item)), Cyberpunk.GetOption(category, item)))
-				Logger.info('Set bool for:', category .. '/' .. item, '=', value)
+			if option ~= toboolean(value) or force then
+				if not force then
+					Logger.info(string.format('    (Was: %s %s)', type(option), option))
+					Logger.info('Set value for:', category .. '/' .. item, '=', value)
+				end
 				Cyberpunk.SetBool(category, item, value)
 			end
 			return
 		end
 
 		if tostring(value):match('^%-?%d+%.%d+$') or valueType == 'float' then -- floats
-			if Cyberpunk.GetOption(category, item) ~= tonumber(value) then
-				Logger.info(string.format('    (Was: %s %s)', type(Cyberpunk.GetOption(category, item)), Cyberpunk.GetOption(category, item)))
-				Logger.info('Set float for:', category .. '/' .. item, '=', value)
+			if option ~= tonumber(value) or force then
+				if not force then
+					Logger.info(string.format('    (Was: %s %s)', type(option), option))
+					Logger.info('Set value for:', category .. '/' .. item, '=', value)
+				end
 				Cyberpunk.SetFloat(category, item, value)
 			end
 			return
 		end
 
 		if tostring(value):match('^%-?%d+$') then -- integers
-			if Cyberpunk.GetOption(category, item) ~= tonumber(value) then
-				Logger.info(string.format('    (Was: %s %s)', type(Cyberpunk.GetOption(category, item)), Cyberpunk.GetOption(category, item)))
-				Logger.info('Set int for:', category .. '/' .. item, '=', value)
+			if option ~= tonumber(value) or force then
+				if not force then
+					Logger.info(string.format('    (Was: %s %s)', type(option), option))
+					Logger.info('Set value for:', category .. '/' .. item, '=', value)
+				end
 				Cyberpunk.SetInt(category, item, tonumber(value))
 			end
 			return
@@ -183,7 +195,7 @@ local Cyberpunk = {
 	end,
 
 	SetWeather = function(label)
-		return Game.GetWeatherSystem():RequestNewWeather(label)
+		return Game.GetWeatherSystem():SetWeather(label)
 	end,
 
 	GetWeather = function()

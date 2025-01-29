@@ -20,7 +20,7 @@ local __log = function(level)
 			end
 		end
 
-		if level == 'info' and Var.settings.enableConsole then
+		if level == 'info' and Var.settings.console then
 			print('        Ultra+:', table.concat(args, ' '))
 		end
 

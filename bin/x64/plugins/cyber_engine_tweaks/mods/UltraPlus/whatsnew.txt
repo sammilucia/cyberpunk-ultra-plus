@@ -1,3 +1,22 @@
+5.5.0-rc1
+---------------------
+Simplify and fix PTNext enablement/robustness by Lazorr
+Significantly improved visual quality of PTNext thanks to FireKahuna
+Significantly improved image stability of all path tracing (reduced boiling noise)
+Major code refactor, likely fixing occasional weird edge-case issues
+More aggressively FPS fix for large FPS drops entering vehicles and cut scenes (vanilla buy)
+Renamed 'Target FPS' to 'Stable FPS'
+Temporarily removed crowd and population controls
+Removed photomode forcing NRD, it just causes problems for people and with DLSS 4 doesn't offer enough advantage
+Replaced internal async tasks with psiberx's Cron library
+Added psiberx's GameUI library to detect fast travel future functionality
+Corrected SetWeather() function call thanks to DeV Dawn
+
+5.4.5
+---------------------
+Improve scene detail and reduce boiling noise for all PT modes from FireKahuna (thank you)
+Fix an issue where PTNext might not enable correctly
+
 5.4.4
 ---------------------
 Pull forward fix for stuck weather due to typo from mick-lue (thank you)

@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.4.4',
+	__VERSION	 = '5.5.0-test2',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -24,27 +24,20 @@ UltraPlus = {
 
 Logger = require('helpers/Logger')
 Var = require('helpers/Variables')
-Config = require('helpers/Config')
+Config = require('helpers/config')
 Cyberpunk = require('helpers/Cyberpunk')
 GameSession = require('helpers/psiberx/GameSession')
+GameUI = require('helpers/psiberx/GameUI')
+Cron = require('helpers/psiberx/Cron')
 Stats = {
 	fps = 0,
 }
 local UltraPlusFlag = "UltraPlus.Initialized"
 local options = require('helpers/options')
 local render = require('render')
-local mode = {
-	changed = false,
-	previousMode = '',
-}
+
 local timer = {
-	lazy = 0,
-	fast = 0,
-	weather = 0,
-	paused = false,
-	FAST = 1.0,
-	LAZY = 5.0,
-	WEATHER = 910, -- 15:10 hours
+	paused = true,
 	flash = false,
 }
 
@@ -157,6 +150,10 @@ function LoadConfig()
 	Logger.info('Loading user settings...')
 	for category, settings in pairs(iniData) do
 		for item, value in pairs(settings) do
+            if value == 'true' or value == 'false' then
+                value = value == 'true'
+            end
+			Logger.info('    config', item..':', value)
 			if settingsTable[item] and not string.match(item, '^internal') then
 				settingsTable[item].value = value
 			elseif string.match(item, '^internal') then
@@ -191,13 +188,11 @@ function SaveConfig()
 	UltraPlus['internal.quality'] = Var.settings.quality
 	UltraPlus['internal.sceneScale'] = Var.settings.sceneScale
 	UltraPlus['internal.vram'] = Var.settings.vram
-	UltraPlus['internal.graphics'] = Var.settings.graphics
+	UltraPlus['internal.graphicsMenuOverrides'] = Var.settings.graphicsMenuOverrides
 	UltraPlus['internal.rayReconstruction'] = Var.settings.rayReconstruction
-	UltraPlus['internal.enableTargetFps'] = Var.settings.enableTargetFps
-	UltraPlus['internal.targetFps'] = Var.settings.targetFps
-	UltraPlus['internal.enableConsole'] = Var.settings.enableConsole
-	UltraPlus['internal.enableTraffic'] = Var.settings.enableTraffic
-	UltraPlus['internal.enableCrowds'] = Var.settings.enableCrowds
+	UltraPlus['internal.stableFps'] = Var.settings.stableFps
+	UltraPlus['internal.stableFpsTarget'] = Var.settings.stableFpsTarget
+	UltraPlus['internal.console'] = Var.settings.console
 
 	local iniData = {}
 	local iniContent = ""
@@ -231,46 +226,15 @@ local function toggleRayReconstruction(state)
 	end
 end
 
-local function preparePTNext()
-	-- if not in PTNext mode, disable ReGIR
-	-- if in PTNext mode, disable PTNext in preparation for loading
-	if Config.ptNext.stage2 then
-		return
-	end
-
-	if Var.settings.mode ~= Var.mode.PTNEXT then
-		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
-
-		Logger.info('    PTNext is not in use')
-		Config.ptNext.active = false
-		return
-	end
-
-	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
-	Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', false)
-
-	Logger.info('    PTNext is ready to load')
-	Config.ptNext.stage2 = true
-	Config.ptNext.active = false
-end
-
 local function enablePTNext()
-	if Config.ptNext.active or Var.settings.mode ~= Var.mode.PTNEXT then
+	if Var.settings.mode ~= Var.mode.PTNEXT then
 		return
 	end
 
-	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
-
-	Wait(0.8, function()
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableSeparateDenoising', true)
-	end)
-
-	Wait(1.5, function()
+	Cron.After(1.5, function()
 		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
 	end)
 
-	Config.ptNext.active = true
 	Logger.info('    PTNext is active')
 end
 
@@ -290,18 +254,18 @@ local function doRayReconstructionFix()
 	-- vehicles or cutscenes. also controls EnableGradients which doesn't work with NRD
 	if Var.settings.mode == Var.mode.PT16 then
 		-- force RR off for PT16, don't rely on user to do it
-		Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', false)
+		Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', false, 'boolean', true)
 	end
 
 	if not Cyberpunk.GetOption('/graphics/presets', 'DLSS_D') then
-		Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', false) -- needs testing with NRD again
-		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', true)
+		-- Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', false) -- needs testing with NRD again
+		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', true, 'boolean', true)
 		return
 	end
 
-	Cyberpunk.SetOption('RayTracing', 'EnableNRD', false)
-	Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', true) -- needs testing with NRD again
-	Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', false)
+	Cyberpunk.SetOption('RayTracing', 'EnableNRD', false, 'boolean', true)
+	-- Cyberpunk.SetOption('Editor/RTXDI', 'EnableGradients', true) -- needs testing with NRD again
+	Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AntiFirefly', false, 'boolean', true)
 end
 
 local function doWindowClose()
@@ -312,98 +276,19 @@ end
 local function setStatus()
 	if Cyberpunk.NeedsConfirmation() then
 		if timer.flash then
-			Config.status = 'Click \'Apply\' in game graphics menu'
+			Config.Status = 'Click \'Apply\' in game graphics menu'
 		else
-			Config.status = ''
+			Config.Status = ''
 		end
-	elseif mode.changed then
+	elseif Var.settings.modeChanged then
 		if timer.flash then
-			Config.status = 'Load a save game to fully activate ' .. Var.settings.mode
+			Config.Status = 'Load a save game to fully activate ' .. Var.settings.mode
 		else
-			Config.status = ''
+			Config.Status = ''
 		end
 	else
-		Config.status = 'Preem.'
+		Config.Status = 'Preem.'
 	end
-end
-
-local function doFastUpdate()
-	-- runs every timer.FAST seconds
-	-- confirmChanges()
-	timer.flash = not timer.flash
-
-	if Var.settings.mode ~= mode.previousMode then
-		mode.changed = true
-	end
-
-	mode.previousMode = Var.settings.mode
-
-	setStatus()
-
-	if Var.settings.mode == Var.mode.PTNEXT and not Config.ptNext.active and not Config.ptNext.stage1 then
-		preparePTNext()
-	end
-
-	if not Cyberpunk.GetOption('Developer/FeatureToggles', 'PathTracingForPhotoMode') then goto continue
-		Config.NRD = Cyberpunk.GetOption('Raytracing', 'EnableNRD')
-		Config.DLSSD = Cyberpunk.GetOption('/graphics/presets', 'DLSS_D')
-
-		if Cyberpunk.PhotoMode() then
-			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', false)
-			Cyberpunk.SetOption('Raytracing', 'EnableNRD', false)
-		else
-			Cyberpunk.SetOption('Raytracing', 'EnableNRD', Config.NRD)
-			Cyberpunk.SetOption('/graphics/presets', 'DLSS_D', Config.DLSSD)
-		end
-		::continue::
-	end
-
-	if timer.paused then
-		return
-	end
-
-	enablePTNext()
-	doRayReconstructionFix()
-
-	local testRain = Cyberpunk.IsRaining()
-	local testIndoors = IsEntityInInteriorArea(GetPlayer())
-
-	if testRain ~= Var.settings.rain or testIndoors ~= Var.settings.indoors then
-		Var.settings.rain = testRain
-		Var.settings.indoors = testIndoors
-		doRainPathTracingFix()
-	end
-end
-
-local function doLazyUpdate()
-	-- runs every timer.LAZY seconds
-	if timer.paused then
-		return
-	end
-
-	-- begin time of day logic:
-	Config.SetDaytime(Cyberpunk.GetHour())
-
-	-- begin targetFps logic:
-	if not Var.settings.enableTargetFps or Var.settings.mode == Var.mode.RTOnly then
-		return
-	end
-
-	local percentageDifference = (Stats.fps - Var.settings.targetFps) / Var.settings.targetFps * 100
-	local scaleStep = math.floor(percentageDifference / 10)
-
-	Var.settings.lastAutoScale = Var.settings.autoScale
-	Var.settings.autoScale = Var.settings.autoScale + scaleStep
-	if scaleStep == 0 then
-		return
-	end
-
-	if Var.settings.autoScale > 6 then Var.settings.autoScale = 6 end
-	if Var.settings.autoScale < 1 then Var.settings.autoScale = 1 end
-	if Var.settings.autoScale == Var.settings.lastAutoScale then
-		return
-	end
-	Config.AutoScale(Var.settings.autoScale)
 end
 
 local function doWeatherUpdate()
@@ -413,44 +298,17 @@ local function doWeatherUpdate()
 
 	-- if the weather is stuck, change it
 	local currentWeather = Cyberpunk.GetWeather()
-	if currentWeather == Config.gameSession.previousWeather then
+	if currentWeather == Var.settings.previousWeather then
 		Config.BumpWeather(currentWeather)
 	end
-	Config.gameSession.previousWeather = currentWeather
+	
+	Var.settings.previousWeather = currentWeather
 end
 
 registerForEvent('onUpdate', function(delta)
-	-- handle non-blocking background tasks
-	timer.fast = timer.fast + delta
-	timer.lazy = timer.lazy + delta
-	timer.weather = timer.weather + delta
+	Cron.Update(delta)
 
 	Stats.fps = (Stats.fps * 9 + (1 / delta)) / 10
-
-	if timer.fast > timer.FAST then
-		doFastUpdate()
-		timer.fast = 0
-	end
-
-	if timer.lazy > timer.LAZY then
-		doLazyUpdate()
-		timer.lazy = 0
-	end
-
-	if timer.weather > timer.WEATHER then
-		doWeatherUpdate()
-		timer.weather = 0
-	end
-
-	for i = #activeTimers, 1, -1 do
-		local tempTimer = activeTimers[i]
-		tempTimer.countdown = tempTimer.countdown - delta
-
-		if tempTimer.countdown < 0 then
-			tempTimer.callback()
-			table.remove(activeTimers, i)
-		end
-	end
 end)
 
 local function initUltraPlus()
@@ -464,23 +322,14 @@ local function initUltraPlus()
 	Logger.debug('Debug mode enabled')
 
 	LoadIni('config/common.ini', true)
-	LoadIni('config/traffic.ini', true)
 	LoadConfig()
 
 	Logger.info('Enforcing user settings...')
-	Config.SetGraphics(Var.settings.graphics)
+	Config.SetGraphics(Var.settings.graphicsMenuOverrides)
 	Config.SetMode(Var.settings.mode)
 	Config.SetQuality(Var.settings.quality)
 	Config.SetSceneScale(Var.settings.sceneScale)
 	Config.SetVram(Var.settings.vram)
-	Config.SetPop(Var.settings.enableTraffic)
-	Config.SetCars(Var.settings.enableTraffic)
-
-	timer.fast = 0
-	timer.lazy = 0
-	timer.weather = 0
-
-	-- preparePTNext()
 end
 
 registerForEvent('onInit', function()
@@ -496,12 +345,103 @@ registerForEvent('onInit', function()
 		timer.paused = false
 	end)
 
+	GameSession.OnLoad(function(state)
+		Logger.info("LOAD")
+
+		-- prepare PTNext
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+	end)
+
+	GameUI.OnFastTravelStart(function()
+        Logger.info("FAST TRAVEL")
+
+		-- prepare PTNext
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+    end)
+
+	local firstStart = true
 	GameSession.OnStart(function(state)
 		Logger.info("START")
 		timer.paused = false
 
-		mode.changed = false
-        mode.previousMode = Var.settings.mode
+		if firstStart then
+			firstStart = false
+			Var.settings.previousWeather = Cyberpunk.GetWeather()
+		end
+
+		Var.settings.modeChanged = false
+
+		enablePTNext()
+	end)
+
+	Cron.Every(30.0, function() 
+		if timer.paused then
+			return
+		end
+
+		Logger.debug("Daytime task and weather")
+		Config.SetDaytime(Cyberpunk.GetHour())
+	end)
+	
+	Cron.Every(910.0, function()	-- 15:10 hours
+		if timer.paused then
+			return
+		end
+
+		doWeatherUpdate()
+	end)
+
+	Cron.Every(0.25, {tick = 0}, function(timerinfo) 
+		timerinfo.tick = (timerinfo.tick + 1) % 4
+
+		if timerinfo.tick == 0 then
+			timer.flash = not timer.flash
+			setStatus()
+		end
+
+		if timer.paused then
+			return
+		end
+
+		Logger.debug("RR fix")
+		doRayReconstructionFix()
+	end)
+
+	Cron.Every(5.0, function() 
+		if timer.paused then
+			return
+		end
+		
+		Logger.debug("Rain check")
+		local testRain = Cyberpunk.IsRaining()
+		local testIndoors = IsEntityInInteriorArea(GetPlayer())
+
+		if testRain ~= Var.settings.rain or testIndoors ~= Var.settings.indoors then
+			Var.settings.rain = testRain
+			Var.settings.indoors = testIndoors
+			doRainPathTracingFix()
+		end
+		
+		-- stableFps system
+		if not Var.settings.stableFps or Var.settings.mode == Var.mode.RTOnly then
+			return
+		end
+
+		local percentageDifference = (Stats.fps - Var.settings.stableFpsTarget) / Var.settings.stableFpsTarget * 100
+		local scaleStep = math.floor(percentageDifference / 10)
+
+		Var.settings.lastAutoScale = Var.settings.autoScale
+		Var.settings.autoScale = Var.settings.autoScale + scaleStep
+		if scaleStep == 0 then
+			return
+		end
+
+		if Var.settings.autoScale > 6 then Var.settings.autoScale = 6 end
+		if Var.settings.autoScale < 1 then Var.settings.autoScale = 1 end
+		if Var.settings.autoScale == Var.settings.lastAutoScale then
+			return
+		end
+		Config.AutoScale(Var.settings.autoScale)
 	end)
 
 	initUltraPlus()

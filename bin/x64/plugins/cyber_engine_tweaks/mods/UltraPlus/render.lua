@@ -2,7 +2,7 @@
 
 Logger = require('helpers/Logger')
 Var = require('helpers/Variables')
-Config = require('helpers/Config')
+Config = require('helpers/config')
 Cyberpunk = require('helpers/Cyberpunk')
 
 Stats = {
@@ -24,7 +24,7 @@ local function toboolean(value)
 end
 
 local function renderMainTab()
-	ui.text(Config.status)
+	ui.text(Config.Status)
 
 	ui.sameLine()
 	local renderingModes = {
@@ -41,11 +41,14 @@ local function renderMainTab()
 		for _, mode in ipairs(renderingModes) do
 			local value = Var.mode[mode.key]
 			if ui.radio(mode.label, Var.settings.mode == value) then
-				Var.settings.mode = value
+				if Var.settings.mode ~= value then
+					Var.settings.mode = value
+					Var.settings.modeChanged = true
+				end
 
 				Config.SetMode(Var.settings.mode)
 				Config.SetQuality(Var.settings.quality)
-				Config.SetGraphics(Var.settings.graphics)
+				Config.SetGraphics(Var.settings.graphicsMenuOverrides)
 				Config.SetSceneScale(Var.settings.sceneScale)
 				SaveConfig()
 			end
@@ -98,10 +101,10 @@ local function renderMainTab()
 	if ui.header('Override Game Graphics Menu Settings') then
 		for _, key in ipairs(graphicsOrder) do
 			local value = Var.graphics[key]
-			if ui.radio(value .. '##Graphics', Var.settings.graphics == value) then
-				Var.settings.graphics = value
+			if ui.radio(value .. '##Graphics', Var.settings.graphicsMenuOverrides == value) then
+				Var.settings.graphicsMenuOverrides = value
 
-				Config.SetGraphics(Var.settings.graphics)
+				Config.SetGraphics(Var.settings.graphicsMenuOverrides)
 				SaveConfig()
 			end
 			ui.sameLine()
@@ -133,37 +136,29 @@ local function renderMainTab()
 			if toggled then
 				Cyberpunk.SetOption(setting.category, setting.item, setting.value)
 
-				if setting.item == 'enableTraffic' then
-					Config.SetCars(Var.settings.enableTraffic)
-				end
-
-				if setting.item == 'enableCrowds' then
-					Config.SetPop(Var.settings.enableCrowds)
-				end
-
 				SaveConfig()
 			end
 		end
 	end
 
 	ui.space()
-	Var.settings.enableConsole, toggled = ui.checkbox('Console Output', toboolean(Var.settings.enableConsole))
+	Var.settings.console, toggled = ui.checkbox('Console Output', toboolean(Var.settings.console))
 	ui.tooltip('Ultra+ will log what it\'s doing to the CET console')
 	if toggled then
 		SaveConfig()
 	end
 
-	ui.sameLine(170)
-	Var.settings.enableTargetFps, toggled = ui.checkbox('Enable Target FPS', toboolean(Var.settings.enableTargetFps))
+	ui.sameLine(175)
+	Var.settings.stableFps, toggled = ui.checkbox('Stable FPS Target', toboolean(Var.settings.stableFps))
 	ui.tooltip('Ultra+ will use basic perceptual auto-scaling of ray/path\tracing quality to target consistent FPS')
 	if toggled then
 		SaveConfig()
 	end
 
-	if Var.settings.enableTargetFps then
+	if Var.settings.stableFps then
 		ui.sameLine()
 		ui.width(Var.window.intSize)
-		Var.settings.targetFps, toggled = ui.inputInt('', tonumber(Var.settings.targetFps), 1)
+		Var.settings.stableFpsTarget, toggled = ui.inputInt('', tonumber(Var.settings.stableFpsTarget), 1)
 
 		if toggled then
 			SaveConfig()

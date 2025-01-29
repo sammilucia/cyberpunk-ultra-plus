@@ -111,9 +111,10 @@ local Var = {
 
 Var.settings = {
 	mode = 'Unknown',
+	modeChanged = false,
 	quality = Var.quality.VANILLA,
 	vram = Var.vram.GB24,
-	graphics = Var.graphics.OFF,
+	graphicsMenuOverrides = Var.graphics.OFF,
 	sceneScale = Var.sceneScale.VANILLA,
 	autoScale = 3,
 	lastAutoScale = 3,
@@ -121,11 +122,10 @@ Var.settings = {
 	indoors = nil,
 	rain = nil,
 	nrdEnabled = nil,
-	enableTargetFps = false,
-	targetFps = 30,
-	enableConsole = false,
-	enableTraffic = nil,
-	enableCrowds = nil,
+	stableFps = false,
+	stableFpsTarget = 30,
+	console = false,
+	previousWeather = nil,
 }
 
 return Var

@@ -20,18 +20,6 @@ local options = {
 			category = 'RayTracing/Reference',
 			tooltip = 'RIS is resampled importance sampling. Disable this if you use reLIGHT\n(CP Default: On)',
 		},
-		{
-			item = 'enableTraffic',
-			name = 'Enable Ultra+ Traffic',
-			category = 'internal',
-			tooltip = 'Changes traffic behavior in game to be more dynamic.',
-		},
-		{
-			item = 'enableCrowds',
-			name = 'Enable Ultra+ Crowds',
-			category = 'internal',
-			tooltip = 'Changes crowd behavior in game to be more dynamic.',
-		},
 	},
 	ptFeatures = {
 		{
