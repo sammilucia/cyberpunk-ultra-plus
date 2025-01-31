@@ -80,7 +80,7 @@ local function renderMainTab()
 	end
 
 	if ui.header('SHaRC Lighting Cache Accuracy') then
-		ui.tooltip('Nvidia SHaRC predicts the color/brightness of areas of the screen before\ntracing rays. This helps denoisers by giving them more context (rays are\ndrawn on a colored background instead of black). It\'s not desinged to add\ndetail, but at extreme settings it might - at the cost of slow lighting\nupdates as you move. \'Fast\' to \'High\' are recommended.')
+		ui.tooltip('Nvidia SHaRC predicts the color/brightness of areas of the screen before\ntracing rays. This helps denoisers by giving them more context (rays are\ndrawn on a colored background instead of black). It\'s not desinged to add\ndetail, but at extreme settings it might - at the cost of slow lighting\nupdates as you move. \'Fast\' to \'High\' is recommended.')
 		for _, key in ipairs(sceneScaleOrder) do
 			local value = Var.sceneScale[key]
 			if ui.radio(value .. '##Scenescale', Var.settings.sceneScale == value) then
