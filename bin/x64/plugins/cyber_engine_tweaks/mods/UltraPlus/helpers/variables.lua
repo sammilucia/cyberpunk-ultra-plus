@@ -46,8 +46,8 @@ local Var = {
 		OFF = 'Off',
 		FAST = 'Fast',
 		VANILLA = 'Vanilla',
-		MEDIUM = 'Med',
 		HIGH = 'High',
+		INSANE = 'Insane',
 		CRAZY = 'Crazy',
 	},
 	graphics = {

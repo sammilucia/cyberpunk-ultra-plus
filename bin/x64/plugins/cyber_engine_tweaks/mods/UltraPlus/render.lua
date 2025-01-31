@@ -31,9 +31,9 @@ local function renderMainTab()
 		{ key = 'RASTER', label = 'Rast', tooltip = 'Configures normal raster, with optimisations and fixes.' },
 		{ key = 'RT', label = 'RT', tooltip = 'Configures normal ray tracing, with optimisations and fixes.' },
 		{ key = 'RT_PT', label = 'RT+PT', tooltip = 'Normal raytracing plus path traced bounce lighting. Leave Path Tracing\ndisabled in graphics options for this to work correctly.' },
-		{ key = 'PT16', label = '16', tooltip = 'Path tracing from Cyberpunk 1.6x. Requires NRD (disable Ray Reconstruction)' },
-		{ key = 'PT20', label = '20', tooltip = 'Path tracing from Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.' },
-		{ key = 'PT21', label = '21', tooltip = 'Path tracing from Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.' },
+		{ key = 'PT16', label = '16', tooltip = 'Path tracing method of Cyberpunk 1.63. Requires NRD (disables Ray Reconstruction)' },
+		{ key = 'PT20', label = '20', tooltip = 'Path tracing method of Cyberpunk 2.0.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.' },
+		{ key = 'PT21', label = '21', tooltip = 'Path tracing method of Cyberpunk 2.10+.\nNOTE: For all PT except PTNext, for the best visuals we recommend higher\nDLSS/FSR/XeSS and lower PT quality.' },
 		{ key = 'PTNEXT', label = 'Next', tooltip = 'For this mode to work, you MUST load a save game, or start CyberPunk with\nPTNext enabled. Changing graphics/DLSS will also require a reload.\n\nNOTE: For other PT modes we recommend increasing DLSS/FSR3 and lowering PT\nquality for the best visuals. However for PTNext we recommend the opposite:\nRun PTNext as high as you can and turn upscaling down a step.' }
 	}
 	ui.space()
@@ -71,7 +71,7 @@ local function renderMainTab()
 		end
 	end
 
-	local sceneScaleOrder = { 'OFF', 'FAST', 'VANILLA', 'MEDIUM', 'HIGH', 'CRAZY' }
+	local sceneScaleOrder = { 'OFF', 'FAST', 'VANILLA', 'HIGH', 'INSANE', 'CRAZY' }
 	ui.space()
 
 	local disableRadianceCache = Var.settings.mode == Var.mode.RASTER or Var.settings.mode == Var.mode.RT or Var.settings.mode == Var.mode.RT_PT or Var.settings.mode == Var.mode.PT16 -- also test RT+PT
@@ -79,7 +79,8 @@ local function renderMainTab()
 		ImGui.BeginDisabled(true)
 	end
 
-	if ui.header('Bounce Lighting Cache Accuracy') then
+	if ui.header('SHaRC Lighting Cache Accuracy') then
+		ui.tooltip('Nvidia SHaRC predicts the color/brightness of areas of the screen before\ntracing rays. This helps denoisers by giving them more context (rays are\ndrawn on a colored background instead of black). It\'s not desinged to add\ndetail, but at extreme settings it might - at the cost of slow lighting\nupdates as you move. \'Fast\' to \'High\' are recommended.')
 		for _, key in ipairs(sceneScaleOrder) do
 			local value = Var.sceneScale[key]
 			if ui.radio(value .. '##Scenescale', Var.settings.sceneScale == value) then

@@ -23,12 +23,12 @@ function Config.SetSceneScale(scale)
 		return
 	end
 
-	if scale == Var.sceneScale.MEDIUM then
+	if scale == Var.sceneScale.HIGH then
 		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '100.0')
 		return
 	end
 
-	if scale == Var.sceneScale.HIGH then
+	if scale == Var.sceneScale.INSANE then
 		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '200.0')
 		return
 	end

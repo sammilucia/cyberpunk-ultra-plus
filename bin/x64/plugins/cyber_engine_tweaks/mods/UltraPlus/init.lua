@@ -1,5 +1,5 @@
 UltraPlus = {
-	__VERSION	 = '5.5.0-test2',
+	__VERSION	 = '5.5.1',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
@@ -353,10 +353,16 @@ registerForEvent('onInit', function()
 	end)
 
 	GameUI.OnFastTravelStart(function()
-        Logger.info("FAST TRAVEL")
+        Logger.info("Fast Travel Start")
 
 		-- prepare PTNext
 		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+    end)
+
+	GameUI.OnFastTravelFinish(function()
+        Logger.info("Fast Travel Finish")
+
+		enablePTNext()
     end)
 
 	local firstStart = true

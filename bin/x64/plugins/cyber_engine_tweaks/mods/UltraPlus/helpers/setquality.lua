@@ -63,7 +63,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '100.0')
 
 		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')
+		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '0')
 
 		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
@@ -178,8 +178,8 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing/ReferenceScreenshot', 'SampleNumber', '16')
 		Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')
 
-		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '7')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')										-- WAS 1
+		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
+		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '1')										-- WAS 1
 		
 		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
@@ -285,7 +285,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Direct/Common', 'AtrousIterationNum', '6')
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AtrousIterationNum', '6')
 		Cyberpunk.SetOption('Editor/ReGIR', 'LightSlotsCount', '512')
-		Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '20')
+		Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '24')
 		Cyberpunk.SetOption('Editor/ReGIR', 'BuildCandidatesCount', '8')		-- above 8 causes flickering lights after menus
 		Cyberpunk.SetOption('Rendering/Shadows', 'DistantShadowsForceFoliageGeometry', false)
 		Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '1500.0')
@@ -298,8 +298,8 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing/Reference', 'RayNumberScreenshot', '3')
 		Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '2')
 
-		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '5')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '4')
+		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '4')
+		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 
 		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing/Reference', 'EnableProbabilisticSampling', false)
@@ -393,7 +393,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Direct/Common', 'AtrousIterationNum', '8')
 		Cyberpunk.SetOption('Editor/Denoising/ReLAX/Indirect/Common', 'AtrousIterationNum', '8')
 		Cyberpunk.SetOption('Editor/ReGIR', 'LightSlotsCount', '512')
-		Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '24')
+		Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '32')
 		Cyberpunk.SetOption('Editor/ReGIR', 'BuildCandidatesCount', '8')		-- above 8 causes flickering lights after menus
 		Cyberpunk.SetOption('Rendering/Shadows', 'DistantShadowsForceFoliageGeometry', false)
 		Cyberpunk.SetOption('RayTracing', 'TracingRadiusReflections', '8000.0')
@@ -406,7 +406,7 @@ function Config.SetQuality(quality)
 		Cyberpunk.SetOption('RayTracing/Reference', 'BounceNumberScreenshot', '3')
 
 		Cyberpunk.SetOption('Editor/SHARC', 'DownscaleFactor', '3')
-		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '4')
+		Cyberpunk.SetOption('Editor/SHARC', 'Bounces', '2')
 
 		if Var.settings.mode == Var.mode.PTNEXT then
 			Cyberpunk.SetOption('RayTracing', 'TracingRadius', '200.0')

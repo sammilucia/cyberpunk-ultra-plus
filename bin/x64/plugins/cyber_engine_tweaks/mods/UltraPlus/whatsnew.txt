@@ -1,3 +1,7 @@
+5.5.0-rc2
+---------------------
+Fix PTNext not enabling after fast travel with new code
+
 5.5.0-rc1
 ---------------------
 Simplify and fix PTNext enablement/robustness by Lazorr
