@@ -33,22 +33,20 @@ local Var = {
 		INSANE = 'Insane',
 	},
 	vram = {
-		GB4 = '4',
-		GB6 = '6',
-		GB8 = '8',
+		GB4 = '4/6/8',
 		GB10 = '10',
 		GB12 = '12',
 		GB16 = '16',
-		GB20 = '20',
-		GB24 = '24',
+		GB20 = '20/24',
+		GB32 = '32+',
 	},
 	sceneScale = {
 		OFF = 'Off',
-		FAST = 'Fast',
-		VANILLA = 'Vanilla',
-		HIGH = 'High',
-		INSANE = 'Insane',
-		CRAZY = 'Crazy',
+		FAST = '30',
+		VANILLA = 'Vanilla (50)',
+		HIGH = '100',
+		INSANE = '200',
+		CRAZY = '400',
 	},
 	graphics = {
 		POTATO = 'Potato',
@@ -81,7 +79,7 @@ local Var = {
 		[9] = 'Courier Clouds',
 		[10] = 'Cloudy Morning',
 	},
-	SunAngularSizes = {
+	sunAngularSizes = {
 		[0] = '0.35',
 		[1] = '0.35',
 		[2] = '0.35',
@@ -125,7 +123,13 @@ Var.settings = {
 	stableFps = false,
 	stableFpsTarget = 30,
 	console = false,
+	tooltips = true,
 	previousWeather = nil,
+	hairAdjustments = true,
+	preemHair = false,
+	ptLightingAdjustments = true,
+	weatherFix = true,
+	sameWeatherSeconds = 0,
 }
 
 return Var

@@ -1,7 +1,7 @@
 -- helpers/Config.lua
 
 Config = {
-	Status = 'Preem.',
+	Status = 'Nova.',
 	SetMode = require('helpers/setmode').SetMode,
 	SetQuality = require('helpers/setquality').SetQuality,
 	SetSceneScale = require('helpers/setscenescale').SetSceneScale,
@@ -12,8 +12,6 @@ Config = {
 	SetDaytime = require('helpers/daytimetasks').SetDaytime,
 	SaveMenu = require('helpers/savemenu').SaveMenu,
 	BumpWeather = require('helpers/bumpweather').BumpWeather,
-	SetPop = require('helpers/population').SetPop,
-	SetCars = require('helpers/population').SetCars,
 }
 
 return Config

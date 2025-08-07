@@ -59,7 +59,7 @@ ui.window = function(title, flags, func)
 	ImGui.PushStyleColor(ImGuiCol.ScrollbarGrabActive, theme.color.mediumer)
 
 	ImGui.SetNextWindowPos(10, 500, ImGuiCond.FirstUseEver)
-	ImGui.SetNextWindowSize(430 * Var.window.scale, 518 * Var.window.scale)
+	ImGui.SetNextWindowSize(433 * Var.window.scale, 604 * Var.window.scale)
 
 	if ImGui.Begin(title, true, flags) then
 		ImGui.SetWindowFontScale(theme.textScale)
@@ -208,14 +208,47 @@ ui.checkbox = function(label, value)
 	return result, toggled
 end
 
-ui.tooltip = function(text)
-	if ImGui.IsItemHovered() and text ~= '' then
-		ImGui.PushStyleColor(ImGuiCol.Text, theme.color.text)
-		ImGui.BeginTooltip()
-		ImGui.SetTooltip(text)
-		ImGui.EndTooltip()
-		ImGui.PopStyleColor()
+ui.tooltip = function(text, ignore)
+	if Var.settings.tooltips or ignore then
+		if ImGui.IsItemHovered() and text ~= '' then
+			ImGui.PushStyleColor(ImGuiCol.Text, theme.color.text)
+			ImGui.BeginTooltip()
+			ImGui.PushTextWrapPos(650)
+			ImGui.TextWrapped(text)
+			ImGui.PopTextWrapPos()
+			ImGui.EndTooltip()
+			ImGui.PopStyleColor()
+		end
 	end
+end
+
+ui.info = function(text, inverted)
+	ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 12.0)
+	ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, 2.0, 2.0)
+
+	if inverted then
+		ImGui.PushStyleColor(ImGuiCol.Button, theme.color.bg)
+		ImGui.PushStyleColor(ImGuiCol.ButtonHovered, theme.color.bg)
+
+		local currentY = ImGui.GetCursorPosY()
+		ImGui.SetCursorPosY(currentY + (2 * Var.window.scale))
+	else
+		ImGui.PushStyleColor(ImGuiCol.Button, theme.color.dark)
+		ImGui.PushStyleColor(ImGuiCol.ButtonHovered, theme.color.dark)
+	end
+
+	ImGui.PushStyleColor(ImGuiCol.Text, theme.color.text)
+
+	local buttonSize = 20 * Var.window.scale
+	ImGui.PushStyleVar(ImGuiStyleVar.ButtonTextAlign, 0.55, 0.5)
+
+	local result = ImGui.Button('i##Info' .. tostring(text), buttonSize, buttonSize)
+	ImGui.PopStyleVar()
+
+	ui.tooltip(text)
+
+	ImGui.PopStyleColor(4)
+	ImGui.PopStyleVar(2)
 end
 
 return ui

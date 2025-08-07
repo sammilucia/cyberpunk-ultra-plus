@@ -14,27 +14,52 @@ function Config.SetSceneScale(scale)
 	end
 
 	if scale == Var.sceneScale.FAST then
-		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '30.0')
+		if Cyberpunk.GetOption('Editor/SHARC', 'Clear') then
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '8.0')
+		else
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '30.0')
+		end
+		Logger.info('Set SHaRC ' .. Cyberpunk.GetOption('Editor/SHARC', 'SceneScale'))
 		return
 	end
 
 	if scale == Var.sceneScale.VANILLA then
-		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '50.0')
+		if Cyberpunk.GetOption('Editor/SHARC', 'Clear') then
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '12.0')
+		else
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '50.0')
+		end
+		Logger.info('Set SHaRC ' .. Cyberpunk.GetOption('Editor/SHARC', 'SceneScale'))
 		return
 	end
 
 	if scale == Var.sceneScale.HIGH then
-		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '100.0')
+		if Cyberpunk.GetOption('Editor/SHARC', 'Clear') then
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '20.0')
+		else
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '100.0')
+		end
+		Logger.info('Set SHaRC ' .. Cyberpunk.GetOption('Editor/SHARC', 'SceneScale'))
 		return
 	end
 
 	if scale == Var.sceneScale.INSANE then
-		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '200.0')
+		if Cyberpunk.GetOption('Editor/SHARC', 'Clear') then
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '30.0')
+		else
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '200.0')
+		end
+		Logger.info('Set SHaRC ' .. Cyberpunk.GetOption('Editor/SHARC', 'SceneScale'))
 		return
 	end
 
 	if scale == Var.sceneScale.CRAZY then
-		Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '400.0')
+		if Cyberpunk.GetOption('Editor/SHARC', 'Clear') then
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '40.0')
+		else
+			Cyberpunk.SetOption('Editor/SHARC', 'SceneScale', '400.0')
+		end
+		Logger.info('Set SHaRC ' .. Cyberpunk.GetOption('Editor/SHARC', 'SceneScale'))
 		return
 	end
 end

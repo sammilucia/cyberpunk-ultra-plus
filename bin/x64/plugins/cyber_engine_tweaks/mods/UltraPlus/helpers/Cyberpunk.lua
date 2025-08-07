@@ -153,6 +153,10 @@ local Cyberpunk = {
 					Logger.info('Set value for:', category .. '/' .. item, '=', value)
 				end
 				Cyberpunk.SetBool(category, item, value)
+
+				if item == 'Clear' then
+					Config.SetSceneScale(Var.settings.sceneScale)
+				end
 			end
 			return
 		end
@@ -182,14 +186,6 @@ local Cyberpunk = {
 		Logger.info('ERROR: Couldn\'t set value for:', category .. '/' .. item, '=', value)
 	end,
 
-	GetPlayer = function()
-		return Game.GetPlayer()
-	end,
-
-	IsPreGame = function()
-		return GetSingleton("inkMenuScenario"):GetSystemRequestsHandler():IsPreGame()
-	end,
-
 	GetHour = function()
 		return Game.GetTimeSystem():GetGameTime():Hours()
 	end,
@@ -204,10 +200,6 @@ local Cyberpunk = {
 
 	IsRaining = function()
 		return Game.GetWeatherSystem():GetRainIntensity() > 0 and true or false
-	end,
-
-	GetPlayTime = function()
-		return Game.GetPlaythroughTime():ToFloat()
 	end,
 }
 

@@ -7,8 +7,8 @@ Copyright (c) 2021 psiberx
 ]]
 
 local GameSession = {
-	version = '1.4.5',
-	framework = '1.19.0'
+    version = '1.4.5',
+    framework = '1.19.0'
 }
 
 GameSession.Event = {
@@ -392,6 +392,8 @@ local function irpairs(tbl)
     return iter, tbl, #tbl + 1
 end
 
+---@diagnostic disable: need-check-nil
+
 local function findSessionTimestampByKey(targetKey, isTemporary)
     if sessionDataDir and not isEmptySessionKey(targetKey) then
         local pattern = '^' .. (isTemporary and '!' or '') .. '(%d+)%.lua$'
@@ -435,6 +437,8 @@ local function writeSessionFile(sessionTimestamp, sessionKey, isTemporary, sessi
     sessionFile:write(exportSessionData(sessionData))
     sessionFile:close()
 end
+
+---@diagnostic enable: need-check-nil
 
 local function readSessionFile(sessionTimestamp, sessionKey, isTemporary)
     if not sessionDataDir then
@@ -741,7 +745,9 @@ local function initialize(event)
             initSessionKey()
         end
 
-        ---@param self PlayerPuppet
+        ---@class PlayerPuppet : userdata
+        ---@field GetEntityID fun(self: PlayerPuppet): integer
+        ---@field IsReplacer fun(self: PlayerPuppet): boolean
         Observe('PlayerPuppet', 'OnTakeControl', function(self)
             --spdlog.error(('PlayerPuppet::OnTakeControl()'))
 

@@ -1,11 +1,11 @@
 UltraPlus = {
-	__VERSION	 = '5.5.1',
+	__VERSION	 = '6.4.6-beta',
 	__DESCRIPTION = 'Better Path Tracing, Ray Tracing and Hotfixes for CyberPunk',
 	__URL		 = 'https://github.com/sammilucia/cyberpunk-ultra-plus',
 	__LICENSE	 = [[
 	MIT No Attribution
 
-	Copyright 2024 SammiLucia, Xerme, FireKahuna, WoaDmulL
+	Copyright 2024 SammiLucia, FireKahuna, robber804, Lazorr, WoaDmulL, Xerme
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy of this
 	software and associated documentation files (the 'Software'), to deal in the Software
@@ -41,10 +41,6 @@ local timer = {
 	flash = false,
 }
 
-local function setUltraPlusInitialized(flag)
-	TweakDB:SetFlat(UltraPlusFlag, flag)
-end
-
 local function isUltraPlusInitialized()
 	local success, flag = pcall(TweakDB.GetFlat, UltraPlusFlag)
 	if not success then
@@ -57,16 +53,6 @@ local activeTimers = {}
 function Wait(seconds, callback)
 	-- non-blocking wait
 	table.insert(activeTimers, { countdown = seconds, callback = callback })
-end
-
-local function saveUserSettingsJson()
-	-- instructs game to save settings to UserSettings.json
-	if timer.paused then
-		return
-	end
-
-	Var.confirmationRequired = false
-	Logger.info('Cyberpunk successfully saved UserSettings.json')
 end
 
 local function confirmChanges()
@@ -148,22 +134,30 @@ function LoadConfig()
 	end
 
 	Logger.info('Loading user settings...')
-	for category, settings in pairs(iniData) do
+	for _, settings in pairs(iniData) do
 		for item, value in pairs(settings) do
-            if value == 'true' or value == 'false' then
-                value = value == 'true'
-            end
-			Logger.info('    config', item..':', value)
+			if value == 'true' or value == 'false' then
+				value = value == 'true'
+			end
+			Logger.info('    config', item .. ':', value)
 			if settingsTable[item] and not string.match(item, '^internal') then
 				settingsTable[item].value = value
 			elseif string.match(item, '^internal') then
 				local key = string.match(item, '^internal%.(%w+)$')
 				if key then
-					Logger.info('    Found user config', key..':', value)
+					Logger.info('    Found user config', key .. ':', value)
 					Var.settings[key] = value
 				end
 			end
 		end
+	end
+
+	for item, setting in pairs(settingsTable) do
+		Cyberpunk.SetOption(setting.category, item, setting.value)
+	end
+
+	if Var.settings.mode == Var.mode.PTNEXT then
+		Cyberpunk.SetOption('RayTracing/Reference', 'EnableRIS', true)
 	end
 end
 
@@ -193,6 +187,10 @@ function SaveConfig()
 	UltraPlus['internal.stableFps'] = Var.settings.stableFps
 	UltraPlus['internal.stableFpsTarget'] = Var.settings.stableFpsTarget
 	UltraPlus['internal.console'] = Var.settings.console
+	UltraPlus['internal.hairAdjustments'] = Var.settings.hairAdjustments
+	UltraPlus['internal.preemHair'] = Var.settings.preemHair
+	UltraPlus['internal.ptLightingAdjustments'] = Var.settings.ptLightingAdjustments
+	UltraPlus['internal.weatherFix'] = Var.settings.weatherFix
 
 	local iniData = {}
 	local iniContent = ""
@@ -226,16 +224,44 @@ local function toggleRayReconstruction(state)
 	end
 end
 
-local function enablePTNext()
+local function resetPTNext()
 	if Var.settings.mode ~= Var.mode.PTNEXT then
 		return
 	end
 
 	Cron.After(1.5, function()
-		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
+		Cyberpunk.SetOption('Editor/ReGIR', 'Enable', false)
+		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+
+		Cron.After(0.5, function()
+			Cyberpunk.SetOption('Editor/ReGIR', 'Enable', true)
+			Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
+		end)
 	end)
 
+	Logger.info('    PTNext RESET')
+end
+
+local function enablePTNext()
+	if Var.settings.mode ~= Var.mode.PTNEXT then
+		return
+	end
+
+	Config.SetQuality(Var.settings.quality)
+
+	resetPTNext()
+
 	Logger.info('    PTNext is active')
+end
+
+local function doMiscFixes()
+	if Cyberpunk.GetOption('RayTracing', 'TransparentReflectionEnvironmentBlendFactor') == 1.0 then
+		Cyberpunk.SetOption('RayTracing', 'TransparentReflectionEnvironmentBlendFactor', '0.06')
+	end
+	
+	if Cyberpunk.GetOption('Visuals', 'MotionBlurScale') == 1.0 then
+		Cyberpunk.SetOption('Visuals', 'MotionBlurScale', '0.6')
+	end 
 end
 
 local function doRainPathTracingFix()
@@ -276,7 +302,7 @@ end
 local function setStatus()
 	if Cyberpunk.NeedsConfirmation() then
 		if timer.flash then
-			Config.Status = 'Click \'Apply\' in game graphics menu'
+			Config.Status = 'Open the Graphics Menu and click \'Apply\'...'
 		else
 			Config.Status = ''
 		end
@@ -287,7 +313,7 @@ local function setStatus()
 			Config.Status = ''
 		end
 	else
-		Config.Status = 'Preem.'
+		Config.Status = 'Let\'s delta'
 	end
 end
 
@@ -301,7 +327,7 @@ local function doWeatherUpdate()
 	if currentWeather == Var.settings.previousWeather then
 		Config.BumpWeather(currentWeather)
 	end
-	
+
 	Var.settings.previousWeather = currentWeather
 end
 
@@ -310,6 +336,35 @@ registerForEvent('onUpdate', function(delta)
 
 	Stats.fps = (Stats.fps * 9 + (1 / delta)) / 10
 end)
+
+function DoHairAdjustments()
+	if Var.settings.hairAdjustments and Var.settings.preemHair then
+		Logger.info('Enabling PT hair adjustments for Preem Hair')
+		LoadIni('config/hair_on-preem.ini', true)
+	elseif Var.settings.hairAdjustments and not Var.settings.preemHair then
+		Logger.info('Enabling PT hair adjustments for vanilla hair')
+		LoadIni('config/hair_on.ini', true)
+	else
+		Logger.info('Disabling PT hair adjustments')
+		LoadIni('config/hair_off.ini', true)
+	end
+end
+
+local function preparePtNext()
+	if Var.settings.mode ~= Var.mode.PTNEXT then
+		return
+	end
+
+	-- delay full activation of PTNext so it loads correctly because it's not exposed in the shipped game
+	-- only seems to build shaders correctly with ShadingCandidatesCount == 4, but increasing these later seems to work
+	Config.SetMode(Var.settings.mode)
+	Config.SetQuality(Var.settings.quality)
+
+	Cyberpunk.SetOption('Editor/ReGIR', 'BuildCandidatesCount', '8')
+	Cyberpunk.SetOption('Editor/ReGIR', 'ShadingCandidatesCount', '4')
+	Cyberpunk.SetOption('Editor/ReGIR', 'LightSlotsCount', '128')
+	Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', true)
+end
 
 local function initUltraPlus()
 	if isUltraPlusInitialized() then
@@ -330,6 +385,9 @@ local function initUltraPlus()
 	Config.SetQuality(Var.settings.quality)
 	Config.SetSceneScale(Var.settings.sceneScale)
 	Config.SetVram(Var.settings.vram)
+
+	LoadIni(Var.settings.ptLightingAdjustments and 'config/ptlighting_on.ini' or 'config/ptlighting_off.ini', true)
+	DoHairAdjustments()
 end
 
 registerForEvent('onInit', function()
@@ -343,27 +401,27 @@ registerForEvent('onInit', function()
 	GameSession.OnResume(function(state)
 		Logger.info("RESUME")
 		timer.paused = false
+
+		resetPTNext()
 	end)
 
 	GameSession.OnLoad(function(state)
 		Logger.info("LOAD")
 
-		-- prepare PTNext
-		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
+		preparePtNext()
 	end)
 
 	GameUI.OnFastTravelStart(function()
-        Logger.info("Fast Travel Start")
+		Logger.info("Fast Travel Start")
 
-		-- prepare PTNext
-		Cyberpunk.SetOption('Editor/ReGIR', 'UseForDI', false)
-    end)
+		preparePtNext()
+	end)
 
 	GameUI.OnFastTravelFinish(function()
-        Logger.info("Fast Travel Finish")
+		Logger.info("Fast Travel Finish")
 
 		enablePTNext()
-    end)
+	end)
 
 	local firstStart = true
 	GameSession.OnStart(function(state)
@@ -373,6 +431,7 @@ registerForEvent('onInit', function()
 		if firstStart then
 			firstStart = false
 			Var.settings.previousWeather = Cyberpunk.GetWeather()
+			Var.settings.sameWeatherSeconds = 0
 		end
 
 		Var.settings.modeChanged = false
@@ -380,24 +439,34 @@ registerForEvent('onInit', function()
 		enablePTNext()
 	end)
 
-	Cron.Every(30.0, function() 
+	Cron.Every(30.0, function()
 		if timer.paused then
 			return
+		end
+
+		local weather = Cyberpunk.GetWeather()
+		if weather == Var.settings.previousWeather then
+			Var.settings.sameWeatherSeconds = Var.settings.sameWeatherSeconds + 30
+
+			if Var.settings.weatherFix and Var.settings.sameWeatherSeconds > 910 then
+				Config.BumpWeather(weather)
+			end
+		else
+			Var.settings.previousWeather = weather
+			Var.settings.sameWeatherSeconds = 0
 		end
 
 		Logger.debug("Daytime task and weather")
 		Config.SetDaytime(Cyberpunk.GetHour())
 	end)
-	
-	Cron.Every(910.0, function()	-- 15:10 hours
-		if timer.paused then
-			return
-		end
 
-		doWeatherUpdate()
+	Cron.Every(1.0, function()
+		if Var.settings.mode == Var.mode.PTNEXT then
+			Cyberpunk.SetOption('RayTracing/Reference', 'EnableRIS', true)
+		end
 	end)
 
-	Cron.Every(0.25, {tick = 0}, function(timerinfo) 
+	Cron.Every(0.25, {tick = 0}, function(timerinfo)
 		timerinfo.tick = (timerinfo.tick + 1) % 4
 
 		if timerinfo.tick == 0 then
@@ -417,7 +486,7 @@ registerForEvent('onInit', function()
 		if timer.paused then
 			return
 		end
-		
+
 		Logger.debug("Rain check")
 		local testRain = Cyberpunk.IsRaining()
 		local testIndoors = IsEntityInInteriorArea(GetPlayer())
@@ -427,7 +496,7 @@ registerForEvent('onInit', function()
 			Var.settings.indoors = testIndoors
 			doRainPathTracingFix()
 		end
-		
+
 		-- stableFps system
 		if not Var.settings.stableFps or Var.settings.mode == Var.mode.RTOnly then
 			return
@@ -457,6 +526,7 @@ registerForEvent('onTweak', function()
 	-- called early during engine init
 	LoadIni('config/common.ini', true)
 	LoadIni('config/traffic.ini', true)
+	doMiscFixes()
 end)
 
 registerForEvent('onOverlayOpen', function()

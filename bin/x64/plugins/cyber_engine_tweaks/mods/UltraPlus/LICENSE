@@ -1,21 +1,39 @@
-MIT License
+Ultra Team Proprietary Software License
+Copyright © 2025 Ultra Team
 
-Copyright (c) 2024 Samantha Glocker and robber804
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software, including all code, blueprints, configuration files, runtime logic,
+and documentation (collectively, the “Software”), is the exclusive property of the
+Ultra Team. It is licensed, not sold.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+You are granted limited permission to:
+- Use the Software for personal, non-commercial purposes;
+- Showcase or review the Software in videos, streams, screenshots, or written
+content (e.g., YouTube, Twitch, blogs, or social media), provided proper
+attribution to “Ultra+" or "Ultra Team” is included.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+You may NOT:
+- Redistribute, sublicense, or republish the Software or any part of it;
+- Modify, reverse engineer, decompile, disassemble, or create derivative works
+based on the Software;
+- Use the Software, its runtime behavior, configuration methods, and/or derived
+  techniques—including engine modifications via UE4SS, Blueprint logic, and/or
+  CVar manipulation—for any commercial purpose, including integration into
+  published games, patches, developer tools, third-party modifications (including
+  but not limited to game mods), and/or middleware, without explicit written
+  permission;
+- Incorporate any part of the Software into a game and/or toolset intended for
+  distribution, sale, or monetized publication;
+- Remove or obscure any copyright, trademark, or proprietary notices.
+
+These restrictions apply regardless of whether the Software is incorporated
+verbatim, adapted, restructured, functionally reimplemented, or recreated by
+reference.
+
+The Software is provided “as is”, without warranty of any kind. Ultra Team assumes
+no liability for any damages or losses arising from use of the Software.
+
+For licensing, commercial use, or collaboration inquiries, contact any of the
+@Moderators at https://discord.gg/UltraPlace (direct messages is okay for this
+purpose).
